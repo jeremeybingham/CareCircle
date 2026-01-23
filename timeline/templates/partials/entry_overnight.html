@@ -1,0 +1,16 @@
+<div class="timeline-content">
+    <h2 class="timeline-title">
+        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
+        Overnight
+    </h2>
+    <div class="data-list">
+        <p><strong>Dinner:</strong> {{ entry.data.dinner }}</p>
+        <p><strong>Bedtime:</strong> {{ entry.data.bedtime }}</p>
+        <p><strong>Woke Up:</strong> {{ entry.data.woke_up }}</p>
+        <p><strong>Breakfast:</strong> {{ entry.data.breakfast }}</p>
+        {% if entry.data.notes %}
+        <p><strong>Notes:</strong> {{ entry.data.notes }}</p>
+        {% endif %}
+    </div>
+    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+</div>

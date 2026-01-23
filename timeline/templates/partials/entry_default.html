@@ -1,0 +1,18 @@
+<div class="timeline-content">
+    <h2 class="timeline-title">
+        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
+        {{ entry.form_type.name }}
+    </h2>
+    
+    {% if entry.image %}
+    <img src="{{ entry.image.url }}" alt="Entry image" class="timeline-image">
+    {% endif %}
+    
+    <div class="data-list">
+        {% for key, value in entry.data.items %}
+        <p><strong>{{ key|title }}:</strong> {{ value }}</p>
+        {% endfor %}
+    </div>
+    
+    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+</div>

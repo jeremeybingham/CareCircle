@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load entry_display %}
+
+{% block title %}My Timeline{% endblock %}
+
+{% block content %}
+<div class="timeline-container">
+    <div class="timeline-header">
+        <h1>My Timeline</h1>
+        <div class="filter-buttons">
+            <a href="{% url 'timeline:timeline' %}" class="filter-btn {% if not current_filter %}active{% endif %}">All</a>
+            {% for form in forms %}
+            <a href="?form={{ form.type }}" class="filter-btn {% if current_filter == form.type %}active{% endif %}">
+                {{ form.icon }} {{ form.name }}
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="timeline">
+        {% if page_obj %}
+            {% for entry in page_obj %}
+            <div class="timeline-item timeline-{{ entry.type }}">
+                {% render_entry entry %}
+            </div>
+            {% endfor %}
+            
+            {% if page_obj.has_other_pages %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if current_filter %}&form={{ current_filter }}{% endif %}" class="page-link">← Previous</a>
+                {% endif %}
+                
+                <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if current_filter %}&form={{ current_filter }}{% endif %}" class="page-link">Next →</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🔭</div>
+                <h2>No entries yet</h2>
+                <p>Start adding to your timeline using the buttons below</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="fab-container">
+        {% for form in forms %}
+        <a href="{% url 'timeline:entry_create' form_type=form.type %}" class="fab">
+            <span class="fab-icon">{{ form.icon }}</span>
+            <span class="fab-label">{{ form.name }}</span>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

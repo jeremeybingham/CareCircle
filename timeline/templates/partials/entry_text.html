@@ -1,0 +1,8 @@
+<div class="timeline-content">
+    <h2 class="timeline-title">
+        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
+        {{ entry.data.title }}
+    </h2>
+    <p class="timeline-text">{{ entry.data.content|linebreaks }}</p>
+    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+</div>
