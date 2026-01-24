@@ -1,6 +1,6 @@
 # Timeline - Personal Timeline Application
 
-A clean, flexible Django application for tracking personal events, activities, and information over time.
+A clean, flexible Django application for tracking a child's personal events, activities, and information over time.
 
 ## Features
 
