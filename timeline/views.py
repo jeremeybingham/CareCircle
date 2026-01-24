@@ -51,7 +51,7 @@ class TimelineListView(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         """Get entries for current user, optionally filtered by form type"""
-        queryset = Entry.objects.filter(user=self.request.user).select_related('form_type')
+        queryset = Entry.objects.filter(user=self.request.user).select_related('form_type', 'user__profile')
         
         # Optional: Filter by form type
         form_filter = self.request.GET.get('form')

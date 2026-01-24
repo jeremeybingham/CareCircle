@@ -3,5 +3,8 @@
 {% endif %}
 <div class="timeline-content">
     <p class="timeline-caption">{{ entry.data.caption|default:"No caption" }}</p>
-    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+    <div class="timeline-meta">
+        <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+        <span class="timeline-author">by {{ entry.user.profile.display_name }}</span>
+    </div>
 </div>
