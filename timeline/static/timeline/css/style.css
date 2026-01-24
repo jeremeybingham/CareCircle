@@ -327,11 +327,24 @@ body {
     white-space: pre-wrap;
 }
 
+.timeline-meta {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .timeline-timestamp {
     display: inline-block;
     font-size: 13px;
     color: #999;
-    margin-top: 12px;
+}
+
+.timeline-author {
+    display: inline-block;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
 }
 
 /* Entry Sections */
