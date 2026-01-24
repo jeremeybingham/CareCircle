@@ -103,6 +103,12 @@ body {
 }
 
 /* Form Elements */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
 .form-group {
     display: flex;
     flex-direction: column;
@@ -167,6 +173,12 @@ body {
 
 .required {
     color: #d32f2f;
+}
+
+.optional {
+    color: #999;
+    font-weight: normal;
+    font-size: 12px;
 }
 
 /* Radio and Checkbox Styling */
@@ -654,9 +666,13 @@ body {
     .auth-box {
         padding: 30px 20px;
     }
-    
+
     .form-box {
         padding: 20px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
     }
 }
 

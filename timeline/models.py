@@ -1,6 +1,80 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator, EmailValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class UserProfile(models.Model):
+    """
+    Extended user profile information.
+    One-to-one relationship with Django's built-in User model.
+    """
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='profile'
+    )
+    display_name = models.CharField(
+        max_length=100,
+        help_text="Name shown on posts (e.g., 'Ms. Johnson')"
+    )
+    email_address = models.EmailField(
+        unique=True,
+        validators=[EmailValidator()],
+        help_text="Contact email address"
+    )
+    position_role = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Job title/role (e.g., 'Teacher', 'Parent', 'Administrator')"
+    )
+    first_name = models.CharField(
+        max_length=50,
+        help_text="User's first name"
+    )
+    last_name = models.CharField(
+        max_length=50,
+        help_text="User's last name"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "User Profile"
+        verbose_name_plural = "User Profiles"
+
+    def __str__(self):
+        return f"{self.display_name} ({self.user.username})"
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Signal handler to create UserProfile when a User is created.
+    If profile data isn't provided, create a minimal profile.
+    """
+    if created:
+        # Only create if profile doesn't exist (handles cases where profile is created explicitly)
+        if not hasattr(instance, 'profile'):
+            UserProfile.objects.get_or_create(
+                user=instance,
+                defaults={
+                    'display_name': instance.username,
+                    'email_address': instance.email or f'{instance.username}@example.com',
+                    'first_name': instance.first_name or '',
+                    'last_name': instance.last_name or ''
+                }
+            )
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    """
+    Signal handler to save UserProfile when User is saved.
+    """
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
 
 
 class FormType(models.Model):

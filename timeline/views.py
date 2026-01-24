@@ -11,6 +11,7 @@ from django.db.models import Q
 
 from .models import FormType, Entry, UserFormAccess
 from .forms import get_form_class, is_valid_form_type
+from .forms.user import CustomUserCreationForm
 
 
 class SignupView(CreateView):
@@ -18,7 +19,7 @@ class SignupView(CreateView):
     User registration view.
     Creates new user and grants access to default forms.
     """
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     template_name = 'timeline/auth/signup.html'
     success_url = reverse_lazy('timeline:timeline')
     
