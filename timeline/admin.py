@@ -4,10 +4,18 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import FormType, UserFormAccess, Entry
+from .models import FormType, UserFormAccess, Entry, UserProfile
 
 
-# Customize User Admin to show form access
+# Customize User Admin to show form access and profile
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+    fields = ['display_name', 'email_address', 'first_name', 'last_name', 'position_role']
+
+
 class UserFormAccessInline(admin.TabularInline):
     model = UserFormAccess
     extra = 1
@@ -17,9 +25,16 @@ class UserFormAccessInline(admin.TabularInline):
 
 
 class CustomUserAdmin(BaseUserAdmin):
-    inlines = [UserFormAccessInline]
-    list_display = ['username', 'email', 'first_name', 'last_name', 'is_staff', 'entry_count', 'date_joined']
-    
+    inlines = [UserProfileInline, UserFormAccessInline]
+    list_display = ['username', 'email', 'first_name', 'last_name', 'display_name_info', 'is_staff', 'entry_count', 'date_joined']
+
+    def display_name_info(self, obj):
+        """Show display name from profile"""
+        if hasattr(obj, 'profile'):
+            return obj.profile.display_name
+        return '-'
+    display_name_info.short_description = 'Display Name'
+
     def entry_count(self, obj):
         count = obj.timeline_entries.count()
         url = reverse('admin:timeline_entry_changelist') + f'?user__id__exact={obj.id}'
@@ -185,6 +200,28 @@ class EntryAdmin(admin.ModelAdmin):
             return mark_safe(f'<img src="{obj.image.url}" style="max-width: 300px; max-height: 300px;" />')
         return "No image"
     image_preview.short_description = 'Image Preview'
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ['user', 'display_name', 'email_address', 'position_role', 'created_at']
+    list_filter = ['position_role', 'created_at']
+    search_fields = ['user__username', 'display_name', 'email_address', 'first_name', 'last_name']
+    readonly_fields = ['created_at', 'updated_at']
+    autocomplete_fields = ['user']
+
+    fieldsets = (
+        ('User', {
+            'fields': ('user',)
+        }),
+        ('Profile Information', {
+            'fields': ('display_name', 'first_name', 'last_name', 'email_address', 'position_role')
+        }),
+        ('Metadata', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
 
 
 # Customize admin site header
