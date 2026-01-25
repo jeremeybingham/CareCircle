@@ -214,6 +214,35 @@ class EntryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         raise PermissionDenied("You don't have permission to delete this entry.")
 
 
+class EntryUnpinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    Unpin an entry. Only users with can_pin_posts permission can unpin.
+    Uses DeleteView as base but overrides delete to just update is_pinned.
+    """
+    model = Entry
+    template_name = 'timeline/entry_confirm_unpin.html'
+    success_url = reverse_lazy('timeline:timeline')
+
+    def test_func(self):
+        """Check if user has permission to unpin posts"""
+        return (
+            hasattr(self.request.user, 'profile') and
+            self.request.user.profile.can_pin_posts
+        )
+
+    def handle_no_permission(self):
+        """Return 403 if user doesn't have permission"""
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("You don't have permission to unpin posts.")
+
+    def form_valid(self, form):
+        """Unpin the entry instead of deleting it"""
+        self.object = self.get_object()
+        self.object.is_pinned = False
+        self.object.save()
+        return redirect(self.get_success_url())
+
+
 # API Views for AJAX/programmatic access
 
 @require_http_methods(["GET"])

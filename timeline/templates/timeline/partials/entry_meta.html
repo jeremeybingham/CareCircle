@@ -6,9 +6,16 @@
         <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
         <span class="timeline-author">by {{ entry.user.profile.display_name|default:entry.user.username }}</span>
     </div>
-    {% if user == entry.user or user.is_staff %}
-    <a href="{% url 'timeline:entry_delete' pk=entry.id %}" class="entry-delete-btn" title="Delete this entry">
-        <span class="delete-icon">&#x1F5D1;</span>
-    </a>
-    {% endif %}
+    <div class="timeline-meta-actions">
+        {% if entry.is_pinned and user.profile.can_pin_posts %}
+        <a href="{% url 'timeline:entry_unpin' pk=entry.id %}" class="entry-unpin-btn" title="Unpin this entry">
+            <span class="unpin-icon">📌</span>
+        </a>
+        {% endif %}
+        {% if user == entry.user or user.is_staff %}
+        <a href="{% url 'timeline:entry_delete' pk=entry.id %}" class="entry-delete-btn" title="Delete this entry">
+            <span class="delete-icon">&#x1F5D1;</span>
+        </a>
+        {% endif %}
+    </div>
 </div>

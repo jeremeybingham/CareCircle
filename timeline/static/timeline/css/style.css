@@ -375,6 +375,13 @@ body {
     font-style: italic;
 }
 
+/* Timeline Meta Actions */
+.timeline-meta-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 /* Entry Delete Button */
 .entry-delete-btn {
     display: inline-flex;
@@ -397,6 +404,30 @@ body {
 
 .delete-icon {
     font-size: 16px;
+}
+
+/* Entry Unpin Button */
+.entry-unpin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #613B6F;
+    background: transparent;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.entry-unpin-btn:hover {
+    color: #4a2d54;
+    background: #ede7f0;
+}
+
+.unpin-icon {
+    font-size: 14px;
 }
 
 /* Delete Confirmation Page */
@@ -908,17 +939,17 @@ body {
 
 /* Pinned Posts Styles */
 .timeline-item.pinned {
-    border: 2px solid #f59e0b;
-    background: linear-gradient(135deg, #fffbeb 0%, white 100%);
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+    border: 2px solid #613B6F;
+    background: linear-gradient(135deg, #f5f0f7 0%, white 100%);
+    box-shadow: 0 2px 8px rgba(97, 59, 111, 0.15);
 }
 
 .pinned-indicator {
     display: inline-block;
     font-size: 12px;
     font-weight: 600;
-    color: #d97706;
-    background: #fef3c7;
+    color: #613B6F;
+    background: #ede7f0;
     padding: 2px 8px;
     border-radius: 4px;
     margin-bottom: 4px;
@@ -926,10 +957,10 @@ body {
 
 /* Pin Option in Forms */
 .pin-option {
-    background: #fffbeb;
+    background: #f5f0f7;
     padding: 16px;
     border-radius: 8px;
-    border: 1px solid #fde68a;
+    border: 1px solid #d4c4db;
 }
 
 .pin-checkbox-label {
