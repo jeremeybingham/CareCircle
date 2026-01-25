@@ -288,6 +288,27 @@ body {
     border-color: #0066cc;
 }
 
+/* Date Dividers */
+.date-divider {
+    display: flex;
+    align-items: center;
+    margin: 30px 0 20px 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #d1d5db, transparent);
+}
+
+.divider-text {
+    padding: 0 20px;
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
 /* Timeline Items */
 .timeline-item {
     background: white;

@@ -55,10 +55,59 @@ def split_commas(value):
 def get_item(dictionary, key):
     """
     Get an item from a dictionary by key.
-    
+
     Usage:
         {{ my_dict|get_item:"key_name" }}
     """
     if not dictionary:
         return None
     return dictionary.get(key)
+
+
+@register.filter(name='format_date')
+def format_date(value):
+    """
+    Format a date/datetime as 'Monday, January 1'.
+
+    Usage:
+        {{ entry.timestamp|format_date }}
+    """
+    if not value:
+        return ''
+    return value.strftime('%A, %B %-d')
+
+
+@register.filter(name='get_date')
+def get_date(value):
+    """
+    Extract just the date from a datetime.
+
+    Usage:
+        {{ entry.timestamp|get_date }}
+    """
+    if not value:
+        return None
+    if hasattr(value, 'date'):
+        return value.date()
+    return value
+
+
+@register.simple_tag
+def should_show_date_divider(entries, current_index):
+    """
+    Determine if a date divider should be shown before the current entry.
+    Returns True if this is the first entry or if the date differs from previous.
+
+    Usage:
+        {% should_show_date_divider page_obj forloop.counter0 as show_divider %}
+    """
+    if current_index == 0:
+        return True
+
+    current_entry = entries[current_index]
+    previous_entry = entries[current_index - 1]
+
+    current_date = current_entry.timestamp.date()
+    previous_date = previous_entry.timestamp.date()
+
+    return current_date != previous_date

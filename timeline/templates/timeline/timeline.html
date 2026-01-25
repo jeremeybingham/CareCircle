@@ -8,6 +8,14 @@
     <div class="timeline">
         {% if page_obj %}
             {% for entry in page_obj %}
+            {% should_show_date_divider page_obj forloop.counter0 as show_divider %}
+            {% if show_divider %}
+            <div class="date-divider">
+                <span class="divider-line"></span>
+                <span class="divider-text">{{ entry.timestamp|format_date }}</span>
+                <span class="divider-line"></span>
+            </div>
+            {% endif %}
             <div class="timeline-item timeline-{{ entry.type }}">
                 {% render_entry entry %}
             </div>
