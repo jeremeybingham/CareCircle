@@ -3,7 +3,5 @@
 {% endif %}
 <div class="timeline-content">
     <p class="timeline-caption">{{ entry.data.caption|default:"No caption" }}</p>
-    <div class="timeline-meta">
-        <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }} • {{ entry.user.username }}</span>
-    </div>
+    {% include "timeline/partials/entry_meta.html" %}
 </div>

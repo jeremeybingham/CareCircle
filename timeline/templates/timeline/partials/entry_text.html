@@ -4,7 +4,5 @@
         {{ entry.data.title }}
     </h2>
     <p class="timeline-text">{{ entry.data.content|linebreaks }}</p>
-    <div class="timeline-meta">
-        <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }} • {{ entry.user.username }}</span>
-    </div>
+    {% include "timeline/partials/entry_meta.html" %}
 </div>
