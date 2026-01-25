@@ -41,6 +41,10 @@ class UserProfile(models.Model):
         default=False,
         help_text="Allow this user to pin posts to the top of the timeline"
     )
+    can_delete_any_post = models.BooleanField(
+        default=False,
+        help_text="Allow this user to delete any post, not just their own"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
