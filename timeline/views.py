@@ -50,14 +50,14 @@ class TimelineListView(LoginRequiredMixin, ListView):
     paginate_by = 20
     
     def get_queryset(self):
-        """Get entries for current user, optionally filtered by form type"""
-        queryset = Entry.objects.filter(user=self.request.user).select_related('form_type', 'user__profile')
-        
+        """Get all entries, optionally filtered by form type"""
+        queryset = Entry.objects.all().select_related('form_type', 'user', 'user__profile')
+
         # Optional: Filter by form type
         form_filter = self.request.GET.get('form')
         if form_filter:
             queryset = queryset.filter(form_type__type=form_filter)
-        
+
         return queryset
     
     def get_context_data(self, **kwargs):
@@ -184,18 +184,18 @@ def api_entries(request):
     if not request.user.is_authenticated:
         return JsonResponse({'error': 'Authentication required'}, status=401)
     
-    # Get entries for current user
-    entries = Entry.objects.filter(user=request.user).select_related('form_type')
-    
+    # Get all entries
+    entries = Entry.objects.all().select_related('form_type', 'user')
+
     # Optional filtering by form type
     form_type = request.GET.get('form_type')
     if form_type:
         entries = entries.filter(form_type__type=form_type)
-    
+
     # Limit results
     limit = min(int(request.GET.get('limit', 50)), 100)
     entries = entries[:limit]
-    
+
     # Serialize entries
     data = []
     for entry in entries:
@@ -206,6 +206,7 @@ def api_entries(request):
             'form_icon': entry.form_type.icon,
             'timestamp': entry.timestamp.isoformat(),
             'data': entry.get_display_data(),
+            'username': entry.user.username,
         }
         data.append(entry_data)
     
