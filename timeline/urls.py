@@ -10,6 +10,9 @@ urlpatterns = [
     # Entry creation
     path('entry/<str:form_type>/', views.EntryCreateView.as_view(), name='entry_create'),
 
+    # Entry deletion
+    path('entry/<int:pk>/delete/', views.EntryDeleteView.as_view(), name='entry_delete'),
+
     # API endpoints
     path('api/entries/', views.api_entries, name='api_entries'),
     path('api/forms/', views.api_forms, name='api_forms'),

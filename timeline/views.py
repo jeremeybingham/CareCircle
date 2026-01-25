@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import ListView, CreateView, FormView
+from django.views.generic import ListView, CreateView, FormView, DeleteView
 from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, Http404
 from django.urls import reverse_lazy, reverse
@@ -173,6 +173,26 @@ class EntryCreateView(LoginRequiredMixin, FormView):
     def get_success_url(self):
         """Redirect to timeline after successful submission"""
         return reverse('timeline:timeline')
+
+
+class EntryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    Delete an entry. Users can delete their own entries, admins can delete any.
+    """
+    model = Entry
+    template_name = 'timeline/entry_confirm_delete.html'
+    success_url = reverse_lazy('timeline:timeline')
+
+    def test_func(self):
+        """Check if user has permission to delete this entry"""
+        entry = self.get_object()
+        # Allow if user is the owner or is staff/admin
+        return self.request.user == entry.user or self.request.user.is_staff
+
+    def handle_no_permission(self):
+        """Return 403 if user doesn't have permission"""
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("You don't have permission to delete this entry.")
 
 
 # API Views for AJAX/programmatic access

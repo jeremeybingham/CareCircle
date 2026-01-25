@@ -1,4 +1,11 @@
 <div class="timeline-meta">
-    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
-    <span class="timeline-author">by {{ entry.user.profile.display_name|default:entry.user.username }}</span>
+    <div class="timeline-meta-info">
+        <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+        <span class="timeline-author">by {{ entry.user.profile.display_name|default:entry.user.username }}</span>
+    </div>
+    {% if user == entry.user or user.is_staff %}
+    <a href="{% url 'timeline:entry_delete' pk=entry.id %}" class="entry-delete-btn" title="Delete this entry">
+        <span class="delete-icon">&#x1F5D1;</span>
+    </a>
+    {% endif %}
 </div>
