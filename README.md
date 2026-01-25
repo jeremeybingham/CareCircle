@@ -1,16 +1,18 @@
 # Timeline - Personal Timeline Application
 
-A clean, flexible Django application for tracking a child's personal events, activities, and information over time.
+A clean, flexible Django application for tracking a child's personal events, activities, and information over time. Multiple users can view all entries on a shared timeline with author attribution.
 
 ## Features
 
 - 📝 **Multiple Form Types**: Text posts, photos, overnight logs, school day tracking
-- 🔒 **User Authentication**: Secure signup/login system
-- 🎨 **Clean UI**: Simple, responsive design
+- 👥 **Shared Timeline**: All authenticated users see all entries with author display names
+- 🔒 **User Authentication**: Secure signup/login with extended profile information
+- 🎨 **Clean UI**: Simple, responsive mobile-first design
 - 🔧 **Admin Control**: Manage forms and user access via Django admin
-- 📊 **Timeline View**: Chronological display with filtering
-- 🔍 **Flexible Architecture**: Easy to add new form types
+- 📊 **Timeline View**: Chronological display with filtering options
+- 🔍 **Flexible Architecture**: Registry pattern makes adding new form types easy
 - 📱 **Mobile Responsive**: Works on all devices
+- 🔌 **JSON API**: Programmatic access to entries and forms
 
 ## Quick Start
 
@@ -19,7 +21,7 @@ A clean, flexible Django application for tracking a child's personal events, act
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd new_timeline
+cd timeline2
 
 # Create virtual environment
 python -m venv venv
@@ -76,7 +78,7 @@ Navigate to `http://localhost:8000/` and start creating timeline entries!
 ## Project Structure
 
 ```
-new_timeline/
+timeline2/
 ├── config/                      # Project settings
 │   ├── settings.py
 │   ├── urls.py
@@ -89,22 +91,29 @@ new_timeline/
 │   │   ├── photo.py            # Photo form
 │   │   ├── overnight.py        # Overnight form
 │   │   ├── schoolday.py        # School day form
+│   │   ├── user.py             # Custom user creation form
 │   │   └── registry.py         # Form registry
 │   │
 │   ├── templates/timeline/
 │   │   ├── timeline.html       # Main timeline view
 │   │   ├── entry_form.html     # Generic form template
-│   │   ├── auth/               # Login/signup
+│   │   ├── auth/               # Login/signup templates
 │   │   └── partials/           # Entry display templates
+│   │       ├── entry_meta.html      # Shared timestamp/author partial
+│   │       ├── entry_text.html      # Text post display
+│   │       ├── entry_photo.html     # Photo display
+│   │       ├── entry_overnight.html # Overnight form display
+│   │       ├── entry_schoolday.html # School day display
+│   │       └── entry_default.html   # Fallback template
 │   │
 │   ├── static/timeline/css/
-│   │   └── style.css           # Styles
+│   │   └── style.css           # Styles (700+ lines)
 │   │
 │   ├── templatetags/
 │   │   └── entry_display.py    # Custom template tags
 │   │
 │   ├── management/commands/
-│   │   └── init_forms.py       # Initialize forms
+│   │   └── init_forms.py       # Initialize forms command
 │   │
 │   ├── models.py               # Database models
 │   ├── views.py                # Views
@@ -116,13 +125,16 @@ new_timeline/
 │
 ├── manage.py
 ├── requirements.txt
+├── ADDING_FORMS.md             # Guide for adding new form types
+├── TODO.md                     # Feature roadmap
+├── CLAUDE.md                   # AI assistant context
 └── README.md
 ```
 
 ## Available Form Types
 
 1. **Text Post** (📝) - Simple title and content
-2. **Photo** (📸) - Image upload with caption
+2. **Photo** (📸) - Image upload with caption (10MB limit)
 3. **Overnight** (🌙) - Track dinner, sleep, breakfast routine
 4. **School Day** (🎒) - Comprehensive school activity tracking
 
@@ -133,17 +145,18 @@ See `ADDING_FORMS.md` for detailed instructions.
 Quick overview:
 1. Create form class in `timeline/forms/newform.py`
 2. Add to `timeline/forms/registry.py`
-3. Run `python manage.py init_forms`
-4. Create display template: `timeline/partials/entry_newform.html`
-5. Configure access in admin
+3. Update `timeline/forms/__init__.py`
+4. Run `python manage.py init_forms`
+5. Create display template: `timeline/templates/timeline/partials/entry_newform.html`
+6. Configure access in admin
 
 ## API Endpoints
 
 The application includes JSON API endpoints:
 
-- `GET /api/entries/` - Get user's entries
-  - Parameters: `form_type` (filter), `limit` (max results)
-- `GET /api/forms/` - Get available forms
+- `GET /api/entries/` - Get timeline entries
+  - Parameters: `form_type` (filter by type), `limit` (max results)
+- `GET /api/forms/` - Get available forms for current user
 
 ## Management Commands
 
@@ -164,6 +177,16 @@ Options:
 SECRET_KEY=your-secret-key
 DEBUG=True
 ALLOWED_HOST=your-domain.com
+
+# Optional: Database configuration
+DATABASE_ENGINE=django.db.backends.sqlite3
+DATABASE_NAME=db.sqlite3
+
+# Optional: S3 Storage
+USE_S3=False
+AWS_ACCESS_KEY_ID=your-access-key
+AWS_SECRET_ACCESS_KEY=your-secret-key
+AWS_STORAGE_BUCKET_NAME=your-bucket
 ```
 
 ### Settings
@@ -208,31 +231,34 @@ python manage.py migrate
 - [ ] Configure email backend
 - [ ] Set up backup system
 
-### Database Migration from Old Version
-
-Not applicable - this is a fresh implementation. If you have data from the old version, you'll need to write a custom migration script.
-
 ## Architecture
 
 ### Models
-- **FormType** - Metadata about form types (name, icon, description)
+
+- **FormType** - Metadata about form types (name, icon, description, is_active, is_default)
 - **UserFormAccess** - Controls which users can use which forms
-- **Entry** - Actual timeline entries (stores data as JSON)
+- **Entry** - Timeline entries (stores data as JSON, optional image, timestamp)
+- **UserProfile** - Extended user information (display_name, email, role, first/last names)
 
 ### Forms
+
 - Django Forms for validation and rendering
 - Registry pattern for form discovery
-- Base class for shared functionality
+- Base class (BaseEntryForm) for shared functionality
+- Custom validation per form type
 
 ### Views
+
 - Class-based views (ListView, FormView, CreateView)
 - Dynamic form loading based on URL parameter
 - API views for programmatic access
 
 ### Templates
+
 - Template inheritance from base.html
-- Custom template tag for entry rendering
-- Type-specific display partials
+- Custom template tags (`render_entry`, `split_commas`, `get_item`)
+- Type-specific display partials with shared meta partial
+- Fallback to default template for unknown types
 
 ## Customization
 
@@ -244,6 +270,7 @@ Key CSS classes:
 - `.timeline-item` - Entry container
 - `.timeline-{type}` - Type-specific styling
 - `.fab` - Floating action buttons
+- `.timeline-meta` - Author and timestamp display
 
 ### Form Validation
 
@@ -271,6 +298,10 @@ def clean_fieldname(self):
 - Run `python manage.py collectstatic`
 - Check browser console for errors
 - Verify `STATIC_URL` in settings
+
+### User profile not created
+- UserProfile is auto-created on user signup via signal handlers
+- For existing users, check admin for UserProfile entries
 
 ## License
 
