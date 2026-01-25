@@ -2,234 +2,7 @@
 
 ## Planned Features and Improvements
 
-### 1. ~~Create "Words I'm Using" Form~~ ✅ COMPLETED
-
-**Goal**: Add a simple form to track new words/phrases Eddie is using.
-
-**Form Structure**:
-- Single text input field (comma-separated phrases)
-- Display words as large, colorful text in timeline
-
-**Implementation Steps**:
-- [x] Create `timeline/forms/words.py` with WordsForm class
-- [x] Add single CharField for comma-separated input
-- [x] Add to `timeline/forms/registry.py`
-- [x] Update `timeline/forms/__init__.py`
-- [x] Create display template: `timeline/templates/timeline/partials/entry_words.html`
-- [x] Style words with larger font size and varied colors
-- [x] Run `python manage.py init_forms`
-- [x] Test form submission and display
-
-**Files to Create/Modify**:
-- `timeline/forms/words.py` - NEW
-- `timeline/forms/registry.py` - Add to FORM_REGISTRY
-- `timeline/forms/__init__.py` - Add import
-- `timeline/templates/timeline/partials/entry_words.html` - NEW
-- `timeline/static/timeline/css/style.css` - Add word styling
-
-**Form Example**:
-```python
-class WordsForm(BaseEntryForm):
-    words = forms.CharField(
-        required=True,
-        label="Words and Phrases",
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Enter words/phrases separated by commas'
-        }),
-        help_text="Separate each word or phrase with a comma"
-    )
-```
-
-**Registry Entry**:
-```python
-'words': {
-    'form_class': WordsForm,
-    'name': "Words I'm Using",
-    'icon': '💬',
-    'description': "Track new words and phrases Eddie is using",
-},
-```
-
-**Display Template Example**:
-```django
-<div class="timeline-content">
-    <h2 class="timeline-title">
-        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
-        Words I'm Using
-    </h2>
-    <div class="words-display">
-        {% for word in entry.data.words|split_commas %}
-        <span class="word-badge">{{ word }}</span>
-        {% endfor %}
-    </div>
-    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
-</div>
-```
-
-**CSS Example**:
-```css
-.words-display {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.word-badge {
-    font-size: 24px;
-    font-weight: bold;
-    padding: 10px 20px;
-    border-radius: 8px;
-    display: inline-block;
-}
-
-.word-badge:nth-child(5n+1) { background-color: #fef3c7; color: #92400e; }
-.word-badge:nth-child(5n+2) { background-color: #dbeafe; color: #1e40af; }
-.word-badge:nth-child(5n+3) { background-color: #dcfce7; color: #166534; }
-.word-badge:nth-child(5n+4) { background-color: #fce7f3; color: #9f1239; }
-.word-badge:nth-child(5n+5) { background-color: #f3e8ff; color: #6b21a8; }
-```
-
----
-
-### 2. ~~Add Date Dividers in Timeline~~ ✅ COMPLETED
-
-**Goal**: Automatically insert subtle date dividers between days in the timeline for better organization.
-
-**Display Format**: `------- Monday, January 1 ---------`
-
-**Implementation Steps**:
-- [x] Modify `TimelineListView` to group entries by date
-- [x] Create template filter or tag to detect date changes
-- [x] Update `timeline.html` to insert dividers between different dates
-- [x] Style dividers with subtle line and centered date text
-- [x] Ensure dividers work correctly with pagination
-
-**Files to Modify**:
-- `timeline/views.py` - Add date grouping logic
-- `timeline/templates/timeline/timeline.html` - Add divider rendering
-- `timeline/templatetags/entry_display.py` - Add date comparison filter
-- `timeline/static/timeline/css/style.css` - Style dividers
-
-**Template Filter Example**:
-```python
-@register.filter(name='format_date')
-def format_date(value):
-    """Format date as 'Monday, January 1'"""
-    if not value:
-        return ''
-    return value.strftime('%A, %B %-d')
-
-@register.filter(name='get_date')
-def get_date(timestamp):
-    """Extract just the date from a timestamp"""
-    return timestamp.date()
-```
-
-**Template Implementation**:
-```django
-{% for entry in page_obj %}
-    {% if forloop.first or entry.timestamp|get_date != page_obj|lookup:forloop.counter0|add:"-1"|get_date %}
-    <div class="date-divider">
-        <span class="divider-line"></span>
-        <span class="divider-text">{{ entry.timestamp|format_date }}</span>
-        <span class="divider-line"></span>
-    </div>
-    {% endif %}
-    
-    <div class="timeline-item timeline-{{ entry.type }}">
-        {% render_entry entry %}
-    </div>
-{% endfor %}
-```
-
-**CSS Example**:
-```css
-.date-divider {
-    display: flex;
-    align-items: center;
-    margin: 30px 0 20px 0;
-    opacity: 0.6;
-}
-
-.divider-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, #d1d5db, transparent);
-}
-
-.divider-text {
-    padding: 0 20px;
-    font-size: 14px;
-    color: #6b7280;
-    font-weight: 500;
-    white-space: nowrap;
-}
-```
-
----
-
-### 3. Pinned Posts Feature
-
-**Goal**: Allow designated users to create posts that stay pinned at the top of the timeline.
-
-**Requirements**:
-- Only certain users can create pinned posts
-- Pinned posts always appear at top of timeline
-- Visual indicator showing post is pinned
-- Admin control over who can pin posts
-
-**Implementation Steps**:
-- [ ] Add `is_pinned` boolean field to Entry model
-- [ ] Add `can_pin_posts` permission to User model or UserProfile
-- [ ] Create database migration for new fields
-- [ ] Update `TimelineListView` queryset to sort pinned posts first
-- [ ] Add "Pin this post" checkbox to entry forms (conditional on permission)
-- [ ] Add visual indicator (📌 icon) to pinned posts
-- [ ] Add admin interface to manage pinned status
-- [ ] Test pinning/unpinning functionality
-
-**Files to Modify**:
-- `timeline/models.py` - Add is_pinned field to Entry
-- `timeline/views.py` - Update queryset ordering
-- `timeline/forms/base.py` - Add optional pin checkbox
-- `timeline/templates/timeline/entry_form.html` - Show pin option
-- `timeline/templates/timeline/partials/*.html` - Add pin indicator
-- `timeline/admin.py` - Add pinned filtering
-- `timeline/static/timeline/css/style.css` - Style pinned posts
-
-**Model Changes**:
-```python
-class Entry(models.Model):
-    # ... existing fields ...
-    is_pinned = models.BooleanField(
-        default=False,
-        help_text="Pin this entry to the top of the timeline"
-    )
-    
-    class Meta:
-        ordering = ['-is_pinned', '-timestamp']  # Pinned first, then by date
-```
-
-**View Changes**:
-```python
-def get_queryset(self):
-    """Get all entries with pinned posts first"""
-    return Entry.objects.filter(
-        user=self.request.user
-    ).select_related('form_type').order_by('-is_pinned', '-timestamp')
-```
-
-**Display Indicator**:
-```django
-{% if entry.is_pinned %}
-<span class="pinned-indicator">📌 Pinned</span>
-{% endif %}
-```
-
----
-
-### 4. Create "About Eddie" Page
+### 1. Create "About Eddie" Page
 
 **Goal**: Create a dedicated page with information about Eddie and emergency contact details.
 
@@ -262,7 +35,7 @@ def get_queryset(self):
 ```python
 class AboutEddieView(LoginRequiredMixin, TemplateView):
     template_name = 'timeline/about_eddie.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Add any dynamic content here
@@ -283,22 +56,22 @@ path('about/', views.AboutEddieView.as_view(), name='about_eddie'),
 {% block content %}
 <div class="about-container">
     <h1>About Eddie</h1>
-    
+
     <section class="about-section">
         <h2>Basic Information</h2>
         <!-- Info here -->
     </section>
-    
+
     <section class="about-section emergency">
         <h2>⚠️ Emergency Contacts</h2>
         <!-- Emergency info here -->
     </section>
-    
+
     <section class="about-section">
         <h2>Daily Routine</h2>
         <!-- Routine info here -->
     </section>
-    
+
     <section class="about-section">
         <h2>Important Notes</h2>
         <!-- Notes here -->
@@ -309,7 +82,7 @@ path('about/', views.AboutEddieView.as_view(), name='about_eddie'),
 
 ---
 
-### 5. Babysitter & Lunch Form (Friday Pickups)
+### 2. Babysitter & Lunch Form (Friday Pickups)
 
 **Goal**: Create a specialized form for Friday babysitter pickups with lunch details.
 
@@ -345,13 +118,13 @@ class FridayPickupForm(BaseEntryForm):
         label="Pickup Time",
         widget=forms.TimeInput(attrs={'type': 'time'})
     )
-    
+
     pickup_person = forms.CharField(
         required=True,
         label="Who is picking up?",
         max_length=100
     )
-    
+
     lunch_packed = forms.ChoiceField(
         choices=[
             ('yes', 'Yes'),
@@ -361,20 +134,20 @@ class FridayPickupForm(BaseEntryForm):
         label="Lunch Packed?",
         widget=forms.RadioSelect()
     )
-    
+
     lunch_contents = forms.CharField(
         required=False,
         label="Lunch Contents",
         widget=forms.Textarea(attrs={'rows': 3}),
         help_text="What's in the lunchbox?"
     )
-    
+
     special_instructions = forms.CharField(
         required=False,
         label="Special Instructions",
         widget=forms.Textarea(attrs={'rows': 3})
     )
-    
+
     contact_number = forms.CharField(
         required=False,
         label="Contact Number",
@@ -397,7 +170,7 @@ class FridayPickupForm(BaseEntryForm):
 
 ---
 
-### 6. Documents & Files Upload System
+### 3. Documents & Files Upload System
 
 **Goal**: Create a system for uploading documents/files with descriptions, viewable in timeline and on a dedicated documents page.
 
@@ -443,20 +216,20 @@ class DocumentForm(BaseEntryForm):
         label="Document Title",
         max_length=200
     )
-    
+
     description = forms.CharField(
         required=False,
         label="Description",
         widget=forms.Textarea(attrs={'rows': 3}),
         help_text="Brief description of this document"
     )
-    
+
     document = forms.FileField(
         required=True,
         label="File",
         help_text="Upload PDF, DOC, XLSX, or other document"
     )
-    
+
     def clean_document(self):
         file = self.cleaned_data.get('document')
         if file:
@@ -485,7 +258,7 @@ class DocumentListView(LoginRequiredMixin, ListView):
     template_name = 'timeline/documents.html'
     context_object_name = 'documents'
     paginate_by = 20
-    
+
     def get_queryset(self):
         """Get only document entries"""
         return Entry.objects.filter(
@@ -501,21 +274,21 @@ class DocumentListView(LoginRequiredMixin, ListView):
         <span class="timeline-icon">📄</span>
         {{ entry.data.title }}
     </h2>
-    
+
     {% if entry.data.description %}
     <p class="document-description">{{ entry.data.description }}</p>
     {% endif %}
-    
+
     <div class="document-actions">
         <a href="{{ entry.document.url }}" class="btn-download" download>
             ⬇️ Download
         </a>
         <span class="file-info">
-            {{ entry.document.name|basename }} 
+            {{ entry.document.name|basename }}
             ({{ entry.document.size|filesizeformat }})
         </span>
     </div>
-    
+
     <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
 </div>
 ```
@@ -535,16 +308,13 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ## Implementation Priority
 
 **High Priority** (Start with these):
-1. ~~Words I'm Using form - Simple, high value~~ ✅ DONE
-2. ~~Date dividers in timeline - Improves readability~~ ✅ DONE
-3. About Eddie page - Important for caregivers
+1. About Eddie page - Important for caregivers
 
 **Medium Priority**:
-4. Friday pickup form - Specific use case
+2. Friday pickup form - Specific use case
 
 **Lower Priority** (More complex):
-5. Pinned posts - Requires model changes and permissions
-6. Documents system - Most complex, requires file handling
+3. Documents system - Most complex, requires file handling
 
 ---
 
@@ -561,6 +331,16 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ---
 
 ## Completed Features
+
+### ✅ Pinned Posts Feature
+- Added `is_pinned` boolean field to Entry model
+- Added `can_pin_posts` permission field to UserProfile
+- Pinned posts automatically appear at the top of the timeline
+- Visual indicator (📌 Pinned badge) displayed on pinned posts
+- Pin checkbox shown in entry form for users with permission
+- Admin interface with actions to pin/unpin entries
+- Admin can grant/revoke pin permission for users
+- Styled pinned posts with amber border and gradient background
 
 ### ✅ "Words I'm Using" Form
 - Added simple form to track new words/phrases Eddie is using

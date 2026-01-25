@@ -16,7 +16,7 @@
                 <span class="divider-line"></span>
             </div>
             {% endif %}
-            <div class="timeline-item timeline-{{ entry.type }}">
+            <div class="timeline-item timeline-{{ entry.type }}{% if entry.is_pinned %} pinned{% endif %}">
                 {% render_entry entry %}
             </div>
             {% endfor %}

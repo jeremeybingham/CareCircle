@@ -13,7 +13,7 @@ class UserProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
-    fields = ['display_name', 'email_address', 'first_name', 'last_name', 'position_role']
+    fields = ['display_name', 'email_address', 'first_name', 'last_name', 'position_role', 'can_pin_posts']
 
 
 class UserFormAccessInline(admin.TabularInline):
@@ -146,16 +146,16 @@ class UserFormAccessAdmin(admin.ModelAdmin):
 
 @admin.register(Entry)
 class EntryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user_display', 'form_display', 'timestamp', 'preview', 'has_image']
-    list_filter = ['form_type__type', 'form_type', 'timestamp']
+    list_display = ['id', 'user_display', 'form_display', 'timestamp', 'preview', 'has_image', 'is_pinned_display']
+    list_filter = ['is_pinned', 'form_type__type', 'form_type', 'timestamp']
     search_fields = ['user__username', 'user__email', 'data']
     readonly_fields = ['timestamp', 'data_display', 'image_preview']
     autocomplete_fields = ['user', 'form_type']
     date_hierarchy = 'timestamp'
-    
+
     fieldsets = (
         ('Entry Information', {
-            'fields': ('user', 'form_type', 'timestamp')
+            'fields': ('user', 'form_type', 'timestamp', 'is_pinned')
         }),
         ('Content', {
             'fields': ('data_display', 'image', 'image_preview')
@@ -187,7 +187,11 @@ class EntryAdmin(admin.ModelAdmin):
     def has_image(self, obj):
         return '✓' if obj.image else ''
     has_image.short_description = 'Image'
-    
+
+    def is_pinned_display(self, obj):
+        return '📌' if obj.is_pinned else ''
+    is_pinned_display.short_description = 'Pinned'
+
     def data_display(self, obj):
         """Pretty-print JSON data"""
         import json
@@ -201,11 +205,23 @@ class EntryAdmin(admin.ModelAdmin):
         return "No image"
     image_preview.short_description = 'Image Preview'
 
+    actions = ['pin_entries', 'unpin_entries']
+
+    def pin_entries(self, request, queryset):
+        count = queryset.update(is_pinned=True)
+        self.message_user(request, f"{count} entries pinned to top of timeline")
+    pin_entries.short_description = "📌 Pin selected entries to top"
+
+    def unpin_entries(self, request, queryset):
+        count = queryset.update(is_pinned=False)
+        self.message_user(request, f"{count} entries unpinned")
+    unpin_entries.short_description = "Unpin selected entries"
+
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'display_name', 'email_address', 'position_role', 'created_at']
-    list_filter = ['position_role', 'created_at']
+    list_display = ['user', 'display_name', 'email_address', 'position_role', 'can_pin_posts', 'created_at']
+    list_filter = ['position_role', 'can_pin_posts', 'created_at']
     search_fields = ['user__username', 'display_name', 'email_address', 'first_name', 'last_name']
     readonly_fields = ['created_at', 'updated_at']
     autocomplete_fields = ['user']
@@ -217,11 +233,26 @@ class UserProfileAdmin(admin.ModelAdmin):
         ('Profile Information', {
             'fields': ('display_name', 'first_name', 'last_name', 'email_address', 'position_role')
         }),
+        ('Permissions', {
+            'fields': ('can_pin_posts',)
+        }),
         ('Metadata', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
+
+    actions = ['grant_pin_permission', 'revoke_pin_permission']
+
+    def grant_pin_permission(self, request, queryset):
+        count = queryset.update(can_pin_posts=True)
+        self.message_user(request, f"Granted pin permission to {count} users")
+    grant_pin_permission.short_description = "📌 Grant pin posts permission"
+
+    def revoke_pin_permission(self, request, queryset):
+        count = queryset.update(can_pin_posts=False)
+        self.message_user(request, f"Revoked pin permission from {count} users")
+    revoke_pin_permission.short_description = "Revoke pin posts permission"
 
 
 # Customize admin site header
