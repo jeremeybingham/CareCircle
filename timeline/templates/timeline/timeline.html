@@ -5,18 +5,6 @@
 
 {% block content %}
 <div class="timeline-container">
-    <div class="timeline-header">
-        <h1>My Timeline</h1>
-        <div class="filter-buttons">
-            <a href="{% url 'timeline:timeline' %}" class="filter-btn {% if not current_filter %}active{% endif %}">All</a>
-            {% for form in forms %}
-            <a href="?form={{ form.type }}" class="filter-btn {% if current_filter == form.type %}active{% endif %}">
-                {{ form.icon }} {{ form.name }}
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-    
     <div class="timeline">
         {% if page_obj %}
             {% for entry in page_obj %}
@@ -28,13 +16,13 @@
             {% if page_obj.has_other_pages %}
             <div class="pagination">
                 {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}{% if current_filter %}&form={{ current_filter }}{% endif %}" class="page-link">← Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}" class="page-link">← Previous</a>
                 {% endif %}
-                
+
                 <span class="page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                
+
                 {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if current_filter %}&form={{ current_filter }}{% endif %}" class="page-link">Next →</a>
+                <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next →</a>
                 {% endif %}
             </div>
             {% endif %}
