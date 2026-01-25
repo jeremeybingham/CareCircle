@@ -1,3 +1,15 @@
+/* ===========================================
+   Color Palette (Buzz Lightyear Theme)
+   ===========================================
+   Purple:       #613B6F (accents, pinned posts)
+   Green:        #8DAC50 (success states)
+   Green Dark:   #084605 (success text)
+   Red:          #DB382D (errors, danger)
+   Medium Gray:  #A89EA8 (timestamps, dividers)
+   Blue:         #2965CA (primary buttons, links)
+   Yellow:       #FFD500 (highlights, warnings)
+   =========================================== */
+
 /* Reset and Base Styles */
 * {
     box-sizing: border-box;
@@ -46,7 +58,7 @@ body {
 }
 
 .nav-link {
-    color: #0066cc;
+    color: #2965CA;
     text-decoration: none;
 }
 
@@ -94,7 +106,7 @@ body {
 }
 
 .auth-footer a {
-    color: #0066cc;
+    color: #2965CA;
     text-decoration: none;
 }
 
@@ -140,8 +152,8 @@ body {
 .form-group textarea:focus,
 .form-group select:focus {
     outline: none;
-    border-color: #0066cc;
-    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    border-color: #2965CA;
+    box-shadow: 0 0 0 3px rgba(41, 101, 202, 0.1);
 }
 
 .form-check-input {
@@ -159,20 +171,20 @@ body {
 
 .field-error {
     font-size: 13px;
-    color: #d32f2f;
+    color: #DB382D;
 }
 
 .form-errors {
     padding: 12px;
-    background: #ffebee;
-    border: 1px solid #ef5350;
+    background: #fce8e7;
+    border: 1px solid #DB382D;
     border-radius: 4px;
-    color: #c62828;
+    color: #DB382D;
     font-size: 14px;
 }
 
 .required {
-    color: #d32f2f;
+    color: #DB382D;
 }
 
 .optional {
@@ -221,12 +233,12 @@ body {
 }
 
 .btn-primary {
-    background: #0066cc;
+    background: #2965CA;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #0052a3;
+    background: #214fa3;
 }
 
 .btn-secondary {
@@ -283,9 +295,9 @@ body {
 }
 
 .filter-btn.active {
-    background: #0066cc;
+    background: #2965CA;
     color: white;
-    border-color: #0066cc;
+    border-color: #2965CA;
 }
 
 /* Date Dividers */
@@ -304,7 +316,7 @@ body {
 .divider-text {
     padding: 0 20px;
     font-size: 14px;
-    color: #6b7280;
+    color: #A89EA8;
     font-weight: 500;
     white-space: nowrap;
 }
@@ -365,7 +377,7 @@ body {
 .timeline-timestamp {
     display: inline-block;
     font-size: 13px;
-    color: #999;
+    color: #A89EA8;
 }
 
 .timeline-author {
@@ -398,8 +410,8 @@ body {
 }
 
 .entry-delete-btn:hover {
-    color: #d32f2f;
-    background: #ffebee;
+    color: #DB382D;
+    background: #fce8e7;
 }
 
 .delete-icon {
@@ -465,12 +477,12 @@ body {
 
 /* Danger Button */
 .btn-danger {
-    background: #d32f2f;
+    background: #DB382D;
     color: white;
 }
 
 .btn-danger:hover {
-    background: #b71c1c;
+    background: #b02922;
 }
 
 /* Entry Sections */
@@ -580,8 +592,8 @@ body {
 }
 
 .note-block.highlight {
-    background: #fffbf0;
-    border-color: #ffe58f;
+    background: #fffbea;
+    border-color: #FFD500;
 }
 
 /* Data List */
@@ -647,7 +659,7 @@ body {
 }
 
 .page-link {
-    color: #0066cc;
+    color: #2965CA;
     text-decoration: none;
     padding: 8px 16px;
     border-radius: 4px;
@@ -659,7 +671,7 @@ body {
 }
 
 .page-info {
-    color: #666;
+    color: #A89EA8;
     font-size: 14px;
 }
 
@@ -675,7 +687,7 @@ body {
 }
 
 .fab {
-    background: #0066cc;
+    background: #2965CA;
     color: white;
     padding: 14px 18px;
     text-decoration: none;
@@ -689,7 +701,7 @@ body {
 }
 
 .fab:hover {
-    background: #0052a3;
+    background: #214fa3;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transform: translateY(-2px);
 }
@@ -753,27 +765,27 @@ body {
 }
 
 .message.success {
-    background: #e8f5e9;
-    border-color: #66bb6a;
-    color: #2e7d32;
+    background: #eef4e6;
+    border-color: #8DAC50;
+    color: #084605;
 }
 
 .message.error {
-    background: #ffebee;
-    border-color: #ef5350;
-    color: #c62828;
+    background: #fce8e7;
+    border-color: #DB382D;
+    color: #DB382D;
 }
 
 .message.info {
-    background: #e3f2fd;
-    border-color: #42a5f5;
-    color: #1565c0;
+    background: #e6eef8;
+    border-color: #2965CA;
+    color: #2965CA;
 }
 
 .message.warning {
-    background: #fff3e0;
-    border-color: #ffa726;
-    color: #e65100;
+    background: #fffbea;
+    border-color: #FFD500;
+    color: #8a7000;
 }
 
 /* Weekend Entry Styles */
@@ -794,7 +806,7 @@ body {
 .timeline-weekend .day-label {
     font-size: 14px;
     font-weight: 600;
-    color: #0066cc;
+    color: #2965CA;
     margin-bottom: 12px;
     display: flex;
     align-items: center;
@@ -834,8 +846,8 @@ body {
 
 .timeline-weekend .weekend-notes {
     padding: 16px;
-    background: #fffbf0;
-    border: 1px solid #ffe58f;
+    background: #fffbea;
+    border: 1px solid #FFD500;
     border-radius: 8px;
     margin-bottom: 12px;
 }
