@@ -7,7 +7,6 @@ from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, Http404
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
-from django.db.models import Q
 
 from .models import FormType, Entry, UserFormAccess
 from .forms import get_form_class, is_valid_form_type
@@ -41,8 +40,7 @@ class SignupView(CreateView):
 
 class TimelineListView(LoginRequiredMixin, ListView):
     """
-    Main timeline view showing user's entries.
-    Supports filtering by form type and pagination.
+    Main timeline view showing all entries with pagination.
     """
     model = Entry
     template_name = 'timeline/timeline.html'
@@ -50,29 +48,21 @@ class TimelineListView(LoginRequiredMixin, ListView):
     paginate_by = 20
     
     def get_queryset(self):
-        """Get all entries, optionally filtered by form type"""
-        queryset = Entry.objects.all().select_related('form_type', 'user', 'user__profile')
-
-        # Optional: Filter by form type
-        form_filter = self.request.GET.get('form')
-        if form_filter:
-            queryset = queryset.filter(form_type__type=form_filter)
-
-        return queryset
+        """Get all entries"""
+        return Entry.objects.all().select_related('form_type', 'user', 'user__profile')
     
     def get_context_data(self, **kwargs):
-        """Add available forms and current filter to context"""
+        """Add available forms to context"""
         context = super().get_context_data(**kwargs)
-        
+
         # Get forms the user has access to
         available_forms = FormType.objects.filter(
             user_access__user=self.request.user,
             is_active=True
         ).distinct().order_by('name')
-        
+
         context['forms'] = available_forms
-        context['current_filter'] = self.request.GET.get('form', '')
-        
+
         return context
 
 
