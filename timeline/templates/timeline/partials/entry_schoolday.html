@@ -96,7 +96,7 @@
     {% if entry.data.notes_about_day %}
     <div class="entry-section">
         <h3>Notes About My Day</h3>
-        <p class="note-block italic">{{ entry.data.notes_about_day|linebreaks }}</p>
+        <div class="note-block italic">{{ entry.data.notes_about_day|linebreaks }}</div>
     </div>
     {% endif %}
     
@@ -104,9 +104,9 @@
     {% if entry.data.additional_notes %}
     <div class="entry-section">
         <h3>Additional Notes/Reminders</h3>
-        <p class="note-block highlight">{{ entry.data.additional_notes|linebreaks }}</p>
+        <div class="note-block highlight">{{ entry.data.additional_notes|linebreaks }}</div>
     </div>
     {% endif %}
     
-    {% include "timeline/partials/entry_meta.html" %}
+    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
 </div>
