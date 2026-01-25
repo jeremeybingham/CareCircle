@@ -1,0 +1,13 @@
+{% load entry_display %}
+<div class="timeline-content">
+    <h2 class="timeline-title">
+        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
+        Words I'm Using
+    </h2>
+    <div class="words-display">
+        {% for word in entry.data.words|split_commas %}
+        <span class="word-badge">{{ word }}</span>
+        {% endfor %}
+    </div>
+    {% include "timeline/partials/entry_meta.html" %}
+</div>

@@ -18,6 +18,7 @@ from .photo import PhotoForm
 from .overnight import OvernightForm
 from .schoolday import SchoolDayForm
 from .weekend import WeekendForm
+from .words import WordsForm
 
 
 # Registry mapping: type_identifier -> (FormClass, display_name, icon)
@@ -51,6 +52,12 @@ FORM_REGISTRY = {
         'name': 'My Weekend',
         'icon': '🎉',
         'description': 'Share photos and highlights from your weekend',
+    },
+    'words': {
+        'form_class': WordsForm,
+        'name': "Words I'm Using",
+        'icon': '💬',
+        'description': "Track new words and phrases Eddie is using",
     },
 }
 

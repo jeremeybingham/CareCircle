@@ -804,6 +804,32 @@ body {
     white-space: pre-wrap;
 }
 
+/* Words I'm Using Entry Styles - Buzz Lightyear Colors */
+.words-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+}
+
+.word-badge {
+    font-size: 22px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 8px;
+    display: inline-block;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Buzz Lightyear color rotation */
+.word-badge:nth-child(5n+1) { background-color: #613B6F; } /* purple */
+.word-badge:nth-child(5n+2) { background-color: #8DAC50; } /* green */
+.word-badge:nth-child(5n+3) { background-color: #DB382D; } /* red */
+.word-badge:nth-child(5n+4) { background-color: #2965CA; } /* blue */
+.word-badge:nth-child(5n+5) { background-color: #FFD500; color: #333; text-shadow: none; } /* yellow - dark text for contrast */
+
 /* Mobile Responsive */
 @media (max-width: 600px) {
     .timeline-container {
