@@ -2,43 +2,7 @@
 
 ## Planned Features and Improvements
 
-### 1. Display User Name on Posts
-
-**Goal**: Show the author's display name on each timeline entry.
-
-**Changes**:
-- Display `display_name` next to or below the timestamp on each post
-- Format: "Posted by [Display Name] on [Date/Time]"
-- Alternative format: "[Date/Time]" on one line, "by [Display Name]" below
-
-**Implementation Steps**:
-- [ ] Update entry display templates to include user display name
-- [ ] Modify timeline query to select related user profile
-- [ ] Add CSS styling for author attribution
-- [ ] Ensure display name shows in all entry type templates
-
-**Files to Modify**:
-- `timeline/templates/timeline/partials/entry_default.html`
-- `timeline/templates/timeline/partials/entry_text.html`
-- `timeline/templates/timeline/partials/entry_photo.html`
-- `timeline/templates/timeline/partials/entry_overnight.html`
-- `timeline/templates/timeline/partials/entry_schoolday.html`
-- `timeline/views.py` - Update query in TimelineListView
-- `timeline/static/timeline/css/style.css` - Add author styling
-
-**Example Template Change**:
-```django
-<span class="timeline-timestamp">
-    {{ entry.timestamp|date:"M d, Y g:i A" }}
-</span>
-<span class="timeline-author">
-    by {{ entry.user.profile.display_name }}
-</span>
-```
-
----
-
-### 2. Create "My Weekend" Form Type
+### 1. Create "My Weekend" Form Type
 
 **Goal**: Add a new form type for tracking weekend activities with photos and descriptions.
 
@@ -79,15 +43,15 @@ class WeekendForm(BaseEntryForm):
     # Friday
     friday_photo = forms.ImageField(required=False, label="Friday Photo")
     friday_text = forms.CharField(required=False, label="Friday", max_length=500)
-    
+
     # Saturday
     saturday_photo = forms.ImageField(required=False, label="Saturday Photo")
     saturday_text = forms.CharField(required=False, label="Saturday", max_length=500)
-    
+
     # Sunday
     sunday_photo = forms.ImageField(required=False, label="Sunday Photo")
     sunday_text = forms.CharField(required=False, label="Sunday", max_length=500)
-    
+
     # Notes
     notes = forms.CharField(
         required=False,
@@ -98,7 +62,7 @@ class WeekendForm(BaseEntryForm):
 
 ---
 
-### 3. Remove Post Filtering Buttons
+### 2. Remove Post Filtering Buttons
 
 **Goal**: Simplify timeline view by removing form type filter buttons. Show all posts by default.
 
@@ -166,11 +130,23 @@ def get_context_data(self, **kwargs):
 
 ## Completed Features
 
+### ✅ Display User Name on Posts
+- Added shared `entry_meta.html` partial template for timestamp and author display
+- Updated all entry type templates to use the shared partial
+- Timeline displays author's display_name next to timestamps
+- Format: "Posted by [Display Name] on [Date/Time]"
+- Optimized query with `select_related` for user profile data
+
 ### ✅ Enhanced User Registration Fields
 - Added UserProfile model with display_name, email_address, position_role, first_name, last_name
 - Updated SignupView with custom registration form
 - Added profile fields to admin interface
 - Users can now set display names shown on their posts
+
+### ✅ Shared Timeline View
+- All authenticated users see all entries from all users
+- Each entry shows author attribution via display name
+- Maintains filtering by form type for organization
 
 ---
 
