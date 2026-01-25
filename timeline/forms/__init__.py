@@ -10,6 +10,7 @@ from .photo import PhotoForm
 from .overnight import OvernightForm
 from .schoolday import SchoolDayForm
 from .weekend import WeekendForm
+from .words import WordsForm
 from .registry import (
     FORM_REGISTRY,
     get_form_class,
@@ -29,6 +30,7 @@ __all__ = [
     'OvernightForm',
     'SchoolDayForm',
     'WeekendForm',
+    'WordsForm',
 
     # Registry
     'FORM_REGISTRY',
