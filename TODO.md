@@ -2,74 +2,7 @@
 
 ## Planned Features and Improvements
 
-### 1. Overnight Form Enhancements
-
-**Goal**: Make overnight form more intuitive by auto-calculating day of week and improving display.
-
-**Changes**:
-- Auto-detect current day of week from entry timestamp
-- Change display title from "Overnight" to "[Day] Morning Report" (e.g., "Friday Morning Report")
-- Add "Dinner Last Night" label to dinner field in display template
-
-**Implementation Steps**:
-- [ ] Update `entry_overnight.html` template to calculate day of week
-- [ ] Use Django's date filter: `{{ entry.timestamp|date:"l" }}` for day name
-- [ ] Change template title to: `{{ entry.timestamp|date:"l" }} Morning Report`
-- [ ] Update dinner display field to: "Dinner Last Night: {{ entry.data.dinner }}"
-- [ ] Test with entries from different days of week
-
-**Files to Modify**:
-- `timeline/templates/timeline/partials/entry_overnight.html`
-
-**Example Template Code**:
-```django
-<h2 class="timeline-title">
-    <span class="timeline-icon">{{ entry.form_type.icon }}</span>
-    {{ entry.timestamp|date:"l" }} Morning Report
-</h2>
-<div class="data-list">
-    <p><strong>Dinner Last Night:</strong> {{ entry.data.dinner }}</p>
-    <p><strong>Bedtime:</strong> {{ entry.data.bedtime }}</p>
-    <p><strong>Woke Up:</strong> {{ entry.data.woke_up }}</p>
-    <p><strong>Breakfast:</strong> {{ entry.data.breakfast }}</p>
-    {% if entry.data.notes %}
-    <p><strong>Notes:</strong> {{ entry.data.notes }}</p>
-    {% endif %}
-</div>
-```
-
----
-
-### 2. Fix Weekend Form Photo Display
-
-**Goal**: Fix photo display in Weekend entries so images aren't cut off.
-
-**Issue**: Pictures in weekend entries are being cut off or not displaying properly.
-
-**Implementation Steps**:
-- [ ] Review `entry_weekend.html` template image styling
-- [ ] Check CSS for `.timeline-image` class
-- [ ] Add proper image constraints (max-width, height: auto)
-- [ ] Ensure images are responsive and maintain aspect ratio
-- [ ] Test with various image sizes and orientations
-
-**Files to Modify**:
-- `timeline/templates/timeline/partials/entry_weekend.html`
-- `timeline/static/timeline/css/style.css`
-
-**CSS Fix Example**:
-```css
-.timeline-weekend .timeline-image {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 10px 0;
-}
-```
-
----
-
-### 3. Create "Words I'm Using" Form
+### 1. Create "Words I'm Using" Form
 
 **Goal**: Add a simple form to track new words/phrases Eddie is using.
 
@@ -159,7 +92,7 @@ class WordsForm(BaseEntryForm):
 
 ---
 
-### 4. Add Date Dividers in Timeline
+### 2. Add Date Dividers in Timeline
 
 **Goal**: Automatically insert subtle date dividers between days in the timeline for better organization.
 
@@ -236,7 +169,7 @@ def get_date(timestamp):
 
 ---
 
-### 5. Pinned Posts Feature
+### 3. Pinned Posts Feature
 
 **Goal**: Allow designated users to create posts that stay pinned at the top of the timeline.
 
@@ -296,7 +229,7 @@ def get_queryset(self):
 
 ---
 
-### 6. Create "About Eddie" Page
+### 4. Create "About Eddie" Page
 
 **Goal**: Create a dedicated page with information about Eddie and emergency contact details.
 
@@ -376,7 +309,7 @@ path('about/', views.AboutEddieView.as_view(), name='about_eddie'),
 
 ---
 
-### 7. Babysitter & Lunch Form (Friday Pickups)
+### 5. Babysitter & Lunch Form (Friday Pickups)
 
 **Goal**: Create a specialized form for Friday babysitter pickups with lunch details.
 
@@ -464,7 +397,7 @@ class FridayPickupForm(BaseEntryForm):
 
 ---
 
-### 8. Documents & Files Upload System
+### 6. Documents & Files Upload System
 
 **Goal**: Create a system for uploading documents/files with descriptions, viewable in timeline and on a dedicated documents page.
 
@@ -602,18 +535,16 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ## Implementation Priority
 
 **High Priority** (Start with these):
-1. Overnight form enhancements - Quick win, improves UX
-2. Fix weekend photo display - Bug fix
-3. About Eddie page - Important for caregivers
+1. About Eddie page - Important for caregivers
+2. Words I'm Using form - Simple, high value
 
 **Medium Priority**:
-4. Words I'm Using form - Simple, high value
-5. Date dividers in timeline - Improves readability
-6. Friday pickup form - Specific use case
+3. Date dividers in timeline - Improves readability
+4. Friday pickup form - Specific use case
 
 **Lower Priority** (More complex):
-7. Pinned posts - Requires model changes and permissions
-8. Documents system - Most complex, requires file handling
+5. Pinned posts - Requires model changes and permissions
+6. Documents system - Most complex, requires file handling
 
 ---
 
@@ -647,3 +578,13 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ### ✅ Removed Post Filtering
 - Simplified timeline view to show all posts
 - Removed filter buttons for cleaner interface
+
+### ✅ Overnight Form Enhancements
+- Auto-detects day of week from entry timestamp
+- Display title shows "[Day] Morning Report" (e.g., "Friday Morning Report")
+- Dinner field displays as "Dinner Last Night"
+
+### ✅ Fixed Weekend Form Photo Display
+- Weekend photos now display at full size like regular photo posts
+- Removed max-height constraint that was cutting off images
+- Images maintain aspect ratio and are responsive
