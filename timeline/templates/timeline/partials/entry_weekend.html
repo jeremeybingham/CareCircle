@@ -1,0 +1,53 @@
+<div class="timeline-content timeline-weekend">
+    <h2 class="timeline-title">
+        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
+        My Weekend
+    </h2>
+
+    <div class="weekend-days">
+        {% if entry.data.friday_photo_url or entry.data.friday_text %}
+        <div class="weekend-day">
+            <h3 class="day-label">Friday</h3>
+            {% if entry.data.friday_photo_url %}
+            <img src="{{ entry.data.friday_photo_url }}" alt="Friday photo" class="weekend-photo">
+            {% endif %}
+            {% if entry.data.friday_text %}
+            <p class="day-text">{{ entry.data.friday_text }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if entry.data.saturday_photo_url or entry.data.saturday_text %}
+        <div class="weekend-day">
+            <h3 class="day-label">Saturday</h3>
+            {% if entry.data.saturday_photo_url %}
+            <img src="{{ entry.data.saturday_photo_url }}" alt="Saturday photo" class="weekend-photo">
+            {% endif %}
+            {% if entry.data.saturday_text %}
+            <p class="day-text">{{ entry.data.saturday_text }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if entry.data.sunday_photo_url or entry.data.sunday_text %}
+        <div class="weekend-day">
+            <h3 class="day-label">Sunday</h3>
+            {% if entry.data.sunday_photo_url %}
+            <img src="{{ entry.data.sunday_photo_url }}" alt="Sunday photo" class="weekend-photo">
+            {% endif %}
+            {% if entry.data.sunday_text %}
+            <p class="day-text">{{ entry.data.sunday_text }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    {% if entry.data.notes %}
+    <div class="weekend-notes">
+        <h3 class="notes-label">Weekend Notes</h3>
+        <p>{{ entry.data.notes }}</p>
+    </div>
+    {% endif %}
+
+    {% include "timeline/partials/entry_meta.html" %}
+</div>

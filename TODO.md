@@ -12,13 +12,13 @@
 - 1 notes section (textarea for general notes/highlights)
 
 **Implementation Steps**:
-- [ ] Create `timeline/forms/weekend.py` with WeekendForm class
-- [ ] Add to `timeline/forms/registry.py`
-- [ ] Update `timeline/forms/__init__.py`
-- [ ] Create display template: `timeline/templates/timeline/partials/entry_weekend.html`
-- [ ] Run `python manage.py init_forms`
-- [ ] Test form submission and display
-- [ ] Add CSS styling for weekend entries
+- [x] Create `timeline/forms/weekend.py` with WeekendForm class
+- [x] Add to `timeline/forms/registry.py`
+- [x] Update `timeline/forms/__init__.py`
+- [x] Create display template: `timeline/templates/timeline/partials/entry_weekend.html`
+- [x] Run `python manage.py init_forms`
+- [x] Test form submission and display
+- [x] Add CSS styling for weekend entries
 
 **Files to Create/Modify**:
 - `timeline/forms/weekend.py` - NEW

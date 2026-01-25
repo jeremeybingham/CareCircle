@@ -7,6 +7,8 @@ from django.views.decorators.http import require_http_methods
 from django.http import JsonResponse, Http404
 from django.urls import reverse_lazy, reverse
 from django.core.paginator import Paginator
+from django.core.files.storage import default_storage
+from django.utils import timezone
 
 from .models import FormType, Entry, UserFormAccess
 from .forms import get_form_class, is_valid_form_type
@@ -116,24 +118,37 @@ class EntryCreateView(LoginRequiredMixin, FormView):
         return context
     
     def form_valid(self, form):
-        """Save the entry with JSON data and optional image"""
+        """Save the entry with JSON data and optional image(s)"""
         # Create entry object
         entry = Entry(
             user=self.request.user,
             form_type=self.form_type_obj,
         )
-        
+
         # Get JSON data from form
         entry.data = form.get_json_data()
-        
-        # Handle image upload if present
+
+        # Handle image upload(s)
         if form.has_image_field():
-            image = form.get_image_data()
-            if image:
-                entry.image = image
-        
+            if form.has_multiple_images():
+                # Handle multiple images - save to storage and store URLs in JSON
+                all_images = form.get_all_images()
+                for field_name, image_file in all_images.items():
+                    # Generate unique path for each image
+                    now = timezone.now()
+                    path = f"uploads/{now.year}/{now.month:02d}/{now.day:02d}/{image_file.name}"
+                    # Save to storage
+                    saved_path = default_storage.save(path, image_file)
+                    # Store URL in JSON data
+                    entry.data[f'{field_name}_url'] = default_storage.url(saved_path)
+            else:
+                # Handle single image using the Entry.image field
+                image = form.get_image_data()
+                if image:
+                    entry.image = image
+
         entry.save()
-        
+
         # Handle AJAX requests
         if self.request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({
@@ -141,7 +156,7 @@ class EntryCreateView(LoginRequiredMixin, FormView):
                 'entry_id': entry.id,
                 'redirect_url': reverse('timeline:timeline')
             })
-        
+
         return redirect('timeline:timeline')
     
     def form_invalid(self, form):
