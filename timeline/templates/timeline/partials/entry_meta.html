@@ -1,0 +1,4 @@
+<div class="timeline-meta">
+    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+    <span class="timeline-author">by {{ entry.user.profile.display_name|default:entry.user.username }}</span>
+</div>
