@@ -16,6 +16,9 @@ urlpatterns = [
     # Entry unpin
     path('entry/<int:pk>/unpin/', views.EntryUnpinView.as_view(), name='entry_unpin'),
 
+    # Entry pin
+    path('entry/<int:pk>/pin/', views.EntryPinView.as_view(), name='entry_pin'),
+
     # API endpoints
     path('api/entries/', views.api_entries, name='api_entries'),
     path('api/forms/', views.api_forms, name='api_forms'),

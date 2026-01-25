@@ -442,6 +442,30 @@ body {
     font-size: 14px;
 }
 
+/* Entry Pin Button */
+.entry-pin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #999;
+    background: transparent;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.entry-pin-btn:hover {
+    color: #613B6F;
+    background: #ede7f0;
+}
+
+.pin-icon {
+    font-size: 14px;
+}
+
 /* Delete Confirmation Page */
 .delete-preview {
     padding: 16px;

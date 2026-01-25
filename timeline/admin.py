@@ -13,7 +13,7 @@ class UserProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
-    fields = ['display_name', 'email_address', 'first_name', 'last_name', 'position_role', 'can_pin_posts', 'can_delete_any_post']
+    fields = ['display_name', 'email_address', 'first_name', 'last_name', 'position_role', 'can_pin_posts', 'can_pin_any_post', 'can_delete_any_post']
 
 
 class UserFormAccessInline(admin.TabularInline):
@@ -220,8 +220,8 @@ class EntryAdmin(admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ['user', 'display_name', 'email_address', 'position_role', 'can_pin_posts', 'can_delete_any_post', 'created_at']
-    list_filter = ['position_role', 'can_pin_posts', 'can_delete_any_post', 'created_at']
+    list_display = ['user', 'display_name', 'email_address', 'position_role', 'can_pin_posts', 'can_pin_any_post', 'can_delete_any_post', 'created_at']
+    list_filter = ['position_role', 'can_pin_posts', 'can_pin_any_post', 'can_delete_any_post', 'created_at']
     search_fields = ['user__username', 'display_name', 'email_address', 'first_name', 'last_name']
     readonly_fields = ['created_at', 'updated_at']
     autocomplete_fields = ['user']
@@ -234,7 +234,7 @@ class UserProfileAdmin(admin.ModelAdmin):
             'fields': ('display_name', 'first_name', 'last_name', 'email_address', 'position_role')
         }),
         ('Permissions', {
-            'fields': ('can_pin_posts', 'can_delete_any_post')
+            'fields': ('can_pin_posts', 'can_pin_any_post', 'can_delete_any_post')
         }),
         ('Metadata', {
             'fields': ('created_at', 'updated_at'),
@@ -242,17 +242,27 @@ class UserProfileAdmin(admin.ModelAdmin):
         }),
     )
 
-    actions = ['grant_pin_permission', 'revoke_pin_permission', 'grant_delete_any_permission', 'revoke_delete_any_permission']
+    actions = ['grant_pin_permission', 'revoke_pin_permission', 'grant_pin_any_permission', 'revoke_pin_any_permission', 'grant_delete_any_permission', 'revoke_delete_any_permission']
 
     def grant_pin_permission(self, request, queryset):
         count = queryset.update(can_pin_posts=True)
-        self.message_user(request, f"Granted pin permission to {count} users")
-    grant_pin_permission.short_description = "📌 Grant pin posts permission"
+        self.message_user(request, f"Granted pin own posts permission to {count} users")
+    grant_pin_permission.short_description = "📌 Grant pin own posts permission"
 
     def revoke_pin_permission(self, request, queryset):
         count = queryset.update(can_pin_posts=False)
-        self.message_user(request, f"Revoked pin permission from {count} users")
-    revoke_pin_permission.short_description = "Revoke pin posts permission"
+        self.message_user(request, f"Revoked pin own posts permission from {count} users")
+    revoke_pin_permission.short_description = "Revoke pin own posts permission"
+
+    def grant_pin_any_permission(self, request, queryset):
+        count = queryset.update(can_pin_any_post=True)
+        self.message_user(request, f"Granted pin any post permission to {count} users")
+    grant_pin_any_permission.short_description = "📌 Grant pin any post permission"
+
+    def revoke_pin_any_permission(self, request, queryset):
+        count = queryset.update(can_pin_any_post=False)
+        self.message_user(request, f"Revoked pin any post permission from {count} users")
+    revoke_pin_any_permission.short_description = "Revoke pin any post permission"
 
     def grant_delete_any_permission(self, request, queryset):
         count = queryset.update(can_delete_any_post=True)

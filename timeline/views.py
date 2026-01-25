@@ -247,6 +247,43 @@ class EntryUnpinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return redirect(self.get_success_url())
 
 
+class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+    Pin an existing entry. Users can pin their own posts if they have can_pin_posts,
+    or pin any post if they have can_pin_any_post.
+    Uses DeleteView as base but overrides delete to just update is_pinned.
+    """
+    model = Entry
+    template_name = 'timeline/entry_confirm_pin.html'
+    success_url = reverse_lazy('timeline:timeline')
+
+    def test_func(self):
+        """Check if user has permission to pin this entry"""
+        entry = self.get_object()
+        if not hasattr(self.request.user, 'profile'):
+            return False
+        profile = self.request.user.profile
+        # User can pin any post
+        if profile.can_pin_any_post:
+            return True
+        # User can pin their own posts if they have can_pin_posts
+        if profile.can_pin_posts and self.request.user == entry.user:
+            return True
+        return False
+
+    def handle_no_permission(self):
+        """Return 403 if user doesn't have permission"""
+        from django.core.exceptions import PermissionDenied
+        raise PermissionDenied("You don't have permission to pin this post.")
+
+    def form_valid(self, form):
+        """Pin the entry instead of deleting it"""
+        self.object = self.get_object()
+        self.object.is_pinned = True
+        self.object.save()
+        return redirect(self.get_success_url())
+
+
 # API Views for AJAX/programmatic access
 
 @require_http_methods(["GET"])
