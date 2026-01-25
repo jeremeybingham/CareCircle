@@ -1,18 +1,65 @@
-# Timeline - Personal Timeline Application
+# Timeline - Eddie's Daily Life Tracker
 
-A clean, flexible Django application for tracking a child's personal events, activities, and information over time. Multiple users can view all entries on a shared timeline with author attribution.
+A Django application for maintaining a continuous record of daily information about Eddie, a mostly non-verbal autistic child, shared among all his caregivers.
+
+## Project Purpose
+
+Timeline serves as a central communication hub for Eddie's parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The application addresses Eddie's limited verbal communication by providing a shared, chronological record of:
+
+- **Essential daily functions**: Toileting, meals, sleep patterns
+- **Transition information**: Status updates between home, school, and after-school programs
+- **Engagement resources**: Photos and vocabulary for memory reinforcement and conversation
+- **Activity tracking**: What Eddie is doing throughout his day across different settings
+- **Mood and behavior**: How he's feeling and responding in different situations
+
+### Primary Use Cases
+
+**For Caregivers Receiving Eddie:**
+- Quickly check when he last ate and used the bathroom
+- See his mood and energy level from earlier in the day
+- View recent photos to engage him in conversation
+- Know what activities he's been doing
+- Access vocabulary words he's currently working on
+
+**For Caregivers Sending Eddie:**
+- Share overnight information (dinner, sleep, breakfast) before school
+- Log school activities for after-school program staff
+- Upload weekend photos for Monday discussions at school
+- Document new words and phrases Eddie is using
 
 ## Features
 
-- 📝 **Multiple Form Types**: Text posts, photos, overnight logs, school day tracking
-- 👥 **Shared Timeline**: All authenticated users see all entries with author display names
-- 🔒 **User Authentication**: Secure signup/login with extended profile information
-- 🎨 **Clean UI**: Simple, responsive mobile-first design
-- 🔧 **Admin Control**: Manage forms and user access via Django admin
-- 📊 **Timeline View**: Chronological display with filtering options
-- 🔍 **Flexible Architecture**: Registry pattern makes adding new form types easy
-- 📱 **Mobile Responsive**: Works on all devices
-- 🔌 **JSON API**: Programmatic access to entries and forms
+- 🕐 **Chronological Timeline**: Shared view of all entries from all caregivers
+- 📝 **Multiple Form Types**: Structured data entry for different situations
+- 📸 **Photo Uploads**: Visual records for engagement and memory reinforcement
+- 👥 **Multi-User Access**: Role-based form access (parents, teachers, therapists, etc.)
+- 📱 **Mobile-First Design**: Optimized for mobile browser access
+- 🔒 **Secure Authentication**: Each caregiver has their own login
+- ⚡ **Quick Status Check**: Immediate access to essential information
+- 🎨 **Clean Interface**: Simple, focused design for fast information access
+
+## Current Form Types
+
+1. **Text Post** (📝) - General notes and observations
+2. **Photo** (📸) - Picture uploads with captions for engagement
+3. **Overnight** (🌙) - Dinner, sleep, and breakfast tracking (for parents)
+4. **School Day** (🎒) - Comprehensive school activity log (for teachers)
+5. **My Weekend** (🎉) - Weekend photos and descriptions (for Monday discussions)
+
+## Project Status
+
+**Current Stage**: Alpha - Core features and functionality being established
+
+**Primary Focus**: 
+- Ensuring reliability and ease of use
+- Maintaining flexibility for new forms and situations
+- Mobile browser optimization
+- Clean, simple interface
+
+**Future Goals**:
+- Analytics dashboard (food patterns, sleep quality, mood trends)
+- Vocabulary tracking and progress metrics
+- Advanced photo tagging and categorization
 
 ## Quick Start
 
@@ -21,7 +68,7 @@ A clean, flexible Django application for tracking a child's personal events, act
 ```bash
 # Clone the repository
 git clone <your-repo-url>
-cd timeline2
+cd timeline
 
 # Create virtual environment
 python -m venv venv
@@ -41,18 +88,18 @@ cp .env.example .env
 # Run migrations
 python manage.py migrate
 
-# Create superuser for admin access
+# Create admin account
 python manage.py createsuperuser
 ```
 
 ### 3. Initialize Form Types
 
 ```bash
-# Load form types from registry into database
+# Load form types into database
 python manage.py init_forms
 ```
 
-### 4. Configure Forms (via Admin)
+### 4. Configure User Access
 
 ```bash
 # Start development server
@@ -65,248 +112,287 @@ open http://localhost:8000/admin/
 ```
 
 In the admin:
-1. Go to **Form Types**
-2. Mark desired forms as **"is_default"** (auto-granted to new users)
-3. Go to **User Form Access**
-4. Grant form access to your admin user
-5. Grant access to other users as needed
+1. **Create users** for each caregiver (parents, teachers, therapists, etc.)
+2. **Set up profiles** with display names and roles
+3. **Grant form access** - assign appropriate forms to each user role
+4. Mark forms as **"is_default"** if all new users should have access
 
 ### 5. Start Using
 
-Navigate to `http://localhost:8000/` and start creating timeline entries!
+Navigate to `http://localhost:8000/` and begin documenting Eddie's day!
+
+## User Roles
+
+The application is designed for different caregiver roles, each with access to relevant forms:
+
+- **Parents**: Overnight logs, photos, weekend activities, general notes
+- **Teachers**: School day logs, photos, vocabulary, activities
+- **Paraprofessionals**: Activity tracking, photos, notes
+- **Therapists** (ABA, Speech, etc.): Session notes, progress tracking, vocabulary
+- **Babysitters/Extended Family**: Photos, meals, activities, notes
+- **After-School Program Staff**: Transition info, activities, snacks
+
+## Core Design Principles
+
+### 1. Mobile-First
+Most users access via mobile browsers during Eddie's care, so the interface prioritizes:
+- Large touch targets
+- Minimal scrolling
+- Fast loading
+- Simple navigation
+
+### 2. Essential Information First
+The timeline prioritizes showing:
+- Recent bathroom times
+- Last meal and what was eaten
+- Current mood/energy level
+- Latest photos and activities
+
+### 3. Quick Entry
+Forms are designed for rapid data entry:
+- Pre-defined choices where possible
+- Minimal required fields
+- Clear labels and instructions
+- Auto-save and confirmation
+
+### 4. Engagement Resources
+Photos and vocabulary entries serve dual purposes:
+- Information sharing between caregivers
+- Tools for engaging Eddie in conversation and memory activities
 
 ## Project Structure
 
 ```
-timeline2/
+timeline/
 ├── config/                      # Project settings
-│   ├── settings.py
-│   ├── urls.py
+│   ├── settings.py             # Django configuration
+│   ├── urls.py                 # URL routing
 │   └── wsgi.py
 │
 ├── timeline/                    # Main app
 │   ├── forms/                   # Django Forms
 │   │   ├── base.py             # Base form class
-│   │   ├── text.py             # Text post form
-│   │   ├── photo.py            # Photo form
-│   │   ├── overnight.py        # Overnight form
-│   │   ├── schoolday.py        # School day form
-│   │   ├── user.py             # Custom user creation form
+│   │   ├── text.py             # General notes
+│   │   ├── photo.py            # Photo uploads
+│   │   ├── overnight.py        # Sleep/meal tracking
+│   │   ├── schoolday.py        # School activities
+│   │   ├── user.py             # User registration
 │   │   └── registry.py         # Form registry
 │   │
 │   ├── templates/timeline/
 │   │   ├── timeline.html       # Main timeline view
-│   │   ├── entry_form.html     # Generic form template
-│   │   ├── auth/               # Login/signup templates
+│   │   ├── entry_form.html     # Form submission
+│   │   ├── auth/               # Login/signup
 │   │   └── partials/           # Entry display templates
-│   │       ├── entry_meta.html      # Shared timestamp/author partial
-│   │       ├── entry_text.html      # Text post display
-│   │       ├── entry_photo.html     # Photo display
-│   │       ├── entry_overnight.html # Overnight form display
-│   │       ├── entry_schoolday.html # School day display
-│   │       └── entry_default.html   # Fallback template
 │   │
 │   ├── static/timeline/css/
-│   │   └── style.css           # Styles (700+ lines)
-│   │
-│   ├── templatetags/
-│   │   └── entry_display.py    # Custom template tags
-│   │
-│   ├── management/commands/
-│   │   └── init_forms.py       # Initialize forms command
+│   │   └── style.css           # Mobile-optimized styles
 │   │
 │   ├── models.py               # Database models
-│   ├── views.py                # Views
-│   ├── urls.py                 # URL routing
-│   └── admin.py                # Admin interface
+│   ├── views.py                # View logic
+│   ├── admin.py                # Admin interface
+│   └── urls.py                 # App URL routing
 │
 ├── templates/
 │   └── base.html               # Base template
 │
 ├── manage.py
 ├── requirements.txt
+├── README.md
 ├── ADDING_FORMS.md             # Guide for adding new form types
-├── TODO.md                     # Feature roadmap
-├── CLAUDE.md                   # AI assistant context
-└── README.md
+└── TODO.md                     # Development roadmap
 ```
 
-## Available Form Types
+## Adding Caregivers
 
-1. **Text Post** (📝) - Simple title and content
-2. **Photo** (📸) - Image upload with caption (10MB limit)
-3. **Overnight** (🌙) - Track dinner, sleep, breakfast routine
-4. **School Day** (🎒) - Comprehensive school activity tracking
+### Creating a New User Account
 
-## Adding a New Form Type
+1. Access admin at `/admin/`
+2. Navigate to **Users** → **Add User**
+3. Set username and password
+4. Save and continue editing
+5. Fill in profile information:
+   - **Display Name**: How they'll appear on posts (e.g., "Ms. Johnson", "Dad", "Speech Therapist Sarah")
+   - **Email Address**: For contact and notifications
+   - **Position/Role**: Their role in Eddie's care
+   - **First/Last Name**: Legal name
+6. Save
 
-See `ADDING_FORMS.md` for detailed instructions.
+### Granting Form Access
 
-Quick overview:
-1. Create form class in `timeline/forms/newform.py`
-2. Add to `timeline/forms/registry.py`
-3. Update `timeline/forms/__init__.py`
-4. Run `python manage.py init_forms`
-5. Create display template: `timeline/templates/timeline/partials/entry_newform.html`
-6. Configure access in admin
+1. In admin, go to **User Form Access**
+2. Add new access entries for the user
+3. Select appropriate forms based on their role:
+   - **Teachers**: School Day, Photo, Text
+   - **Parents**: Overnight, My Weekend, Photo, Text
+   - **Therapists**: Text, Photo, specific therapy forms
+4. Save
 
-## API Endpoints
+## Adding New Forms
 
-The application includes JSON API endpoints:
+See `ADDING_FORMS.md` for comprehensive instructions.
 
-- `GET /api/entries/` - Get timeline entries
-  - Parameters: `form_type` (filter by type), `limit` (max results)
-- `GET /api/forms/` - Get available forms for current user
+**Quick Overview:**
+1. Create form class in `timeline/forms/newform.py` inheriting from `BaseEntryForm`
+2. Register in `timeline/forms/registry.py`
+3. Run `python manage.py init_forms`
+4. Create display template: `timeline/templates/timeline/partials/entry_newform.html`
+5. Assign to appropriate users in admin
 
-## Management Commands
+**Example Use Cases for New Forms:**
+- Therapy session notes (OT, PT, Speech)
+- Behavior incident reports
+- Medication tracking
+- Sensory activities log
+- Social interactions log
 
-### Initialize Forms
-```bash
-python manage.py init_forms
-```
-Loads form types from code into database.
+## Key Information Display
 
-Options:
-- `--reset` - Delete all existing form types and recreate
+The timeline is designed to make critical information immediately visible:
 
-## Configuration
+### Status at a Glance
+Each entry shows:
+- **Timestamp**: When the activity occurred
+- **Author**: Which caregiver logged it (by display name)
+- **Form Type**: What kind of information (icon + label)
+- **Key Data**: Most important details prominently displayed
 
-### Environment Variables (.env)
+### Recent Activity Tracking
+The timeline allows caregivers to quickly scan for:
+- Last bathroom time
+- Most recent meal and portion eaten
+- Current mood indicators
+- Latest photos for engagement
+- Recent vocabulary words
 
-```
-SECRET_KEY=your-secret-key
-DEBUG=True
-ALLOWED_HOST=your-domain.com
+## Mobile Browser Optimization
 
-# Optional: Database configuration
-DATABASE_ENGINE=django.db.backends.sqlite3
-DATABASE_NAME=db.sqlite3
+### Design Considerations
+- **Large touch targets**: Buttons and form inputs sized for thumbs
+- **Minimal typing**: Checkboxes and dropdowns preferred over text entry
+- **Fast loading**: Optimized images and minimal JavaScript
+- **Responsive layout**: Adapts to phone and tablet screens
+- **Offline-friendly**: Forms can be completed and submitted when connection returns
 
-# Optional: S3 Storage
-USE_S3=False
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-AWS_STORAGE_BUCKET_NAME=your-bucket
-```
-
-### Settings
-
-Key settings in `config/settings.py`:
-- `LOGIN_REDIRECT_URL` - Where to redirect after login
-- `MEDIA_ROOT` - Where uploaded images are stored
-- `STATIC_ROOT` - Where static files are collected
+### Recommended Usage
+- Access via mobile browser (Safari, Chrome, Firefox on iOS/Android)
+- Bookmark the site for quick access
+- Enable notifications (future feature) for updates
 
 ## Development
 
-### Running Tests
+### For the Developer (Dad)
+
+**Common Development Tasks:**
 
 ```bash
+# Update form types after registry changes
+python manage.py init_forms
+
+# Create new database migration
+python manage.py makemigrations
+python manage.py migrate
+
+# Collect static files for production
+python manage.py collectstatic
+
+# Run tests
 python manage.py test timeline
 ```
 
-### Collecting Static Files
-
-```bash
-python manage.py collectstatic
-```
-
-### Creating Migrations
-
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
+**Key Files for Modifications:**
+- `timeline/forms/registry.py` - Add new form types
+- `timeline/models.py` - Database structure changes
+- `timeline/static/timeline/css/style.css` - Visual styling
+- `timeline/templates/timeline/partials/` - How entries display
 
 ## Deployment
 
 ### Production Checklist
 
-- [ ] Set `DEBUG=False`
+- [ ] Set `DEBUG=False` in .env
 - [ ] Set strong `SECRET_KEY`
 - [ ] Configure `ALLOWED_HOSTS`
-- [ ] Set up proper database (PostgreSQL recommended)
-- [ ] Configure S3 or file storage
-- [ ] Run `collectstatic`
+- [ ] Set up PostgreSQL database
+- [ ] Configure S3 or file storage for photos
 - [ ] Set up SSL/HTTPS
-- [ ] Configure email backend
-- [ ] Set up backup system
+- [ ] Configure backup system
+- [ ] Test on multiple mobile devices
 
-## Architecture
+### Recommended Hosting
+- **App**: Heroku, Railway, or PythonAnywhere
+- **Database**: Heroku Postgres or AWS RDS
+- **Media Storage**: AWS S3 or Cloudinary
+- **Domain**: Custom domain for easy access (e.g., eddies-timeline.com)
 
-### Models
+## Privacy and Security
 
-- **FormType** - Metadata about form types (name, icon, description, is_active, is_default)
-- **UserFormAccess** - Controls which users can use which forms
-- **Entry** - Timeline entries (stores data as JSON, optional image, timestamp)
-- **UserProfile** - Extended user information (display_name, email, role, first/last names)
+### Data Protection
+- All data is private to authenticated users only
+- No public access to timeline or photos
+- User passwords hashed and secured
+- Optional: HTTPS encryption for all data transmission
 
-### Forms
+### User Management
+- Each caregiver has individual login credentials
+- Access can be granted or revoked per user
+- Form access is role-based and customizable
+- Admin (parent) has full control over all access
 
-- Django Forms for validation and rendering
-- Registry pattern for form discovery
-- Base class (BaseEntryForm) for shared functionality
-- Custom validation per form type
+## Future Enhancements
 
-### Views
+### Planned Features
+- **Analytics Dashboard**: Track patterns in food, sleep, mood, activities
+- **Vocabulary Progress**: Chart word usage and growth over time
+- **Photo Tagging**: Categorize photos by activity type, people, locations
+- **Push Notifications**: Alert caregivers to new entries
+- **Daily Summaries**: Automated end-of-day reports
+- **Export/Printing**: Generate reports for doctors, therapists, school meetings
+- **Voice Notes**: Audio attachments for non-typing situations
 
-- Class-based views (ListView, FormView, CreateView)
-- Dynamic form loading based on URL parameter
-- API views for programmatic access
+### Long-Term Goals
+- Mobile apps (iOS/Android) for better offline support
+- Integration with external calendars
+- Medication reminder and tracking
+- Appointment scheduling and notes
+- Behavior pattern recognition
+- Customizable reports for IEP meetings
 
-### Templates
+## Support and Contribution
 
-- Template inheritance from base.html
-- Custom template tags (`render_entry`, `split_commas`, `get_item`)
-- Type-specific display partials with shared meta partial
-- Fallback to default template for unknown types
+This is a personal project for Eddie's care team. If you're part of Eddie's care team and have questions or suggestions, contact Dad directly.
 
-## Customization
-
-### Styling
-
-Edit `timeline/static/timeline/css/style.css` for custom styles.
-
-Key CSS classes:
-- `.timeline-item` - Entry container
-- `.timeline-{type}` - Type-specific styling
-- `.fab` - Floating action buttons
-- `.timeline-meta` - Author and timestamp display
-
-### Form Validation
-
-Add validation in form classes:
-```python
-def clean_fieldname(self):
-    value = self.cleaned_data.get('fieldname')
-    # Validate
-    return value
-```
-
-## Troubleshooting
-
-### Forms not showing up
-- Run `python manage.py init_forms`
-- Check form is marked `is_active=True` in admin
-- Verify user has UserFormAccess for the form
-
-### Images not uploading
-- Check `MEDIA_ROOT` and `MEDIA_URL` in settings
-- Ensure `media/` directory exists and is writable
-- In production, configure S3 or similar
-
-### CSS not loading
-- Run `python manage.py collectstatic`
-- Check browser console for errors
-- Verify `STATIC_URL` in settings
-
-### User profile not created
-- UserProfile is auto-created on user signup via signal handlers
-- For existing users, check admin for UserProfile entries
+For technical issues or ideas:
+- Create an issue in the repository
+- Discuss during development meetings
+- Email the developer
 
 ## License
 
-[Your License Here]
+Private use only. Not for public distribution.
 
-## Support
+---
 
-For issues or questions, please [open an issue](your-repo-url/issues).
+**For Eddie**: This app exists to help everyone who cares for you communicate better, so we can all work together to support you, understand you, and help you thrive. Every entry here represents someone who loves you and wants the best for you.
+
+---
+
+## Quick Reference
+
+**Main Goals:**
+1. ✅ Quick access to last meal/bathroom/mood
+2. ✅ Photo sharing for engagement and memory
+3. ✅ Seamless information handoff between caregivers
+4. ✅ Vocabulary and activity tracking
+5. ✅ Simple, mobile-friendly interface
+
+**Key Commands:**
+```bash
+python manage.py runserver          # Start server
+python manage.py init_forms         # Update forms
+python manage.py createsuperuser    # Create admin
+```
+
+**Admin Access:** `/admin/`  
+**Main Timeline:** `/`  
+**User Signup:** `/signup/` (requires admin approval)
