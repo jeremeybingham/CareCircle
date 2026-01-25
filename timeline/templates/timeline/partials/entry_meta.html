@@ -1,5 +1,8 @@
 <div class="timeline-meta">
     <div class="timeline-meta-info">
+        {% if entry.is_pinned %}
+        <span class="pinned-indicator">📌 Pinned</span>
+        {% endif %}
         <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
         <span class="timeline-author">by {{ entry.user.profile.display_name|default:entry.user.username }}</span>
     </div>

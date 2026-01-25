@@ -37,6 +37,10 @@ class UserProfile(models.Model):
         max_length=50,
         help_text="User's last name"
     )
+    can_pin_posts = models.BooleanField(
+        default=False,
+        help_text="Allow this user to pin posts to the top of the timeline"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -193,14 +197,19 @@ class Entry(models.Model):
         null=True,
         validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'gif', 'webp'])]
     )
+    is_pinned = models.BooleanField(
+        default=False,
+        help_text="Pin this entry to the top of the timeline"
+    )
 
     class Meta:
-        ordering = ['-timestamp']
+        ordering = ['-is_pinned', '-timestamp']
         verbose_name = "Entry"
         verbose_name_plural = "Entries"
         indexes = [
             models.Index(fields=['-timestamp']),
             models.Index(fields=['user', '-timestamp']),
+            models.Index(fields=['-is_pinned', '-timestamp']),
         ]
 
     def __str__(self):

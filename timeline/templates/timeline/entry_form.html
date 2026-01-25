@@ -25,19 +25,29 @@
                     {{ field.label }}
                     {% if field.field.required %}<span class="required">*</span>{% endif %}
                 </label>
-                
+
                 {{ field }}
-                
+
                 {% if field.errors %}
                 <span class="field-error">{{ field.errors }}</span>
                 {% endif %}
-                
+
                 {% if field.help_text %}
                 <small class="field-help">{{ field.help_text }}</small>
                 {% endif %}
             </div>
             {% endfor %}
-            
+
+            {% if can_pin %}
+            <div class="form-group pin-option">
+                <label class="pin-checkbox-label">
+                    <input type="checkbox" name="is_pinned" class="form-check-input">
+                    <span class="pin-icon">📌</span> Pin this post to the top of the timeline
+                </label>
+                <small class="field-help">Pinned posts always appear at the top for all users</small>
+            </div>
+            {% endif %}
+
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <a href="{% url 'timeline:timeline' %}" class="btn btn-secondary">Cancel</a>

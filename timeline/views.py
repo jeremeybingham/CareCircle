@@ -65,6 +65,12 @@ class TimelineListView(LoginRequiredMixin, ListView):
 
         context['forms'] = available_forms
 
+        # Check if user can pin posts
+        context['can_pin'] = (
+            hasattr(self.request.user, 'profile') and
+            self.request.user.profile.can_pin_posts
+        )
+
         return context
 
 
@@ -115,14 +121,27 @@ class EntryCreateView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['form_type_obj'] = self.form_type_obj
         context['form_type'] = self.form_type
+        # Check if user can pin posts
+        context['can_pin'] = (
+            hasattr(self.request.user, 'profile') and
+            self.request.user.profile.can_pin_posts
+        )
         return context
     
     def form_valid(self, form):
         """Save the entry with JSON data and optional image(s)"""
+        # Check if user can pin and wants to pin this post
+        can_pin = (
+            hasattr(self.request.user, 'profile') and
+            self.request.user.profile.can_pin_posts
+        )
+        is_pinned = can_pin and self.request.POST.get('is_pinned') == 'on'
+
         # Create entry object
         entry = Entry(
             user=self.request.user,
             form_type=self.form_type_obj,
+            is_pinned=is_pinned,
         )
 
         # Get JSON data from form
