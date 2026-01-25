@@ -205,8 +205,12 @@ class EntryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         """Check if user has permission to delete this entry"""
         entry = self.get_object()
-        # Allow if user is the owner or is staff/admin
-        return self.request.user == entry.user or self.request.user.is_staff
+        # Allow if user is the owner, is staff/admin, or has can_delete_any_post permission
+        can_delete_any = (
+            hasattr(self.request.user, 'profile') and
+            self.request.user.profile.can_delete_any_post
+        )
+        return self.request.user == entry.user or self.request.user.is_staff or can_delete_any
 
     def handle_no_permission(self):
         """Return 403 if user doesn't have permission"""

@@ -108,5 +108,5 @@
     </div>
     {% endif %}
     
-    <span class="timeline-timestamp">{{ entry.timestamp|date:"M d, Y g:i A" }}</span>
+    {% include "timeline/partials/entry_meta.html" %}
 </div>

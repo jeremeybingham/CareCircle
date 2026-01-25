@@ -12,7 +12,7 @@
             <span class="unpin-icon">📌</span>
         </a>
         {% endif %}
-        {% if user == entry.user or user.is_staff %}
+        {% if user == entry.user or user.is_staff or user.profile.can_delete_any_post %}
         <a href="{% url 'timeline:entry_delete' pk=entry.id %}" class="entry-delete-btn" title="Delete this entry">
             <span class="delete-icon">&#x1F5D1;</span>
         </a>
