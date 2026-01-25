@@ -11,6 +11,12 @@
         <a href="{% url 'timeline:entry_unpin' pk=entry.id %}" class="entry-unpin-btn" title="Unpin this entry">
             <span class="unpin-icon">📌</span>
         </a>
+        {% elif not entry.is_pinned %}
+            {% if user.profile.can_pin_any_post or user.profile.can_pin_posts and user == entry.user %}
+        <a href="{% url 'timeline:entry_pin' pk=entry.id %}" class="entry-pin-btn" title="Pin this entry">
+            <span class="pin-icon">📌</span>
+        </a>
+            {% endif %}
         {% endif %}
         {% if user == entry.user or user.is_staff or user.profile.can_delete_any_post %}
         <a href="{% url 'timeline:entry_delete' pk=entry.id %}" class="entry-delete-btn" title="Delete this entry">
