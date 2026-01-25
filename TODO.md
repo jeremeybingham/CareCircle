@@ -2,7 +2,7 @@
 
 ## Planned Features and Improvements
 
-### 1. Create "Words I'm Using" Form
+### 1. ~~Create "Words I'm Using" Form~~ ✅ COMPLETED
 
 **Goal**: Add a simple form to track new words/phrases Eddie is using.
 
@@ -11,14 +11,14 @@
 - Display words as large, colorful text in timeline
 
 **Implementation Steps**:
-- [ ] Create `timeline/forms/words.py` with WordsForm class
-- [ ] Add single CharField for comma-separated input
-- [ ] Add to `timeline/forms/registry.py`
-- [ ] Update `timeline/forms/__init__.py`
-- [ ] Create display template: `timeline/templates/timeline/partials/entry_words.html`
-- [ ] Style words with larger font size and varied colors
-- [ ] Run `python manage.py init_forms`
-- [ ] Test form submission and display
+- [x] Create `timeline/forms/words.py` with WordsForm class
+- [x] Add single CharField for comma-separated input
+- [x] Add to `timeline/forms/registry.py`
+- [x] Update `timeline/forms/__init__.py`
+- [x] Create display template: `timeline/templates/timeline/partials/entry_words.html`
+- [x] Style words with larger font size and varied colors
+- [x] Run `python manage.py init_forms`
+- [x] Test form submission and display
 
 **Files to Create/Modify**:
 - `timeline/forms/words.py` - NEW
@@ -92,18 +92,18 @@ class WordsForm(BaseEntryForm):
 
 ---
 
-### 2. Add Date Dividers in Timeline
+### 2. ~~Add Date Dividers in Timeline~~ ✅ COMPLETED
 
 **Goal**: Automatically insert subtle date dividers between days in the timeline for better organization.
 
 **Display Format**: `------- Monday, January 1 ---------`
 
 **Implementation Steps**:
-- [ ] Modify `TimelineListView` to group entries by date
-- [ ] Create template filter or tag to detect date changes
-- [ ] Update `timeline.html` to insert dividers between different dates
-- [ ] Style dividers with subtle line and centered date text
-- [ ] Ensure dividers work correctly with pagination
+- [x] Modify `TimelineListView` to group entries by date
+- [x] Create template filter or tag to detect date changes
+- [x] Update `timeline.html` to insert dividers between different dates
+- [x] Style dividers with subtle line and centered date text
+- [x] Ensure dividers work correctly with pagination
 
 **Files to Modify**:
 - `timeline/views.py` - Add date grouping logic
@@ -535,11 +535,11 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ## Implementation Priority
 
 **High Priority** (Start with these):
-1. About Eddie page - Important for caregivers
-2. Words I'm Using form - Simple, high value
+1. ~~Words I'm Using form - Simple, high value~~ ✅ DONE
+2. ~~Date dividers in timeline - Improves readability~~ ✅ DONE
+3. About Eddie page - Important for caregivers
 
 **Medium Priority**:
-3. Date dividers in timeline - Improves readability
 4. Friday pickup form - Specific use case
 
 **Lower Priority** (More complex):
@@ -561,6 +561,19 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ---
 
 ## Completed Features
+
+### ✅ "Words I'm Using" Form
+- Added simple form to track new words/phrases Eddie is using
+- Single text input field for comma-separated phrases
+- Words display as large, colorful badges with Buzz Lightyear color theme
+- Created `timeline/forms/words.py`, display template, and CSS styling
+
+### ✅ Date Dividers in Timeline
+- Added automatic date dividers between days in the timeline
+- Display format: `------- Monday, January 1 ---------`
+- Added template filters: `format_date` and `get_date`
+- Added `should_show_date_divider` template tag for date comparison
+- Works correctly with pagination
 
 ### ✅ Enhanced User Registration Fields
 - Added UserProfile model with display_name, email_address, position_role, first_name, last_name
