@@ -13,6 +13,9 @@ urlpatterns = [
     # Entry deletion
     path('entry/<int:pk>/delete/', views.EntryDeleteView.as_view(), name='entry_delete'),
 
+    # Entry unpin
+    path('entry/<int:pk>/unpin/', views.EntryUnpinView.as_view(), name='entry_unpin'),
+
     # API endpoints
     path('api/entries/', views.api_entries, name='api_entries'),
     path('api/forms/', views.api_forms, name='api_forms'),

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Unpin Entry - Timeline{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-box">
+        <h1>Unpin Entry</h1>
+        <p class="form-description">Are you sure you want to unpin this {{ object.form_type.name }} entry? It will return to its chronological position in the timeline.</p>
+
+        <div class="delete-preview">
+            <div class="preview-header">
+                <span class="preview-icon">{{ object.form_type.icon }}</span>
+                <span class="preview-type">{{ object.form_type.name }}</span>
+            </div>
+            <div class="preview-meta">
+                <span>Created {{ object.timestamp|date:"M d, Y g:i A" }}</span>
+                <span>by {{ object.user.profile.display_name|default:object.user.username }}</span>
+            </div>
+        </div>
+
+        <form method="post" class="submission-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Unpin</button>
+                <a href="{% url 'timeline:timeline' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
