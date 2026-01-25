@@ -2,35 +2,7 @@
 
 ## Planned Features and Improvements
 
-### 1. Enhanced User Registration Fields
-
-**Goal**: Extend user registration to capture additional profile information.
-
-**New Fields to Add**:
-- `display_name` - Name shown on posts (e.g., "Ms. Johnson")
-- `email_address` - Contact email
-- `position_role` - Job title/role (e.g., "Teacher", "Parent", "Administrator")
-- `first_name` - User's first name
-- `last_name` - User's last name
-
-**Implementation Steps**:
-- [ ] Create a `UserProfile` model with these fields (or extend User model)
-- [ ] Update `SignupView` to include custom registration form
-- [ ] Create custom registration form class extending `UserCreationForm`
-- [ ] Update signup template to display new fields
-- [ ] Add validation for email uniqueness and format
-- [ ] Update admin interface to show/edit profile fields
-
-**Files to Modify**:
-- `timeline/models.py` - Add UserProfile model
-- `timeline/forms/` - Create user registration form
-- `timeline/views.py` - Update SignupView
-- `timeline/templates/timeline/auth/signup.html` - Update form
-- `timeline/admin.py` - Add UserProfile admin
-
----
-
-### 2. Display User Name on Posts
+### 1. Display User Name on Posts
 
 **Goal**: Show the author's display name on each timeline entry.
 
@@ -66,21 +38,16 @@
 
 ---
 
-### 3. Create "Weekend" Form Type
+### 2. Create "My Weekend" Form Type
 
-**Goal**: Add a new form type for tracking weekend activities.
+**Goal**: Add a new form type for tracking weekend activities with photos and descriptions.
 
-**Status**: Content/fields to be determined
-
-**Potential Fields** (placeholder ideas):
-- Weekend activities/events
-- Meals
-- Sleep schedule
-- Highlights/notes
-- Photos
+**Form Structure**:
+- 3 photo upload fields (one for Friday, Saturday, Sunday)
+- 3 short answer text boxes (one for Friday, Saturday, Sunday)
+- 1 notes section (textarea for general notes/highlights)
 
 **Implementation Steps**:
-- [ ] Define form fields and structure
 - [ ] Create `timeline/forms/weekend.py` with WeekendForm class
 - [ ] Add to `timeline/forms/registry.py`
 - [ ] Update `timeline/forms/__init__.py`
@@ -100,15 +67,38 @@
 ```python
 'weekend': {
     'form_class': WeekendForm,
-    'name': 'Weekend',
+    'name': 'My Weekend',
     'icon': '🎉',  # or '📅' or '🌞'
-    'description': 'Track weekend activities and highlights',
+    'description': 'Share photos and highlights from your weekend',
 },
+```
+
+**Form Field Example**:
+```python
+class WeekendForm(BaseEntryForm):
+    # Friday
+    friday_photo = forms.ImageField(required=False, label="Friday Photo")
+    friday_text = forms.CharField(required=False, label="Friday", max_length=500)
+    
+    # Saturday
+    saturday_photo = forms.ImageField(required=False, label="Saturday Photo")
+    saturday_text = forms.CharField(required=False, label="Saturday", max_length=500)
+    
+    # Sunday
+    sunday_photo = forms.ImageField(required=False, label="Sunday Photo")
+    sunday_text = forms.CharField(required=False, label="Sunday", max_length=500)
+    
+    # Notes
+    notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={'rows': 4}),
+        label="Weekend Notes"
+    )
 ```
 
 ---
 
-### 4. Remove Post Filtering Buttons
+### 3. Remove Post Filtering Buttons
 
 **Goal**: Simplify timeline view by removing form type filter buttons. Show all posts by default.
 
@@ -171,6 +161,16 @@ def get_context_data(self, **kwargs):
 - [ ] Email notifications
 - [ ] Multi-user timeline sharing
 - [ ] Calendar view of entries
+
+---
+
+## Completed Features
+
+### ✅ Enhanced User Registration Fields
+- Added UserProfile model with display_name, email_address, position_role, first_name, last_name
+- Updated SignupView with custom registration form
+- Added profile fields to admin interface
+- Users can now set display names shown on their posts
 
 ---
 
