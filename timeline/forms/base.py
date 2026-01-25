@@ -57,10 +57,28 @@ class BaseEntryForm(forms.Form):
             if isinstance(field, forms.ImageField):
                 return True
         return False
-    
+
     def get_image_data(self):
-        """Get the image file if present"""
+        """Get the first image file if present (for single-image forms)"""
         for field_name, field in self.fields.items():
             if isinstance(field, forms.ImageField):
                 return self.cleaned_data.get(field_name)
         return None
+
+    def has_multiple_images(self):
+        """Check if this form has multiple image fields. Override in subclass if needed."""
+        return False
+
+    def get_all_images(self):
+        """
+        Get all image fields with their data.
+        Returns dict of {field_name: image_file}
+        Override in subclass for custom behavior.
+        """
+        images = {}
+        for field_name, field in self.fields.items():
+            if isinstance(field, forms.ImageField):
+                image = self.cleaned_data.get(field_name)
+                if image:
+                    images[field_name] = image
+        return images

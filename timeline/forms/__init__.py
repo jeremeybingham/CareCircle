@@ -9,6 +9,7 @@ from .text import TextForm
 from .photo import PhotoForm
 from .overnight import OvernightForm
 from .schoolday import SchoolDayForm
+from .weekend import WeekendForm
 from .registry import (
     FORM_REGISTRY,
     get_form_class,
@@ -21,13 +22,14 @@ from .registry import (
 __all__ = [
     # Base form
     'BaseEntryForm',
-    
+
     # Concrete forms
     'TextForm',
     'PhotoForm',
     'OvernightForm',
     'SchoolDayForm',
-    
+    'WeekendForm',
+
     # Registry
     'FORM_REGISTRY',
     'get_form_class',

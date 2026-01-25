@@ -17,6 +17,7 @@ from .text import TextForm
 from .photo import PhotoForm
 from .overnight import OvernightForm
 from .schoolday import SchoolDayForm
+from .weekend import WeekendForm
 
 
 # Registry mapping: type_identifier -> (FormClass, display_name, icon)
@@ -44,6 +45,12 @@ FORM_REGISTRY = {
         'name': 'School Day',
         'icon': '🎒',
         'description': 'Track daily school activities, meals, specials, and notes',
+    },
+    'weekend': {
+        'form_class': WeekendForm,
+        'name': 'My Weekend',
+        'icon': '🎉',
+        'description': 'Share photos and highlights from your weekend',
     },
 }
 
