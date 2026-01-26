@@ -103,13 +103,13 @@ Located in `timeline/templatetags/entry_display.py`:
 | File | Purpose |
 |------|---------|
 | `timeline/models.py` | 4 models: FormType, UserFormAccess, Entry, UserProfile |
-| `timeline/views.py` | TimelineListView (main view), EntryCreateView, SignupView, API views |
+| `timeline/views.py` | TimelineListView, EntryCreateView, EntryDeleteView, EntryPinView, EntryUnpinView, SignupView, API views |
 | `timeline/forms/registry.py` | Central form registry (FORM_REGISTRY dict) - add new forms here |
 | `timeline/forms/base.py` | BaseEntryForm - all forms inherit from this |
 | `timeline/forms/user.py` | Custom user registration with profile fields |
 | `timeline/admin.py` | Admin customizations for managing users and form access |
 | `config/settings.py` | Django settings, environment variable handling |
-| `timeline/static/timeline/css/style.css` | All styling (700+ lines, mobile-optimized) |
+| `timeline/static/timeline/css/style.css` | All styling (1000+ lines, mobile-optimized) |
 
 ## Models
 
@@ -117,7 +117,9 @@ Located in `timeline/templatetags/entry_display.py`:
 - Stores timeline entries with JSON data field for flexible form data
 - Optional image field for photos (essential for engagement)
 - Foreign keys to User and FormType
-- Indexed on timestamp and (user, timestamp) for fast queries
+- `is_pinned` - Boolean to pin entry to top of timeline
+- Indexed on timestamp, (user, timestamp), and (is_pinned, timestamp) for fast queries
+- Ordering: pinned entries first, then by timestamp descending
 - Properties: `type`, `get_display_data()`
 
 ### FormType
@@ -135,6 +137,10 @@ Located in `timeline/templatetags/entry_display.py`:
 ### UserProfile
 - One-to-one with Django User model
 - Fields: display_name (shown on posts), email_address, position_role, first_name, last_name
+- Permission fields:
+  - `can_pin_posts` - Allow user to pin their own posts
+  - `can_pin_any_post` - Allow user to pin any post
+  - `can_delete_any_post` - Allow user to delete any post (not just their own)
 - Auto-created on user signup via signal handler
 - `display_name` examples: "Dad", "Ms. Johnson", "Speech Therapist Sarah"
 
@@ -144,6 +150,9 @@ Located in `timeline/templatetags/entry_display.py`:
 |-----|------|---------|
 | `/` | TimelineListView | Main shared timeline (requires login) |
 | `/entry/<form_type>/` | EntryCreateView | Create new entry (dynamic form loading) |
+| `/entry/<pk>/delete/` | EntryDeleteView | Delete an entry (owner or admin) |
+| `/entry/<pk>/pin/` | EntryPinView | Pin an entry to top of timeline |
+| `/entry/<pk>/unpin/` | EntryUnpinView | Unpin an entry |
 | `/api/entries/` | api_entries | JSON API for entries (future: mobile app) |
 | `/api/forms/` | api_forms | JSON API for available forms |
 | `/signup/` | SignupView | User registration with profile |
@@ -160,6 +169,7 @@ Located in `timeline/templatetags/entry_display.py`:
 | `overnight` | Overnight | 🌙 | Parents | Dinner, sleep, breakfast (morning handoff info) |
 | `schoolday` | School Day | 🎒 | Teachers | Comprehensive school activity log |
 | `weekend` | My Weekend | 🎉 | Parents | Weekend photos + descriptions (Monday discussions) |
+| `words` | Words I'm Using | 💬 | All | Track new words and phrases Eddie is using |
 
 ## Adding Features
 
@@ -175,7 +185,6 @@ See `ADDING_FORMS.md` for detailed steps. Key files:
 - Behavior incident reports
 - Sensory activities log
 - Social interactions log
-- "Words I'm Using" vocabulary tracker
 
 ### Modifying Entry Display
 - Edit type-specific template in `partials/entry_*.html`
@@ -283,24 +292,28 @@ python manage.py test timeline.tests.TestClassName
 **Stage**: Alpha - Core features being established and tested
 
 ### Completed
-✅ Multi-user shared timeline with author display names  
-✅ User registration with profile information (display name, role)  
-✅ 5 form types (text, photo, overnight, schoolday, weekend)  
-✅ Photo uploads for engagement  
-✅ Mobile-optimized CSS  
-✅ Role-based form access system  
-✅ Shared entry_meta.html partial for consistent display  
+✅ Multi-user shared timeline with author display names
+✅ User registration with profile information (display name, role)
+✅ 6 form types (text, photo, overnight, schoolday, weekend, words)
+✅ Photo uploads for engagement
+✅ Mobile-optimized CSS (1000+ lines)
+✅ Role-based form access system
+✅ Shared entry_meta.html partial for consistent display
+✅ Post pinning (pin important entries to top of timeline)
+✅ Post deletion with permission controls
+✅ Vocabulary tracking ("Words I'm Using" form)
+✅ Permission-based controls (can_pin_posts, can_pin_any_post, can_delete_any_post)
 
 ### In Progress
-🔨 Testing with actual caregivers  
-🔨 Refining mobile UX based on real usage  
-🔨 Adding specialized forms for therapists  
+🔨 Testing with actual caregivers
+🔨 Refining mobile UX based on real usage
+🔨 Adding specialized forms for therapists
 
 ### Planned (see TODO.md)
-📋 Analytics dashboard (food/sleep/mood patterns)  
-📋 Vocabulary tracking metrics  
-📋 Daily summary reports  
-📋 Push notifications for new entries  
+📋 Analytics dashboard (food/sleep/mood patterns)
+📋 Vocabulary tracking metrics
+📋 Daily summary reports
+📋 Push notifications for new entries
 📋 Photo tagging and categorization  
 
 ### Future Considerations
@@ -423,8 +436,28 @@ __all__ = [
 
 ## Production Deployment Considerations
 
+### Target Deployment: AWS Lightsail Ubuntu
+
+The target deployment environment is **AWS Lightsail Ubuntu** with the following stack:
+- **Web Server**: Nginx (reverse proxy)
+- **Application Server**: Gunicorn (WSGI)
+- **SSL/HTTPS**: Let's Encrypt (certbot)
+- **Database**: PostgreSQL
+- **Media Storage**: AWS S3 (recommended for photos)
+
+### AWS Lightsail Setup Steps
+1. Create Ubuntu instance on AWS Lightsail
+2. Install system dependencies: `sudo apt install python3-pip python3-venv nginx postgresql`
+3. Set up PostgreSQL database and user
+4. Clone repository and create virtual environment
+5. Install Python dependencies: `pip install -r requirements.txt gunicorn`
+6. Configure Gunicorn systemd service
+7. Configure Nginx with proxy_pass to Gunicorn
+8. Install certbot and configure Let's Encrypt SSL
+9. Set up S3 bucket for media storage
+
 ### Essential for Production
-- HTTPS/SSL for all traffic
+- HTTPS/SSL for all traffic (via Let's Encrypt)
 - PostgreSQL database (not SQLite)
 - S3 or Cloudinary for photo storage
 - Daily database backups
@@ -433,7 +466,7 @@ __all__ = [
 - Rate limiting for API endpoints
 - Error monitoring (Sentry or similar)
 
-### Recommended Hosting
+### Alternative Hosting
 - **App**: Heroku, Railway, or PythonAnywhere
 - **Database**: Heroku Postgres or AWS RDS
 - **Media**: AWS S3 or Cloudinary
