@@ -20,9 +20,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-CHANGE-THIS-IN-PRODUCTION'
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Registration access control
-REGISTRATION_CODE = os.getenv('REGISTRATION_CODE', 'ABC')
+REGISTRATION_CODE = os.getenv('REGISTRATION_CODE')
 
-ALLOWED_HOSTS = ['3.89.177.91', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 
 # Application definition
@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # Local apps
     'timeline',
 ]
@@ -84,10 +84,10 @@ DATABASES = {
     }
 }
 
-# Security settings for production
-SECURE_SSL_REDIRECT = False  # Set to True after SSL setup
-SESSION_COOKIE_SECURE = False  # Set to True after SSL setup
-CSRF_COOKIE_SECURE = False  # Set to True after SSL setup
+# Security settings for production (set to True when using HTTPS)
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
 
 
 # Password validation
