@@ -96,16 +96,27 @@ def get_date(value):
 def should_show_date_divider(entries, current_index):
     """
     Determine if a date divider should be shown before the current entry.
-    Returns True if this is the first entry or if the date differs from previous.
+    Returns True if this is the first non-pinned entry or if the date differs from previous.
+    Pinned entries never show date dividers (their dates can be confusing when old).
 
     Usage:
         {% should_show_date_divider page_obj forloop.counter0 as show_divider %}
     """
+    current_entry = entries[current_index]
+
+    # Never show date divider for pinned entries
+    if current_entry.is_pinned:
+        return False
+
+    # Show divider for first entry or first non-pinned entry after pinned section
     if current_index == 0:
         return True
 
-    current_entry = entries[current_index]
     previous_entry = entries[current_index - 1]
+
+    # Show divider when transitioning from pinned to non-pinned
+    if previous_entry.is_pinned:
+        return True
 
     current_date = current_entry.timestamp.date()
     previous_date = previous_entry.timestamp.date()
