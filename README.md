@@ -30,13 +30,16 @@ Timeline serves as a central communication hub for Eddie's parents, teachers, pa
 ## Features
 
 - 🕐 **Chronological Timeline**: Shared view of all entries from all caregivers
-- 📝 **Multiple Form Types**: Structured data entry for different situations
+- 📝 **Multiple Form Types**: Structured data entry for different situations (6 built-in forms)
 - 📸 **Photo Uploads**: Visual records for engagement and memory reinforcement
 - 👥 **Multi-User Access**: Role-based form access (parents, teachers, therapists, etc.)
 - 📱 **Mobile-First Design**: Optimized for mobile browser access
 - 🔒 **Secure Authentication**: Each caregiver has their own login
 - ⚡ **Quick Status Check**: Immediate access to essential information
 - 🎨 **Clean Interface**: Simple, focused design for fast information access
+- 📌 **Post Pinning**: Pin important entries to the top of the timeline
+- 🗑️ **Post Deletion**: Remove entries with permission-based controls
+- 💬 **Vocabulary Tracking**: Track words and phrases Eddie is using
 
 ## Current Form Types
 
@@ -45,6 +48,7 @@ Timeline serves as a central communication hub for Eddie's parents, teachers, pa
 3. **Overnight** (🌙) - Dinner, sleep, and breakfast tracking (for parents)
 4. **School Day** (🎒) - Comprehensive school activity log (for teachers)
 5. **My Weekend** (🎉) - Weekend photos and descriptions (for Monday discussions)
+6. **Words I'm Using** (💬) - Track new words and phrases Eddie is using
 
 ## Project Status
 
@@ -176,17 +180,36 @@ timeline/
 │   │   ├── photo.py            # Photo uploads
 │   │   ├── overnight.py        # Sleep/meal tracking
 │   │   ├── schoolday.py        # School activities
+│   │   ├── weekend.py          # Weekend activities
+│   │   ├── words.py            # Vocabulary tracking
 │   │   ├── user.py             # User registration
 │   │   └── registry.py         # Form registry
 │   │
 │   ├── templates/timeline/
 │   │   ├── timeline.html       # Main timeline view
 │   │   ├── entry_form.html     # Form submission
-│   │   ├── auth/               # Login/signup
+│   │   ├── entry_confirm_delete.html  # Delete confirmation
+│   │   ├── entry_confirm_pin.html     # Pin confirmation
+│   │   ├── entry_confirm_unpin.html   # Unpin confirmation
+│   │   ├── auth/               # Login/signup templates
 │   │   └── partials/           # Entry display templates
+│   │       ├── entry_meta.html     # Shared timestamp/author display
+│   │       ├── entry_text.html     # Text post display
+│   │       ├── entry_photo.html    # Photo display
+│   │       ├── entry_overnight.html # Overnight display
+│   │       ├── entry_schoolday.html # School day display
+│   │       ├── entry_weekend.html  # Weekend display
+│   │       ├── entry_words.html    # Words display
+│   │       └── entry_default.html  # Fallback display
 │   │
 │   ├── static/timeline/css/
-│   │   └── style.css           # Mobile-optimized styles
+│   │   └── style.css           # Mobile-optimized styles (1000+ lines)
+│   │
+│   ├── templatetags/
+│   │   └── entry_display.py    # Custom template tags
+│   │
+│   ├── management/commands/
+│   │   └── init_forms.py       # Form initialization command
 │   │
 │   ├── models.py               # Database models
 │   ├── views.py                # View logic
@@ -199,6 +222,7 @@ timeline/
 ├── manage.py
 ├── requirements.txt
 ├── README.md
+├── CLAUDE.md                   # AI assistant context
 ├── ADDING_FORMS.md             # Guide for adding new form types
 └── TODO.md                     # Development roadmap
 ```
@@ -308,6 +332,15 @@ python manage.py test timeline
 
 ## Deployment
 
+### Target Deployment Environment
+
+**AWS Lightsail Ubuntu** with the following stack:
+- **Web Server**: Nginx (reverse proxy)
+- **Application Server**: Gunicorn (WSGI)
+- **SSL/HTTPS**: Let's Encrypt (certbot)
+- **Database**: PostgreSQL
+- **Media Storage**: AWS S3 (recommended for photos)
+
 ### Production Checklist
 
 - [ ] Set `DEBUG=False` in .env
@@ -315,11 +348,25 @@ python manage.py test timeline
 - [ ] Configure `ALLOWED_HOSTS`
 - [ ] Set up PostgreSQL database
 - [ ] Configure S3 or file storage for photos
-- [ ] Set up SSL/HTTPS
+- [ ] Set up SSL/HTTPS with Let's Encrypt
+- [ ] Configure Nginx as reverse proxy
+- [ ] Set up Gunicorn with systemd service
 - [ ] Configure backup system
 - [ ] Test on multiple mobile devices
 
-### Recommended Hosting
+### AWS Lightsail Setup
+
+1. Create Ubuntu instance on AWS Lightsail
+2. Install system dependencies: `sudo apt install python3-pip python3-venv nginx postgresql`
+3. Set up PostgreSQL database and user
+4. Clone repository and create virtual environment
+5. Install Python dependencies: `pip install -r requirements.txt gunicorn`
+6. Configure Gunicorn systemd service
+7. Configure Nginx with proxy_pass to Gunicorn
+8. Install certbot and configure Let's Encrypt SSL
+9. Set up S3 bucket for media storage (optional but recommended)
+
+### Alternative Hosting
 - **App**: Heroku, Railway, or PythonAnywhere
 - **Database**: Heroku Postgres or AWS RDS
 - **Media Storage**: AWS S3 or Cloudinary
