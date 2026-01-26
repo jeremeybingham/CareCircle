@@ -19,7 +19,10 @@
                 {% if user.is_staff %}
                 <a href="{% url 'admin:index' %}" class="nav-link">Admin</a>
                 {% endif %}
-                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link logout-btn">Logout</button>
+                </form>
             </div>
         </div>
     </nav>
