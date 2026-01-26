@@ -1,5 +1,12 @@
 from django import forms
+
 from .base import BaseEntryForm
+from .constants import (
+    INCLUSION_SPECIALS_CHOICES,
+    PORTION_CHOICES_RADIO,
+    RELATED_SERVICES_CHOICES,
+    SMALL_GROUP_SPECIALS_CHOICES,
+)
 
 
 class SchoolDayForm(BaseEntryForm):
@@ -7,12 +14,6 @@ class SchoolDayForm(BaseEntryForm):
     School day tracking form.
     Tracks bathroom, meals, activities, services, and notes.
     """
-    PORTION_CHOICES = [
-        ('None', 'None'),
-        ('Some', 'Some'),
-        ('All', 'All'),
-    ]
-    
     # Bathroom
     bathroom = forms.CharField(
         required=False,
@@ -26,14 +27,14 @@ class SchoolDayForm(BaseEntryForm):
     
     # Food Log
     snacks = forms.ChoiceField(
-        choices=[('', 'Not specified')] + [(c, c) for c in ['None', 'Some', 'All']],
+        choices=PORTION_CHOICES_RADIO,
         required=False,
         label="Snacks",
         widget=forms.RadioSelect()
     )
-    
+
     lunch_from_home = forms.ChoiceField(
-        choices=[('', 'Not specified')] + [(c, c) for c in ['None', 'Some', 'All']],
+        choices=PORTION_CHOICES_RADIO,
         required=False,
         label="Lunch from Home",
         widget=forms.RadioSelect()
@@ -50,12 +51,7 @@ class SchoolDayForm(BaseEntryForm):
     
     # Inclusion Specials
     inclusion_specials = forms.MultipleChoiceField(
-        choices=[
-            ('Art', 'Art'),
-            ('Music', 'Music'),
-            ('Gym', 'Gym'),
-            ('Library', 'Library'),
-        ],
+        choices=INCLUSION_SPECIALS_CHOICES,
         required=False,
         label="Inclusion Specials",
         widget=forms.CheckboxSelectMultiple()
@@ -72,11 +68,7 @@ class SchoolDayForm(BaseEntryForm):
     
     # Small Group Specials
     small_group_specials = forms.MultipleChoiceField(
-        choices=[
-            ('Art', 'Art'),
-            ('Music', 'Music'),
-            ('Library', 'Library'),
-        ],
+        choices=SMALL_GROUP_SPECIALS_CHOICES,
         required=False,
         label="Small Group Specials",
         widget=forms.CheckboxSelectMultiple()
@@ -93,10 +85,7 @@ class SchoolDayForm(BaseEntryForm):
     
     # Related Services
     related_services = forms.MultipleChoiceField(
-        choices=[
-            ('Speech', 'Speech'),
-            ('OT', 'OT'),
-        ],
+        choices=RELATED_SERVICES_CHOICES,
         required=False,
         label="Related Services",
         widget=forms.CheckboxSelectMultiple()
