@@ -2,6 +2,7 @@
 User registration and profile forms.
 """
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from timeline.models import UserProfile
@@ -11,6 +12,15 @@ class CustomUserCreationForm(UserCreationForm):
     """
     Extended user registration form that includes UserProfile fields.
     """
+    # Registration code field
+    registration_code = forms.CharField(
+        max_length=50,
+        required=True,
+        label="Registration Code",
+        help_text="Enter the registration code to create an account",
+        widget=forms.TextInput(attrs={'placeholder': 'Enter code'})
+    )
+
     # UserProfile fields
     display_name = forms.CharField(
         max_length=100,
@@ -53,6 +63,15 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['username'].widget.attrs['placeholder'] = 'username'
         self.fields['password1'].widget.attrs['placeholder'] = 'Enter password'
         self.fields['password2'].widget.attrs['placeholder'] = 'Confirm password'
+
+    def clean_registration_code(self):
+        """Validate registration code"""
+        code = self.cleaned_data.get('registration_code')
+        if code != settings.REGISTRATION_CODE:
+            raise forms.ValidationError(
+                'Invalid registration code. Please contact an administrator for access.'
+            )
+        return code
 
     def clean_email_address(self):
         """Validate email uniqueness"""

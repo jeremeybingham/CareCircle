@@ -17,6 +17,17 @@
             </div>
             {% endif %}
 
+            <div class="form-group">
+                <label for="{{ form.registration_code.id_for_label }}">Registration Code <span class="required">*</span></label>
+                {{ form.registration_code }}
+                {% if form.registration_code.errors %}
+                <span class="field-error">{{ form.registration_code.errors }}</span>
+                {% endif %}
+                {% if form.registration_code.help_text %}
+                <small class="field-help">{{ form.registration_code.help_text }}</small>
+                {% endif %}
+            </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="{{ form.first_name.id_for_label }}">First Name</label>

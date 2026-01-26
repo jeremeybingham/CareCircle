@@ -19,6 +19,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-CHANGE-THIS-IN-PRODUCTION'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
+# Registration access control
+REGISTRATION_CODE = os.getenv('REGISTRATION_CODE', 'ABC')
+
 ALLOWED_HOSTS = ['3.89.177.91', 'localhost', '127.0.0.1']
 
 
