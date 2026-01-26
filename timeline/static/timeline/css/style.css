@@ -66,6 +66,14 @@ body {
     text-decoration: underline;
 }
 
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 /* Authentication Pages */
 .auth-container {
     display: flex;
