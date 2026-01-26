@@ -1,18 +1,78 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from functools import wraps
+
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib.auth.forms import UserCreationForm
-from django.views.generic import ListView, CreateView, FormView, DeleteView
-from django.views.decorators.http import require_http_methods
-from django.http import JsonResponse, Http404
-from django.urls import reverse_lazy, reverse
-from django.core.paginator import Paginator
+from django.core.exceptions import PermissionDenied
 from django.core.files.storage import default_storage
+from django.http import JsonResponse, Http404
+from django.shortcuts import redirect
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
+from django.views.decorators.http import require_http_methods
+from django.views.generic import ListView, CreateView, FormView, DeleteView
 
 from .models import FormType, Entry, UserFormAccess
 from .forms import get_form_class, is_valid_form_type
 from .forms.user import CustomUserCreationForm
+
+
+# =============================================================================
+# Permission Helpers
+# =============================================================================
+
+def get_user_profile_attr(user, attr, default=False):
+    """
+    Safely get an attribute from a user's profile.
+
+    Args:
+        user: The user object
+        attr: The profile attribute name (e.g., 'can_pin_posts')
+        default: Value to return if profile or attr doesn't exist
+
+    Returns:
+        The attribute value or default
+    """
+    profile = getattr(user, 'profile', None)
+    if profile is None:
+        return default
+    return getattr(profile, attr, default)
+
+
+def user_can_pin_posts(user):
+    """Check if user has permission to pin their own posts."""
+    return get_user_profile_attr(user, 'can_pin_posts', False)
+
+
+def user_can_pin_any_post(user):
+    """Check if user has permission to pin any post."""
+    return get_user_profile_attr(user, 'can_pin_any_post', False)
+
+
+def user_can_delete_any_post(user):
+    """Check if user has permission to delete any post."""
+    return get_user_profile_attr(user, 'can_delete_any_post', False)
+
+
+# =============================================================================
+# API Decorators
+# =============================================================================
+
+def api_login_required(view_func):
+    """
+    Decorator for API views that require authentication.
+    Returns JSON error response instead of redirect for unauthenticated users.
+    """
+    @wraps(view_func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return JsonResponse({'error': 'Authentication required'}, status=401)
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+# =============================================================================
+# Views
+# =============================================================================
 
 
 class SignupView(CreateView):
@@ -66,10 +126,7 @@ class TimelineListView(LoginRequiredMixin, ListView):
         context['forms'] = available_forms
 
         # Check if user can pin posts
-        context['can_pin'] = (
-            hasattr(self.request.user, 'profile') and
-            self.request.user.profile.can_pin_posts
-        )
+        context['can_pin'] = user_can_pin_posts(self.request.user)
 
         return context
 
@@ -122,19 +179,13 @@ class EntryCreateView(LoginRequiredMixin, FormView):
         context['form_type_obj'] = self.form_type_obj
         context['form_type'] = self.form_type
         # Check if user can pin posts
-        context['can_pin'] = (
-            hasattr(self.request.user, 'profile') and
-            self.request.user.profile.can_pin_posts
-        )
+        context['can_pin'] = user_can_pin_posts(self.request.user)
         return context
-    
+
     def form_valid(self, form):
         """Save the entry with JSON data and optional image(s)"""
         # Check if user can pin and wants to pin this post
-        can_pin = (
-            hasattr(self.request.user, 'profile') and
-            self.request.user.profile.can_pin_posts
-        )
+        can_pin = user_can_pin_posts(self.request.user)
         is_pinned = can_pin and self.request.POST.get('is_pinned') == 'on'
 
         # Create entry object
@@ -205,16 +256,12 @@ class EntryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         """Check if user has permission to delete this entry"""
         entry = self.get_object()
+        user = self.request.user
         # Allow if user is the owner, is staff/admin, or has can_delete_any_post permission
-        can_delete_any = (
-            hasattr(self.request.user, 'profile') and
-            self.request.user.profile.can_delete_any_post
-        )
-        return self.request.user == entry.user or self.request.user.is_staff or can_delete_any
+        return user == entry.user or user.is_staff or user_can_delete_any_post(user)
 
     def handle_no_permission(self):
         """Return 403 if user doesn't have permission"""
-        from django.core.exceptions import PermissionDenied
         raise PermissionDenied("You don't have permission to delete this entry.")
 
 
@@ -229,14 +276,10 @@ class EntryUnpinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         """Check if user has permission to unpin posts"""
-        return (
-            hasattr(self.request.user, 'profile') and
-            self.request.user.profile.can_pin_posts
-        )
+        return user_can_pin_posts(self.request.user)
 
     def handle_no_permission(self):
         """Return 403 if user doesn't have permission"""
-        from django.core.exceptions import PermissionDenied
         raise PermissionDenied("You don't have permission to unpin posts.")
 
     def form_valid(self, form):
@@ -260,20 +303,17 @@ class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         """Check if user has permission to pin this entry"""
         entry = self.get_object()
-        if not hasattr(self.request.user, 'profile'):
-            return False
-        profile = self.request.user.profile
+        user = self.request.user
         # User can pin any post
-        if profile.can_pin_any_post:
+        if user_can_pin_any_post(user):
             return True
         # User can pin their own posts if they have can_pin_posts
-        if profile.can_pin_posts and self.request.user == entry.user:
+        if user_can_pin_posts(user) and user == entry.user:
             return True
         return False
 
     def handle_no_permission(self):
         """Return 403 if user doesn't have permission"""
-        from django.core.exceptions import PermissionDenied
         raise PermissionDenied("You don't have permission to pin this post.")
 
     def form_valid(self, form):
@@ -286,18 +326,16 @@ class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 # API Views for AJAX/programmatic access
 
+@api_login_required
 @require_http_methods(["GET"])
 def api_entries(request):
     """
     API endpoint to get entries as JSON.
-    
+
     Query parameters:
         - form_type: Filter by form type (optional)
         - limit: Number of entries to return (default: 50, max: 100)
     """
-    if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Authentication required'}, status=401)
-    
     # Get all entries
     entries = Entry.objects.all().select_related('form_type', 'user')
 
@@ -327,16 +365,14 @@ def api_entries(request):
     return JsonResponse(data, safe=False)
 
 
+@api_login_required
 @require_http_methods(["GET"])
 def api_forms(request):
     """
     API endpoint to get available forms.
-    
+
     Returns list of forms the current user has access to.
     """
-    if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Authentication required'}, status=401)
-    
     # Get forms user has access to
     forms = FormType.objects.filter(
         user_access__user=request.user,
