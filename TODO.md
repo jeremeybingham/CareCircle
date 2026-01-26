@@ -305,6 +305,169 @@ class DocumentListView(LoginRequiredMixin, ListView):
 
 ---
 
+### 4. Code Quality & Refactoring Improvements
+
+**Goal**: Improve code maintainability, consistency, and adherence to Django best practices without changing functionality.
+
+**Note**: Some items from a January 2026 code review have already been addressed in PR #25 (permission helpers, API decorator, centralized form constants). The items below remain.
+
+#### 4.1 Replace DeleteView for Pin/Unpin Views (Medium Priority)
+
+**Issue**: `EntryPinView` and `EntryUnpinView` inherit from `DeleteView` but override `form_valid()` to update instead of delete. This is semantically confusing.
+
+**Recommendation**: Use `UpdateView` or a generic `View` with `post()` method instead.
+
+**Files to Modify**:
+- `timeline/views.py` - Refactor EntryPinView and EntryUnpinView
+
+**Example**:
+```python
+from django.views.generic import View
+
+class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """Pin an entry to the top of the timeline."""
+
+    def post(self, request, pk):
+        entry = get_object_or_404(Entry, pk=pk)
+        entry.is_pinned = True
+        entry.save()
+        return redirect('timeline:timeline')
+
+    def test_func(self):
+        # ... permission check
+```
+
+---
+
+#### 4.2 Add Type Hints (Low Priority)
+
+**Issue**: The codebase doesn't use type hints, which would improve IDE support and catch errors earlier.
+
+**Files to Modify**:
+- `timeline/views.py`
+- `timeline/models.py`
+- `timeline/forms/*.py`
+- `timeline/templatetags/entry_display.py`
+
+**Example**:
+```python
+def get_form_class(form_type: str) -> type[BaseEntryForm] | None:
+    """Get the form class for a given form type."""
+    form_config = FORM_REGISTRY.get(form_type)
+    if form_config:
+        return form_config['form_class']
+    return None
+```
+
+---
+
+#### 4.3 Create Template Inclusion Tag for Tag Sections (Low Priority)
+
+**Issue**: In `entry_schoolday.html`, the same tag-list rendering pattern repeats 4 times for different sections (inclusion specials, small group specials, related services).
+
+**Recommendation**: Create a reusable inclusion tag or template partial.
+
+**Files to Create/Modify**:
+- `timeline/templatetags/entry_display.py` - Add new inclusion tag
+- `timeline/templates/timeline/partials/_tag_section.html` - NEW partial template
+- `timeline/templates/timeline/partials/entry_schoolday.html` - Use new tag
+
+**Example Tag**:
+```python
+@register.inclusion_tag('timeline/partials/_tag_section.html')
+def render_tag_section(title, items, other=None):
+    """Render a section with tag badges."""
+    return {
+        'title': title,
+        'items': items.split(', ') if items else [],
+        'other': other,
+    }
+```
+
+**Usage**:
+```django
+{% render_tag_section "Inclusion Specials" entry.data.inclusion_specials entry.data.inclusion_other %}
+```
+
+---
+
+#### 4.4 Standardize Docstring Format (Low Priority)
+
+**Issue**: Docstrings use inconsistent formats - some are detailed with Args/Returns, others are single lines.
+
+**Recommendation**: Adopt Google-style docstrings consistently across the codebase.
+
+**Files to Modify**:
+- All Python files with docstrings
+
+**Example** (Google style):
+```python
+def get_user_profile_attr(user, attr, default=False):
+    """Safely get an attribute from a user's profile.
+
+    Args:
+        user: The Django user object.
+        attr: The profile attribute name (e.g., 'can_pin_posts').
+        default: Value to return if profile or attr doesn't exist.
+
+    Returns:
+        The attribute value, or default if not found.
+    """
+```
+
+---
+
+#### 4.5 Split Settings into Environment-Specific Files (Low Priority)
+
+**Issue**: `config/settings.py` handles all environments with conditionals. For larger deployments, split settings are easier to manage.
+
+**Recommendation**: Create separate settings files for different environments.
+
+**Files to Create**:
+```
+config/
+    settings/
+        __init__.py      # Imports from appropriate env
+        base.py          # Shared settings
+        development.py   # Debug=True, SQLite
+        production.py    # Debug=False, PostgreSQL, S3
+```
+
+**Note**: This is optional and may be overkill for a solo-developer project. Only implement if deployment complexity increases.
+
+---
+
+#### 4.6 Add Custom Model Managers (Low Priority)
+
+**Issue**: Query patterns like `Entry.objects.all().select_related(...)` repeat in views.
+
+**Recommendation**: Add custom managers to encapsulate common query patterns.
+
+**Files to Modify**:
+- `timeline/models.py`
+
+**Example**:
+```python
+class EntryManager(models.Manager):
+    def with_relations(self):
+        """Return entries with commonly needed related objects."""
+        return self.select_related('form_type', 'user', 'user__profile')
+
+    def pinned(self):
+        """Return only pinned entries."""
+        return self.filter(is_pinned=True)
+
+    def for_timeline(self):
+        """Return entries optimized for timeline display."""
+        return self.with_relations().order_by('-is_pinned', '-timestamp')
+
+class Entry(models.Model):
+    # ... fields ...
+    objects = EntryManager()
+```
+
+---
+
 ## Implementation Priority
 
 **High Priority** (Start with these):
@@ -312,9 +475,15 @@ class DocumentListView(LoginRequiredMixin, ListView):
 
 **Medium Priority**:
 2. Friday pickup form - Specific use case
+3. Replace DeleteView for pin/unpin (4.1) - Semantic clarity
 
-**Lower Priority** (More complex):
-3. Documents system - Most complex, requires file handling
+**Lower Priority** (More complex or cosmetic):
+4. Documents system - Most complex, requires file handling
+5. Template inclusion tag for tag sections (4.3)
+6. Add type hints (4.2)
+7. Standardize docstrings (4.4)
+8. Split settings files (4.5) - Only if needed
+9. Custom model managers (4.6)
 
 ---
 
@@ -331,6 +500,15 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ---
 
 ## Completed Features
+
+### ✅ Code Quality Improvements (January 2026)
+- Added permission helper functions in `views.py` to centralize user profile attribute checking
+- Created `@api_login_required` decorator to reduce duplicate authentication code in API views
+- Moved `PermissionDenied` import to top of `views.py` (was imported 3 times inside methods)
+- Created `timeline/forms/constants.py` with centralized form field choices (PORTION_CHOICES, TIME_CHOICES, activity choices)
+- Updated `overnight.py` and `schoolday.py` to use centralized constants
+- Removed unnecessary `widget=forms.Select()` declarations where Select is the default
+- Reorganized imports in `views.py` to follow Django conventions
 
 ### ✅ Pinned Posts Feature
 - Added `is_pinned` boolean field to Entry model
