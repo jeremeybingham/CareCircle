@@ -84,10 +84,10 @@ DATABASES = {
     }
 }
 
-# Security settings for production
-SECURE_SSL_REDIRECT = False  # Set to True after SSL setup
-SESSION_COOKIE_SECURE = False  # Set to True after SSL setup
-CSRF_COOKIE_SECURE = False  # Set to True after SSL setup
+# Security settings for production (set to True when using HTTPS)
+SECURE_SSL_REDIRECT = os.getenv('SECURE_SSL_REDIRECT', 'False') == 'True'
+SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'False') == 'True'
+CSRF_COOKIE_SECURE = os.getenv('CSRF_COOKIE_SECURE', 'False') == 'True'
 
 
 # Password validation
