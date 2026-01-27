@@ -1,0 +1,55 @@
+{% load entry_display %}
+<div class="timeline-content pickup-entry">
+    <h2 class="timeline-title">
+        <span class="timeline-icon">{{ entry.form_type.icon }}</span>
+        Pickup Report
+    </h2>
+
+    <div class="data-list">
+        {# Pickup section #}
+        <div class="entry-section">
+            <h3 class="section-header">Pickup</h3>
+            <p><strong>Time:</strong> {{ entry.data.pickup_time }}</p>
+            <p><strong>Location:</strong> {{ entry.data.pickup_location }}</p>
+        </div>
+
+        {# Activities/Stops section #}
+        {% if entry.data.stops_notes %}
+        <div class="entry-section">
+            <h3 class="section-header">Activities & Stops</h3>
+            <p>{{ entry.data.stops_notes }}</p>
+        </div>
+        {% endif %}
+
+        {# Lunch/Snack section #}
+        {% if entry.data.had_lunch %}
+        <div class="entry-section">
+            <h3 class="section-header">Lunch/Snack</h3>
+            {% if entry.data.lunch_portion %}
+            <p><strong>Ate:</strong> {{ entry.data.lunch_portion }}</p>
+            {% endif %}
+            {% if entry.data.lunch_notes %}
+            <p>{{ entry.data.lunch_notes }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {# Dropoff section #}
+        {% if entry.data.dropoff_time or entry.data.dropoff_location %}
+        <div class="entry-section">
+            <h3 class="section-header">Dropoff</h3>
+            {% if entry.data.dropoff_time %}
+            <p><strong>Time:</strong> {{ entry.data.dropoff_time }}</p>
+            {% endif %}
+            {% if entry.data.dropoff_location %}
+            <p><strong>Location:</strong> {{ entry.data.dropoff_location }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    {# Mood section #}
+    {% include "timeline/partials/_mood_display.html" with moods=entry.data.mood mood_notes=entry.data.mood_notes %}
+
+    {% include "timeline/partials/entry_meta.html" %}
+</div>

@@ -19,6 +19,7 @@ from .overnight import OvernightForm
 from .schoolday import SchoolDayForm
 from .weekend import WeekendForm
 from .words import WordsForm
+from .pickup import PickupForm
 
 
 # Registry mapping: type_identifier -> (FormClass, display_name, icon)
@@ -58,6 +59,12 @@ FORM_REGISTRY = {
         'name': "Words I'm Using",
         'icon': '💬',
         'description': "Track new words and phrases Eddie is using",
+    },
+    'pickup': {
+        'form_class': PickupForm,
+        'name': 'Pickup Report',
+        'icon': '🚗',
+        'description': 'Track pickup, activities, meals, and dropoff information',
     },
 }
 
