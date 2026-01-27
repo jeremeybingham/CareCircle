@@ -6,10 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("timeline", "0004_userprofile_can_delete_any_post"),
+        ("timeline", "0003_alter_entry_options_entry_is_pinned_and_more"),
     ]
 
     operations = [
+        migrations.AddField(
+            model_name="userprofile",
+            name="can_delete_any_post",
+            field=models.BooleanField(
+                default=False,
+                help_text="Allow this user to delete any post, not just their own",
+            ),
+        ),
         migrations.AddField(
             model_name="userprofile",
             name="can_pin_any_post",

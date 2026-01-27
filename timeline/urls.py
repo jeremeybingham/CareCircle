@@ -7,6 +7,9 @@ urlpatterns = [
     # Main timeline view
     path('', views.TimelineListView.as_view(), name='timeline'),
 
+    # About Eddie page
+    path('about/', views.AboutEddieView.as_view(), name='about_eddie'),
+
     # Entry creation
     path('entry/<str:form_type>/', views.EntryCreateView.as_view(), name='entry_create'),
 
