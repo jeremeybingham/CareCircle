@@ -9,11 +9,13 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
-from django.views.generic import ListView, CreateView, FormView, DeleteView, DetailView
+from django.views.generic import ListView, CreateView, FormView, DeleteView, DetailView, TemplateView, UpdateView
+from django.contrib import messages
+from django.contrib.auth.views import PasswordChangeView
 
 from .models import FormType, Entry, UserFormAccess, EddieProfile
 from .forms import get_form_class, is_valid_form_type
-from .forms.user import CustomUserCreationForm
+from .forms.user import CustomUserCreationForm, UserProfileEditForm, StyledPasswordChangeForm
 
 
 # =============================================================================
@@ -356,6 +358,72 @@ class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         self.object.is_pinned = True
         self.object.save()
         return redirect(self.get_success_url())
+
+
+# =============================================================================
+# User Profile Views
+# =============================================================================
+
+
+class UserProfileView(LoginRequiredMixin, TemplateView):
+    """
+    Display the current user's profile information.
+    Shows editable fields and read-only permissions.
+    """
+    template_name = 'timeline/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        profile = getattr(user, 'profile', None)
+
+        context['profile'] = profile
+
+        # Get user's form access for display
+        form_access = UserFormAccess.objects.filter(user=user).select_related('form_type')
+        context['form_access'] = form_access
+
+        # Get user's permissions
+        context['permissions'] = {
+            'can_pin_posts': get_user_profile_attr(user, 'can_pin_posts', False),
+            'can_pin_any_post': get_user_profile_attr(user, 'can_pin_any_post', False),
+            'can_delete_any_post': get_user_profile_attr(user, 'can_delete_any_post', False),
+        }
+
+        return context
+
+
+class UserProfileEditView(LoginRequiredMixin, FormView):
+    """
+    Allow users to edit their own profile information.
+    Does not allow editing permissions - those are admin-controlled.
+    """
+    template_name = 'timeline/profile_edit.html'
+    form_class = UserProfileEditForm
+    success_url = reverse_lazy('timeline:profile')
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Your profile has been updated.')
+        return super().form_valid(form)
+
+
+class UserPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    """
+    Custom password change view with styled form.
+    """
+    template_name = 'timeline/password_change.html'
+    form_class = StyledPasswordChangeForm
+    success_url = reverse_lazy('timeline:profile')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your password has been changed successfully.')
+        return super().form_valid(form)
 
 
 # API Views for AJAX/programmatic access

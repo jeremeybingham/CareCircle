@@ -16,7 +16,7 @@
             <a href="{% url 'timeline:timeline' %}" class="nav-brand">🚀 Eddie's Timeline</a>
             <div class="nav-menu">
                 <a href="{% url 'timeline:about_eddie' %}" class="nav-link">About Eddie</a>
-                <span class="nav-user">{{ user.username }}</span>
+                <a href="{% url 'timeline:profile' %}" class="nav-link nav-user-link">{{ user.username }}</a>
                 {% if user.is_staff %}
                 <a href="{% url 'admin:index' %}" class="nav-link">Admin</a>
                 {% endif %}

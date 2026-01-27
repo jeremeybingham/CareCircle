@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-box">
+        <h1>Edit Profile</h1>
+        <p class="form-description">Update your profile information below.</p>
+
+        {% if form.errors %}
+        <div class="form-errors">
+            <strong>Please correct the errors below:</strong>
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form method="post" class="submission-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_display_name">
+                    Display Name <span class="required">*</span>
+                </label>
+                <input type="text"
+                       name="display_name"
+                       id="id_display_name"
+                       value="{{ form.display_name.value|default:'' }}"
+                       placeholder="Ms. Johnson"
+                       required
+                       maxlength="100">
+                <span class="field-help">{{ form.display_name.help_text }}</span>
+                {% if form.display_name.errors %}
+                <span class="field-error">{{ form.display_name.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_first_name">
+                        First Name <span class="required">*</span>
+                    </label>
+                    <input type="text"
+                           name="first_name"
+                           id="id_first_name"
+                           value="{{ form.first_name.value|default:'' }}"
+                           placeholder="Jane"
+                           required
+                           maxlength="50">
+                    {% if form.first_name.errors %}
+                    <span class="field-error">{{ form.first_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_last_name">
+                        Last Name <span class="required">*</span>
+                    </label>
+                    <input type="text"
+                           name="last_name"
+                           id="id_last_name"
+                           value="{{ form.last_name.value|default:'' }}"
+                           placeholder="Doe"
+                           required
+                           maxlength="50">
+                    {% if form.last_name.errors %}
+                    <span class="field-error">{{ form.last_name.errors.0 }}</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email_address">
+                    Email Address <span class="required">*</span>
+                </label>
+                <input type="email"
+                       name="email_address"
+                       id="id_email_address"
+                       value="{{ form.email_address.value|default:'' }}"
+                       placeholder="your.email@example.com"
+                       required>
+                <span class="field-help">{{ form.email_address.help_text }}</span>
+                {% if form.email_address.errors %}
+                <span class="field-error">{{ form.email_address.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_position_role">
+                    Position/Role <span class="optional">(optional)</span>
+                </label>
+                <input type="text"
+                       name="position_role"
+                       id="id_position_role"
+                       value="{{ form.position_role.value|default:'' }}"
+                       placeholder="Teacher"
+                       maxlength="100">
+                <span class="field-help">{{ form.position_role.help_text }}</span>
+                {% if form.position_role.errors %}
+                <span class="field-error">{{ form.position_role.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="{% url 'timeline:profile' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
