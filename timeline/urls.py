@@ -10,6 +10,11 @@ urlpatterns = [
     # About Eddie page
     path('about/', views.AboutEddieView.as_view(), name='about_eddie'),
 
+    # User Profile pages
+    path('profile/', views.UserProfileView.as_view(), name='profile'),
+    path('profile/edit/', views.UserProfileEditView.as_view(), name='profile_edit'),
+    path('profile/password/', views.UserPasswordChangeView.as_view(), name='password_change'),
+
     # Entry creation
     path('entry/<str:form_type>/', views.EntryCreateView.as_view(), name='entry_create'),
 

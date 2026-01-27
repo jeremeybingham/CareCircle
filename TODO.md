@@ -487,15 +487,15 @@ class Entry(models.Model):
 - Consider adding password requirements/validation
 
 **Implementation Steps**:
-- [ ] Create `UserProfileView` for viewing profile
-- [ ] Create `UserProfileEditView` for editing profile
-- [ ] Create `PasswordChangeView` (or use Django's built-in with custom template)
-- [ ] Create templates for profile view and edit
-- [ ] Add URL routes for profile pages
-- [ ] Add navigation link to profile in navbar/menu
-- [ ] Style forms to match existing mobile-first design
-- [ ] Add success messages for profile updates
-- [ ] Handle validation errors gracefully
+- [x] Create `UserProfileView` for viewing profile
+- [x] Create `UserProfileEditView` for editing profile
+- [x] Create `PasswordChangeView` (or use Django's built-in with custom template)
+- [x] Create templates for profile view and edit
+- [x] Add URL routes for profile pages
+- [x] Add navigation link to profile in navbar/menu
+- [x] Style forms to match existing mobile-first design
+- [x] Add success messages for profile updates
+- [x] Handle validation errors gracefully
 
 **Files to Create/Modify**:
 - `timeline/views.py` - Add UserProfileView, UserProfileEditView
@@ -1001,3 +1001,16 @@ class MoodFieldMixin:
 - Weekend photos now display at full size like regular photo posts
 - Removed max-height constraint that was cutting off images
 - Images maintain aspect ratio and are responsive
+
+### ✅ User Profile Self-Service Page
+- Created profile view page (`/profile/`) showing user information
+- Created profile edit page (`/profile/edit/`) for updating profile fields
+- Created password change page (`/profile/password/`) using Django's built-in with custom template
+- Added `UserProfileEditForm` with email uniqueness validation
+- Added `StyledPasswordChangeForm` with styled widgets
+- Display name, email, first name, last name, and position/role are editable
+- Permissions displayed as read-only (admin-controlled)
+- Form access list shows which forms the user can use
+- Username link in navbar goes to profile page
+- Mobile-responsive design with CSS styling
+- Success messages for profile updates and password changes

@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>My Profile</h1>
+        <p class="profile-subtitle">View and manage your account information</p>
+    </div>
+
+    {% if profile %}
+    <!-- Profile Information Section -->
+    <div class="profile-section">
+        <h2 class="section-title">
+            <span class="section-icon">Profile Information</span>
+        </h2>
+        <div class="section-content">
+            <div class="profile-info-grid">
+                <div class="profile-info-item">
+                    <span class="info-label">Display Name</span>
+                    <span class="info-value">{{ profile.display_name }}</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value">{{ profile.email_address }}</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="info-label">First Name</span>
+                    <span class="info-value">{{ profile.first_name }}</span>
+                </div>
+                <div class="profile-info-item">
+                    <span class="info-label">Last Name</span>
+                    <span class="info-value">{{ profile.last_name }}</span>
+                </div>
+                <div class="profile-info-item full-width">
+                    <span class="info-label">Position/Role</span>
+                    <span class="info-value">{{ profile.position_role|default:"Not set" }}</span>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <a href="{% url 'timeline:profile_edit' %}" class="btn btn-primary">Edit Profile</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Security Section -->
+    <div class="profile-section">
+        <h2 class="section-title">
+            <span class="section-icon">Account Security</span>
+        </h2>
+        <div class="section-content">
+            <p class="security-info">Keep your account secure by using a strong password.</p>
+            <div class="profile-actions">
+                <a href="{% url 'timeline:password_change' %}" class="btn btn-secondary">Change Password</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Permissions Section (Read-only) -->
+    <div class="profile-section permissions-section">
+        <h2 class="section-title">
+            <span class="section-icon">My Permissions</span>
+        </h2>
+        <div class="section-content">
+            <p class="permissions-note">These permissions are managed by administrators.</p>
+            <div class="permissions-list">
+                <div class="permission-item">
+                    <span class="permission-status {% if permissions.can_pin_posts %}enabled{% else %}disabled{% endif %}">
+                        {% if permissions.can_pin_posts %}{% else %}{% endif %}
+                    </span>
+                    <span class="permission-label">Can pin own posts</span>
+                </div>
+                <div class="permission-item">
+                    <span class="permission-status {% if permissions.can_pin_any_post %}enabled{% else %}disabled{% endif %}">
+                        {% if permissions.can_pin_any_post %}{% else %}{% endif %}
+                    </span>
+                    <span class="permission-label">Can pin any post</span>
+                </div>
+                <div class="permission-item">
+                    <span class="permission-status {% if permissions.can_delete_any_post %}enabled{% else %}disabled{% endif %}">
+                        {% if permissions.can_delete_any_post %}{% else %}{% endif %}
+                    </span>
+                    <span class="permission-label">Can delete any post</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Access Section -->
+    {% if form_access %}
+    <div class="profile-section">
+        <h2 class="section-title">
+            <span class="section-icon">Available Forms</span>
+        </h2>
+        <div class="section-content">
+            <p class="forms-note">Forms you have access to create entries with:</p>
+            <div class="form-access-list">
+                {% for access in form_access %}
+                <div class="form-access-item">
+                    <span class="form-icon">{{ access.form_type.icon }}</span>
+                    <span class="form-name">{{ access.form_type.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Account Info Section -->
+    <div class="profile-section">
+        <h2 class="section-title">
+            <span class="section-icon">Account Info</span>
+        </h2>
+        <div class="section-content">
+            <div class="account-info">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Member since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                {% if user.is_staff %}
+                <p><strong>Role:</strong> Administrator</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="profile-section">
+        <div class="section-content">
+            <p class="error-message">Profile not found. Please contact an administrator.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="profile-footer">
+        <a href="{% url 'timeline:timeline' %}" class="btn btn-secondary">Back to Timeline</a>
+    </div>
+</div>
+{% endblock %}
