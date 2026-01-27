@@ -30,6 +30,7 @@ LOCATION_CHOICES = [
     ('', '-- Select --'),
     ('School', 'School'),
     ('Home', 'Home'),
+    ('ABA', 'ABA'),
     ('Other', 'Other (specify in notes)'),
 ]
 
