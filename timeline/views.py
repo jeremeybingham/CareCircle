@@ -9,9 +9,9 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
-from django.views.generic import ListView, CreateView, FormView, DeleteView
+from django.views.generic import ListView, CreateView, FormView, DeleteView, DetailView
 
-from .models import FormType, Entry, UserFormAccess
+from .models import FormType, Entry, UserFormAccess, EddieProfile
 from .forms import get_form_class, is_valid_form_type
 from .forms.user import CustomUserCreationForm
 
@@ -83,21 +83,55 @@ class SignupView(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'timeline/auth/signup.html'
     success_url = reverse_lazy('timeline:timeline')
-    
+
     def form_valid(self, form):
         """Save user and grant default form access"""
         response = super().form_valid(form)
         user = self.object
-        
+
         # Grant access to all default forms
         default_forms = FormType.objects.filter(is_default=True, is_active=True)
         for form_type in default_forms:
             UserFormAccess.objects.create(user=user, form_type=form_type)
-        
+
         # Log the user in
         login(self.request, user)
-        
+
         return response
+
+
+class AboutEddieView(LoginRequiredMixin, DetailView):
+    """
+    Displays Eddie's profile information for caregivers.
+    Uses singleton pattern - always shows the same profile.
+    """
+    model = EddieProfile
+    template_name = 'timeline/about_eddie.html'
+    context_object_name = 'profile'
+
+    def get_object(self, queryset=None):
+        """Always return the singleton instance"""
+        return EddieProfile.get_instance()
+
+    def get_context_data(self, **kwargs):
+        """Add contacts list to context for easier template iteration"""
+        context = super().get_context_data(**kwargs)
+        profile = self.object
+
+        # Build list of contacts for template
+        contacts = []
+        for i in range(1, 5):
+            name = getattr(profile, f'contact_{i}_name', '')
+            if name:
+                contacts.append({
+                    'name': name,
+                    'relationship': getattr(profile, f'contact_{i}_relationship', ''),
+                    'phone': getattr(profile, f'contact_{i}_phone', ''),
+                    'email': getattr(profile, f'contact_{i}_email', ''),
+                })
+        context['contacts'] = contacts
+
+        return context
 
 
 class TimelineListView(LoginRequiredMixin, ListView):

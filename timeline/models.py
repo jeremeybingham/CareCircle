@@ -234,3 +234,211 @@ class Entry(models.Model):
         if self.image:
             display_data['image_url'] = self.image.url
         return display_data
+
+
+class EddieProfile(models.Model):
+    """
+    Singleton model storing Eddie's profile information for the "About Eddie" page.
+    This information is shared with all caregivers to help them understand and support Eddie.
+    """
+    # Profile Photo
+    photo = models.ImageField(
+        upload_to='eddie_profile/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'gif', 'webp'])],
+        help_text="Current photo of Eddie for caregivers"
+    )
+
+    # Bio Section
+    bio = models.TextField(
+        help_text="General information about Eddie (age, family, personality)"
+    )
+
+    # Tips and Tricks
+    tips_and_tricks = models.TextField(
+        help_text="Calming strategies, what helps when overwhelmed"
+    )
+
+    # Favorites
+    favorites = models.TextField(
+        help_text="Eddie's favorite activities, foods, games, etc."
+    )
+
+    # Fun Facts
+    fun_facts = models.TextField(
+        help_text="Fun and interesting things about Eddie"
+    )
+
+    # Goals for This Year
+    goals = models.TextField(
+        help_text="Current developmental and educational goals"
+    )
+
+    # Meals
+    meals_info = models.TextField(
+        help_text="Eating habits, food preferences, dietary notes"
+    )
+
+    # Potty
+    potty_info = models.TextField(
+        help_text="Bathroom routine, assistance needed"
+    )
+
+    # Safety
+    safety_info = models.TextField(
+        help_text="Safety considerations, supervision needs"
+    )
+
+    # Communication
+    communication_info = models.TextField(
+        help_text="How Eddie communicates, AAC usage, verbal abilities"
+    )
+
+    # Physical Description
+    height = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Height (e.g., '3 ft 8 in')"
+    )
+    weight = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Weight (e.g., '45 lbs')"
+    )
+    hair_color = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Hair color"
+    )
+    eye_color = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Eye color"
+    )
+    distinguishing_marks = models.TextField(
+        blank=True,
+        help_text="Any distinguishing marks or features"
+    )
+
+    # Emergency Contacts
+    contact_1_name = models.CharField(
+        max_length=100,
+        help_text="Contact 1 name (e.g., 'Mom')"
+    )
+    contact_1_relationship = models.CharField(
+        max_length=50,
+        help_text="Relationship to Eddie"
+    )
+    contact_1_phone = models.CharField(
+        max_length=20,
+        help_text="Phone number"
+    )
+    contact_1_email = models.EmailField(
+        blank=True,
+        help_text="Email address (optional)"
+    )
+
+    contact_2_name = models.CharField(
+        max_length=100,
+        help_text="Contact 2 name (e.g., 'Dad')"
+    )
+    contact_2_relationship = models.CharField(
+        max_length=50,
+        help_text="Relationship to Eddie"
+    )
+    contact_2_phone = models.CharField(
+        max_length=20,
+        help_text="Phone number"
+    )
+    contact_2_email = models.EmailField(
+        blank=True,
+        help_text="Email address (optional)"
+    )
+
+    contact_3_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Contact 3 name (optional)"
+    )
+    contact_3_relationship = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Relationship to Eddie"
+    )
+    contact_3_phone = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Phone number"
+    )
+    contact_3_email = models.EmailField(
+        blank=True,
+        help_text="Email address (optional)"
+    )
+
+    contact_4_name = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Contact 4 name (optional)"
+    )
+    contact_4_relationship = models.CharField(
+        max_length=50,
+        blank=True,
+        help_text="Relationship to Eddie"
+    )
+    contact_4_phone = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text="Phone number"
+    )
+    contact_4_email = models.EmailField(
+        blank=True,
+        help_text="Email address (optional)"
+    )
+
+    # Metadata
+    updated_at = models.DateTimeField(auto_now=True)
+    updated_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="User who last updated this profile"
+    )
+
+    class Meta:
+        verbose_name = "Eddie's Profile"
+        verbose_name_plural = "Eddie's Profile"
+
+    def __str__(self):
+        return "Eddie's Profile"
+
+    def save(self, *args, **kwargs):
+        """Ensure only one instance exists (singleton pattern)"""
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get_instance(cls):
+        """Get or create the singleton instance"""
+        obj, created = cls.objects.get_or_create(
+            pk=1,
+            defaults={
+                'bio': '',
+                'tips_and_tricks': '',
+                'favorites': '',
+                'fun_facts': '',
+                'goals': '',
+                'meals_info': '',
+                'potty_info': '',
+                'safety_info': '',
+                'communication_info': '',
+                'contact_1_name': 'Mom',
+                'contact_1_relationship': 'Mother',
+                'contact_1_phone': '',
+                'contact_2_name': 'Dad',
+                'contact_2_relationship': 'Father',
+                'contact_2_phone': '',
+            }
+        )
+        return obj

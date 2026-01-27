@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}About Eddie{% endblock %}
+
+{% block content %}
+<div class="about-container">
+    <div class="about-header">
+        {% if profile.photo %}
+        <div class="profile-photo-container">
+            <img src="{{ profile.photo.url }}" alt="Eddie" class="profile-photo">
+        </div>
+        {% endif %}
+        <h1>All About Eddie</h1>
+        <p class="about-subtitle">Essential information for caregivers</p>
+    </div>
+
+    {% if profile.bio %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Bio</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.bio|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.tips_and_tricks %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Tips and Tricks</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.tips_and_tricks|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.favorites %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Favs</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.favorites|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.fun_facts %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Fun Facts</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.fun_facts|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.goals %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Goals for This Year</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.goals|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="section-divider"></div>
+
+    {% if profile.meals_info %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Meals</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.meals_info|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.potty_info %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Potty</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.potty_info|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.safety_info %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Safety</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.safety_info|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.communication_info %}
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Communication</span>
+        </h2>
+        <div class="section-content">
+            <p>{{ profile.communication_info|linebreaks }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if profile.height or profile.weight or profile.hair_color or profile.eye_color or profile.distinguishing_marks %}
+    <div class="section-divider"></div>
+
+    <section class="about-section">
+        <h2 class="section-title">
+            <span class="section-icon">Physical Description</span>
+        </h2>
+        <div class="section-content">
+            <div class="physical-grid">
+                {% if profile.height %}
+                <div class="physical-item">
+                    <span class="physical-label">Height</span>
+                    <span class="physical-value">{{ profile.height }}</span>
+                </div>
+                {% endif %}
+                {% if profile.weight %}
+                <div class="physical-item">
+                    <span class="physical-label">Weight</span>
+                    <span class="physical-value">{{ profile.weight }}</span>
+                </div>
+                {% endif %}
+                {% if profile.hair_color %}
+                <div class="physical-item">
+                    <span class="physical-label">Hair</span>
+                    <span class="physical-value">{{ profile.hair_color }}</span>
+                </div>
+                {% endif %}
+                {% if profile.eye_color %}
+                <div class="physical-item">
+                    <span class="physical-label">Eyes</span>
+                    <span class="physical-value">{{ profile.eye_color }}</span>
+                </div>
+                {% endif %}
+            </div>
+            {% if profile.distinguishing_marks %}
+            <div class="physical-marks">
+                <span class="physical-label">Distinguishing Marks</span>
+                <p>{{ profile.distinguishing_marks|linebreaks }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if contacts %}
+    <div class="section-divider"></div>
+
+    <section class="about-section contacts-section">
+        <h2 class="section-title">
+            <span class="section-icon">Emergency Contacts</span>
+        </h2>
+        <div class="contacts-grid">
+            {% for contact in contacts %}
+            <div class="contact-card">
+                <div class="contact-name">{{ contact.name }}</div>
+                <div class="contact-relationship">{{ contact.relationship }}</div>
+                {% if contact.phone %}
+                <a href="tel:{{ contact.phone }}" class="contact-phone">{{ contact.phone }}</a>
+                {% endif %}
+                {% if contact.email %}
+                <a href="mailto:{{ contact.email }}" class="contact-email">{{ contact.email }}</a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="about-footer">
+        <p class="updated-info">Last updated: {{ profile.updated_at|date:"F j, Y" }}</p>
+        <a href="{% url 'timeline:timeline' %}" class="btn btn-secondary">Back to Timeline</a>
+    </div>
+</div>
+{% endblock %}

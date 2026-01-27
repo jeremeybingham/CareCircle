@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import FormType, UserFormAccess, Entry, UserProfile
+from .models import FormType, UserFormAccess, Entry, UserProfile, EddieProfile
 
 
 # Customize User Admin to show form access and profile
@@ -273,6 +273,78 @@ class UserProfileAdmin(admin.ModelAdmin):
         count = queryset.update(can_delete_any_post=False)
         self.message_user(request, f"Revoked delete any post permission from {count} users")
     revoke_delete_any_permission.short_description = "Revoke delete any post permission"
+
+
+@admin.register(EddieProfile)
+class EddieProfileAdmin(admin.ModelAdmin):
+    """Admin interface for Eddie's profile (singleton)"""
+
+    fieldsets = (
+        ('Photo', {
+            'fields': ('photo', 'photo_preview'),
+            'description': 'Current photo of Eddie'
+        }),
+        ('About Eddie', {
+            'fields': ('bio', 'tips_and_tricks', 'favorites', 'fun_facts', 'goals'),
+            'description': 'General information about Eddie for caregivers'
+        }),
+        ('Daily Care', {
+            'fields': ('meals_info', 'potty_info', 'safety_info', 'communication_info'),
+            'description': 'Important daily care information'
+        }),
+        ('Physical Description', {
+            'fields': ('height', 'weight', 'hair_color', 'eye_color', 'distinguishing_marks'),
+            'classes': ('collapse',),
+        }),
+        ('Emergency Contact 1', {
+            'fields': ('contact_1_name', 'contact_1_relationship', 'contact_1_phone', 'contact_1_email'),
+        }),
+        ('Emergency Contact 2', {
+            'fields': ('contact_2_name', 'contact_2_relationship', 'contact_2_phone', 'contact_2_email'),
+        }),
+        ('Emergency Contact 3 (Optional)', {
+            'fields': ('contact_3_name', 'contact_3_relationship', 'contact_3_phone', 'contact_3_email'),
+            'classes': ('collapse',),
+        }),
+        ('Emergency Contact 4 (Optional)', {
+            'fields': ('contact_4_name', 'contact_4_relationship', 'contact_4_phone', 'contact_4_email'),
+            'classes': ('collapse',),
+        }),
+        ('Metadata', {
+            'fields': ('updated_at', 'updated_by'),
+            'classes': ('collapse',),
+        }),
+    )
+
+    readonly_fields = ['updated_at', 'photo_preview']
+
+    def photo_preview(self, obj):
+        """Show photo thumbnail in admin"""
+        if obj.photo:
+            return mark_safe(f'<img src="{obj.photo.url}" style="max-width: 300px; max-height: 300px; border-radius: 8px;" />')
+        return "No photo uploaded"
+    photo_preview.short_description = 'Current Photo'
+
+    def has_add_permission(self, request):
+        """Only allow one instance (singleton)"""
+        return not EddieProfile.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        """Prevent deletion of the singleton"""
+        return False
+
+    def save_model(self, request, obj, form, change):
+        """Track who updated the profile"""
+        obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
+
+    def changelist_view(self, request, extra_context=None):
+        """Redirect to the edit page if instance exists, otherwise to add page"""
+        if EddieProfile.objects.exists():
+            obj = EddieProfile.objects.first()
+            from django.shortcuts import redirect
+            return redirect(f'admin:timeline_eddieprofile_change', obj.pk)
+        return super().changelist_view(request, extra_context)
 
 
 # Customize admin site header
