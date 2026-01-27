@@ -5,19 +5,23 @@
         <span class="timeline-icon">{{ entry.form_type.icon }}</span>
         School Day
     </h2>
-    
+
     <!-- Bathroom Times -->
     {% if entry.data.bathroom %}
     <div class="entry-section">
-        <h3>Bathroom</h3>
-        <p>{{ entry.data.bathroom }}</p>
+        <h3>🚽 Bathroom</h3>
+        <div class="tag-list">
+            {% for time in entry.data.bathroom|split_commas %}
+            <span class="tag bathroom-badge">{{ time }}</span>
+            {% endfor %}
+        </div>
     </div>
     {% endif %}
-    
+
     <!-- Food Log -->
     {% if entry.data.snacks or entry.data.lunch_from_home or entry.data.other_food %}
     <div class="entry-section">
-        <h3>Food Log</h3>
+        <h3>🍎 Food Log</h3>
         <div class="data-grid">
             {% if entry.data.snacks %}
             <div class="data-item">
@@ -40,45 +44,35 @@
         </div>
     </div>
     {% endif %}
-    
+
     <!-- Inclusion Specials -->
-    {% if entry.data.inclusion_specials or entry.data.inclusion_other %}
+    {% if entry.data.inclusion_specials %}
     <div class="entry-section">
-        <h3>Inclusion Specials</h3>
+        <h3>🏃 Inclusion Specials</h3>
         <div class="tag-list">
-            {% if entry.data.inclusion_specials %}
-                {% for activity in entry.data.inclusion_specials|split_commas %}
-                <span class="tag">{{ activity }}</span>
-                {% endfor %}
-            {% endif %}
-            {% if entry.data.inclusion_other %}
-                <span class="tag tag-other">{{ entry.data.inclusion_other }}</span>
-            {% endif %}
+            {% for activity in entry.data.inclusion_specials|split_commas %}
+            <span class="tag">{{ activity }}</span>
+            {% endfor %}
         </div>
     </div>
     {% endif %}
-    
+
     <!-- Small Group Specials -->
-    {% if entry.data.small_group_specials or entry.data.small_group_other %}
+    {% if entry.data.small_group_specials %}
     <div class="entry-section">
-        <h3>Small Group Specials</h3>
+        <h3>👥 Small Group Specials</h3>
         <div class="tag-list">
-            {% if entry.data.small_group_specials %}
-                {% for activity in entry.data.small_group_specials|split_commas %}
-                <span class="tag">{{ activity }}</span>
-                {% endfor %}
-            {% endif %}
-            {% if entry.data.small_group_other %}
-                <span class="tag tag-other">{{ entry.data.small_group_other }}</span>
-            {% endif %}
+            {% for activity in entry.data.small_group_specials|split_commas %}
+            <span class="tag">{{ activity }}</span>
+            {% endfor %}
         </div>
     </div>
     {% endif %}
-    
+
     <!-- Related Services -->
     {% if entry.data.related_services or entry.data.related_other %}
     <div class="entry-section">
-        <h3>Related Services</h3>
+        <h3>🩺 Related Services</h3>
         <div class="tag-list">
             {% if entry.data.related_services %}
                 {% for service in entry.data.related_services|split_commas %}
@@ -98,18 +92,10 @@
     <!-- Notes About My Day -->
     {% if entry.data.notes_about_day %}
     <div class="entry-section">
-        <h3>Notes About My Day</h3>
+        <h3>📝 Notes About My Day</h3>
         <div class="note-block italic">{{ entry.data.notes_about_day|linebreaks }}</div>
     </div>
     {% endif %}
-    
-    <!-- Additional Notes/Reminders -->
-    {% if entry.data.additional_notes %}
-    <div class="entry-section">
-        <h3>Additional Notes/Reminders</h3>
-        <div class="note-block highlight">{{ entry.data.additional_notes|linebreaks }}</div>
-    </div>
-    {% endif %}
-    
+
     {% include "timeline/partials/entry_meta.html" %}
 </div>

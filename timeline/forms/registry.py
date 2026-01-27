@@ -37,8 +37,8 @@ FORM_REGISTRY = {
     },
     'overnight': {
         'form_class': OvernightForm,
-        'name': 'Overnight',
-        'icon': '🌙',
+        'name': 'Morning Report',
+        'icon': '🌅',
         'description': 'Track your overnight routine - dinner, sleep, and breakfast',
     },
     'schoolday': {

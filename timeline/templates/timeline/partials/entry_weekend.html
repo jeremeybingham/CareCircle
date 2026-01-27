@@ -1,3 +1,4 @@
+{% load entry_display %}
 <div class="timeline-content timeline-weekend">
     <h2 class="timeline-title">
         <span class="timeline-icon">{{ entry.form_type.icon }}</span>
@@ -48,6 +49,8 @@
         <p>{{ entry.data.notes }}</p>
     </div>
     {% endif %}
+
+    {% include "timeline/partials/_mood_display.html" with moods=entry.data.mood mood_notes=entry.data.mood_notes %}
 
     {% include "timeline/partials/entry_meta.html" %}
 </div>

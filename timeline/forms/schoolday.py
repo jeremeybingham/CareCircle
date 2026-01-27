@@ -20,11 +20,11 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
     field_order = [
         'bathroom',
         'snacks', 'lunch_from_home', 'other_food',
-        'inclusion_specials', 'inclusion_other',
-        'small_group_specials', 'small_group_other',
+        'inclusion_specials',
+        'small_group_specials',
         'related_services', 'related_other',
         'mood', 'mood_notes',
-        'notes_about_day', 'additional_notes',
+        'notes_about_day',
     ]
     # Bathroom
     bathroom = forms.CharField(
@@ -68,31 +68,13 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
         label="Inclusion Specials",
         widget=forms.CheckboxSelectMultiple()
     )
-    
-    inclusion_other = forms.CharField(
-        required=False,
-        label="Inclusion Specials - Other",
-        max_length=200,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Other inclusion activities'
-        })
-    )
-    
+
     # Small Group Specials
     small_group_specials = forms.MultipleChoiceField(
         choices=SMALL_GROUP_SPECIALS_CHOICES,
         required=False,
         label="Small Group Specials",
         widget=forms.CheckboxSelectMultiple()
-    )
-    
-    small_group_other = forms.CharField(
-        required=False,
-        label="Small Group - Other",
-        max_length=200,
-        widget=forms.TextInput(attrs={
-            'placeholder': 'Other small group activities'
-        })
     )
     
     # Related Services
@@ -119,15 +101,6 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
         widget=forms.Textarea(attrs={
             'rows': 4,
             'placeholder': 'How was the day?'
-        })
-    )
-    
-    additional_notes = forms.CharField(
-        required=False,
-        label="Additional Notes/Reminders",
-        widget=forms.Textarea(attrs={
-            'rows': 3,
-            'placeholder': 'Any additional notes or reminders'
         })
     )
     

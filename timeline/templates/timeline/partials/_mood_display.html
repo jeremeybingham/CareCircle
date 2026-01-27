@@ -15,7 +15,6 @@ Usage:
 
 {% if moods %}
 <div class="entry-section mood-section">
-    <h3>Mood</h3>
     <div class="mood-badges">
         {% for mood in moods|split_commas %}
         <span class="mood-badge mood-{{ mood }}">

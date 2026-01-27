@@ -607,6 +607,13 @@ body {
     border-style: dashed;
 }
 
+.tag.bathroom-badge {
+    background: #e3f2fd;
+    border-color: #64b5f6;
+    color: #1565c0;
+    font-weight: 600;
+}
+
 /* Note Blocks */
 .note-block {
     padding: 12px;
@@ -878,8 +885,8 @@ body {
 
 .timeline-weekend .weekend-notes {
     padding: 16px;
-    background: #fffbea;
-    border: 1px solid #FFD500;
+    background: #e8f4f8;
+    border: 1px solid #a8d4e6;
     border-radius: 8px;
     margin-bottom: 12px;
 }
@@ -1048,10 +1055,11 @@ body {
 }
 
 .profile-photo {
-    width: 180px;
-    height: 180px;
+    width: 60%;
+    max-width: 300px;
+    aspect-ratio: 1;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 8px;
     border: 4px solid #613B6F;
     box-shadow: 0 4px 12px rgba(97, 59, 111, 0.2);
 }
@@ -1237,8 +1245,8 @@ body {
     }
 
     .profile-photo {
-        width: 140px;
-        height: 140px;
+        width: 60%;
+        max-width: 200px;
     }
 
     .about-header h1 {
