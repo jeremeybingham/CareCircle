@@ -4,15 +4,19 @@
  
 ### 1. Babysitter & Lunch Form (Friday Pickups)
  
-**Goal**: Create a specialized form for Friday babysitter pickups with lunch details.
+**Goal**: Create a specialized form for babysitter pickups with optional lunch details.
  
 **Form Fields**:
 - Pickup time
-- Who is picking up (name)
-- Lunch packed (yes/no)
-- Lunch contents (if packed)
-- Special instructions
-- Contact number
+- Pickup Location
+- Any stops / Notes? (text area)
+- Lunch or snack? Yes / No (checkbox)
+- if Lunch, None|Some|Most|All (radio buttons)
+- Lunch Notes? (text area)
+- Mood Grid
+- Dropoff time
+- Dropoff Location
+- (form will be filled out by sitter/user)
  
 **Implementation Steps**:
 - [ ] Create `timeline/forms/friday_pickup.py` with FridayPickupForm
@@ -29,64 +33,6 @@
 - `timeline/forms/__init__.py` - Add import
 - `timeline/templates/timeline/partials/entry_friday_pickup.html` - NEW
 - `timeline/static/timeline/css/style.css` - Add styling
- 
-**Form Example**:
-```python
-class FridayPickupForm(BaseEntryForm):
-    pickup_time = forms.TimeField(
-        required=True,
-        label="Pickup Time",
-        widget=forms.TimeInput(attrs={'type': 'time'})
-    )
- 
-    pickup_person = forms.CharField(
-        required=True,
-        label="Who is picking up?",
-        max_length=100
-    )
- 
-    lunch_packed = forms.ChoiceField(
-        choices=[
-            ('yes', 'Yes'),
-            ('no', 'No'),
-        ],
-        required=True,
-        label="Lunch Packed?",
-        widget=forms.RadioSelect()
-    )
- 
-    lunch_contents = forms.CharField(
-        required=False,
-        label="Lunch Contents",
-        widget=forms.Textarea(attrs={'rows': 3}),
-        help_text="What's in the lunchbox?"
-    )
- 
-    special_instructions = forms.CharField(
-        required=False,
-        label="Special Instructions",
-        widget=forms.Textarea(attrs={'rows': 3})
-    )
- 
-    contact_number = forms.CharField(
-        required=False,
-        label="Contact Number",
-        max_length=20,
-        widget=forms.TextInput(attrs={
-            'placeholder': '(555) 123-4567'
-        })
-    )
-```
- 
-**Registry Entry**:
-```python
-'friday_pickup': {
-    'form_class': FridayPickupForm,
-    'name': 'Friday Pickup',
-    'icon': '🚗',
-    'description': 'Babysitter and lunch details for Friday pickups',
-},
-```
  
 ---
  
