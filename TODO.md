@@ -1,4 +1,33 @@
 # Timeline - TODO List
+
+## Quick Fixes & UI Improvements
+
+### Visual & Display Improvements
+- [ ] **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
+- [ ] **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
+- [ ] **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
+- [ ] **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
+- [ ] **Timeline header**: Show Display Name instead of username at top of timeline page
+- [ ] **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
+- [ ] **Weekend notes styling**: Change background from yellow to light blue or green
+
+### Form & Entry Display Improvements
+- [ ] **Morning Report date format**: Auto-format previous day's dinner based on day of week
+  - Example: "Mon Dinner" (on Tuesday), "Fri Dinner" (on Saturday)
+- [ ] **School Day form updates**:
+  - [ ] Display bathroom times as badges (improve spacing)
+  - [ ] Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
+  - [ ] Remove "Additional Notes/Reminders" field from form and display
+  - [ ] Remove "Other" option for Inclusion Specials and Small Group Specials
+  - [ ] Keep "Other" option for Related Services only
+
+### New Feature Additions
+- [ ] **Clickable links in posts**: Auto-detect and convert URLs in text posts to clickable links
+- [ ] **Weekend form mood grid**: Add optional mood grid to Weekend form input
+- [ ] **Photo post mood grid**: Add optional mood grid to Photo form input
+- [ ] **User guide**: Create how-to guide for new users, accessible from user profile page
+
+---
  
 ## Planned Features and Improvements
  
@@ -83,10 +112,10 @@
         <h3>{{ user.profile.display_name }}</h3>
         <p>{{ user.profile.position_role }}</p>
         {% if user.profile.email_address %}
-        <a href="mailto:{{ user.profile.email_address }}">📧 {{ user.profile.email_address }}</a>
+        <a href="mailto:{{ user.profile.email_address }}">ðŸ“§ {{ user.profile.email_address }}</a>
         {% endif %}
         {% if user.profile.phone_number %}
-        <a href="tel:{{ user.profile.phone_number }}">📞 {{ user.profile.phone_number }}</a>
+        <a href="tel:{{ user.profile.phone_number }}">ðŸ“ž {{ user.profile.phone_number }}</a>
         {% endif %}
     </div>
     {% endfor %}
@@ -197,7 +226,7 @@ class DocumentListView(LoginRequiredMixin, ListView):
 ```django
 <div class="timeline-content">
     <h2 class="timeline-title">
-        <span class="timeline-icon">📄</span>
+        <span class="timeline-icon">ðŸ“„</span>
         {{ entry.data.title }}
     </h2>
  
@@ -207,7 +236,7 @@ class DocumentListView(LoginRequiredMixin, ListView):
  
     <div class="document-actions">
         <a href="{{ entry.document.url }}" class="btn-download" download>
-            ⬇️ Download
+            â¬‡ï¸ Download
         </a>
         <span class="file-info">
             {{ entry.document.name|basename }}
@@ -224,7 +253,7 @@ class DocumentListView(LoginRequiredMixin, ListView):
 'document': {
     'form_class': DocumentForm,
     'name': 'Document',
-    'icon': '📄',
+    'icon': 'ðŸ“„',
     'description': 'Upload and share documents and files',
 },
 ```
@@ -566,15 +595,24 @@ class Entry(models.Model):
 ---
  
 ## Implementation Priority
- 
+
+**Immediate** (Quick wins):
+- **Quick Fixes & UI Improvements** - Address visual/display issues and small enhancements
+  - Most are simple template/CSS changes
+  - Image optimization may require more work
+  - Clickable links feature needs URL detection logic
+
 **High Priority** (Start with these):
 1. Babysitter & Lunch Form (1) - Specific recurring use case
 2. Caregiver Directory (2) - Useful for team communication
+   - *Note: "New View: list of all users with contact info" aligns with this*
  
 **Medium Priority**:
 3. Documents & Files Upload System (3) - Useful for sharing IEP docs, forms
 4. User Post History Export (4) - Start with plaintext
+   - *Note: "Download post history to plaintext/PDF" aligns with this*
 5. Standardized Data Fields (5) - Foundation for reporting
+   - *Note: "Standardize food intake form design" aligns with this*
 6. Replace DeleteView for pin/unpin (6.1) - Semantic clarity
  
 **Lower Priority** (More complex or optional):
@@ -602,7 +640,7 @@ class Entry(models.Model):
  
 ## Completed Features
  
-### ✅ About Eddie Page
+### About Eddie Page
 - Created dedicated page with information about Eddie and emergency contacts
 - Added `AboutEddieView` at `/about/` route
 - Page includes: basic information, emergency contacts, daily routine, preferences
@@ -610,7 +648,7 @@ class Entry(models.Model):
 - Accessible only to authenticated users
 - Mobile-responsive design
  
-### ✅ Code Quality Improvements (January 2026)
+### Code Quality Improvements (January 2026)
 - Added permission helper functions in `views.py` to centralize user profile attribute checking
 - Created `@api_login_required` decorator to reduce duplicate authentication code in API views
 - Moved `PermissionDenied` import to top of `views.py` (was imported 3 times inside methods)
@@ -619,57 +657,57 @@ class Entry(models.Model):
 - Removed unnecessary `widget=forms.Select()` declarations where Select is the default
 - Reorganized imports in `views.py` to follow Django conventions
  
-### ✅ Pinned Posts Feature
+### Pinned Posts Feature
 - Added `is_pinned` boolean field to Entry model
 - Added `can_pin_posts` permission field to UserProfile
 - Pinned posts automatically appear at the top of the timeline
-- Visual indicator (📌 Pinned badge) displayed on pinned posts
+- Visual indicator (ðŸ“Œ Pinned badge) displayed on pinned posts
 - Pin checkbox shown in entry form for users with permission
 - Admin interface with actions to pin/unpin entries
 - Admin can grant/revoke pin permission for users
 - Styled pinned posts with amber border and gradient background
  
-### ✅ "Words I'm Using" Form
+### "Words I'm Using" Form
 - Added simple form to track new words/phrases Eddie is using
 - Single text input field for comma-separated phrases
 - Words display as large, colorful badges with Buzz Lightyear color theme
 - Created `timeline/forms/words.py`, display template, and CSS styling
  
-### ✅ Date Dividers in Timeline
+### Date Dividers in Timeline
 - Added automatic date dividers between days in the timeline
 - Display format: `------- Monday, January 1 ---------`
 - Added template filters: `format_date` and `get_date`
 - Added `should_show_date_divider` template tag for date comparison
 - Works correctly with pagination
  
-### ✅ Enhanced User Registration Fields
+### Enhanced User Registration Fields
 - Added UserProfile model with display_name, email_address, position_role, first_name, last_name
 - Updated SignupView with custom registration form
 - Added profile fields to admin interface
  
-### ✅ Display User Name on Posts
+### Display User Name on Posts
 - User display names now shown on all timeline entries
 - Profile information accessible in admin
  
-### ✅ My Weekend Form
+### My Weekend Form
 - Created weekend form with 3 photos and 3 text descriptions
 - Added notes section for weekend highlights
  
-### ✅ Removed Post Filtering
+### Removed Post Filtering
 - Simplified timeline view to show all posts
 - Removed filter buttons for cleaner interface
  
-### ✅ Overnight Form Enhancements
+### Overnight Form Enhancements
 - Auto-detects day of week from entry timestamp
 - Display title shows "[Day] Morning Report" (e.g., "Friday Morning Report")
 - Dinner field displays as "Dinner Last Night"
  
-### ✅ Fixed Weekend Form Photo Display
+### Fixed Weekend Form Photo Display
 - Weekend photos now display at full size like regular photo posts
 - Removed max-height constraint that was cutting off images
 - Images maintain aspect ratio and are responsive
  
-### ✅ User Profile Self-Service Page
+### User Profile Self-Service Page
 - Created profile view page (`/profile/`) showing user information
 - Created profile edit page (`/profile/edit/`) for updating profile fields
 - Created password change page (`/profile/password/`) using Django's built-in with custom template
@@ -682,7 +720,7 @@ class Entry(models.Model):
 - Mobile-responsive design with CSS styling
 - Success messages for profile updates and password changes
  
-### ✅ Standardized Mood Tracking Grid
+### Standardized Mood Tracking Grid
 - Created reusable `MoodFieldMixin` for adding mood tracking to any form
 - Created `MoodGridWidget` custom widget with touch-friendly grid layout
 - Added 12 mood options with emojis: Happy, Calm, Energetic, Tired, Sad, Anxious, Frustrated, Silly, Upset/Angry, Not feeling well, Focused, Quiet/Withdrawn
