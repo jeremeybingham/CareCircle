@@ -1,12 +1,22 @@
 from django import forms
 from .base import BaseEntryForm
+from .mixins import MoodFieldMixin
 
 
-class WeekendForm(BaseEntryForm):
+class WeekendForm(MoodFieldMixin, BaseEntryForm):
     """
     Weekend summary form with photos and descriptions for Friday, Saturday, Sunday.
     Allows users to share photos and highlights from their weekend.
     """
+
+    # Field ordering to put mood at the end
+    field_order = [
+        'friday_photo', 'friday_text',
+        'saturday_photo', 'saturday_text',
+        'sunday_photo', 'sunday_text',
+        'notes',
+        'mood', 'mood_notes',
+    ]
 
     # Friday
     friday_photo = forms.ImageField(
@@ -85,6 +95,7 @@ class WeekendForm(BaseEntryForm):
             cleaned_data.get('sunday_photo'),
             cleaned_data.get('sunday_text'),
             cleaned_data.get('notes'),
+            cleaned_data.get('mood'),
         ])
 
         if not has_content:

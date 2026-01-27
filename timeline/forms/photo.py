@@ -1,12 +1,17 @@
 from django import forms
 from .base import BaseEntryForm
+from .mixins import MoodFieldMixin
 
 
-class PhotoForm(BaseEntryForm):
+class PhotoForm(MoodFieldMixin, BaseEntryForm):
     """
     Photo with caption form.
-    Allows users to upload an image with an optional caption.
+    Allows users to upload an image with an optional caption and mood tracking.
     """
+
+    # Field ordering
+    field_order = ['image', 'caption', 'mood', 'mood_notes']
+
     image = forms.ImageField(
         required=True,
         label="Photo",

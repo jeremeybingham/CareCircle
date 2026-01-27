@@ -3,25 +3,25 @@
 ## Quick Fixes & UI Improvements
 
 ### Visual & Display Improvements
-- [ ] **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
-- [ ] **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
-- [ ] **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
-- [ ] **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
-- [ ] **Timeline header**: Show Display Name instead of username at top of timeline page
-- [ ] **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
-- [ ] **Weekend notes styling**: Change background from yellow to light blue or green
+- [x] **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
+- [x] **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
+- [x] **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
+- [x] **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
+- [x] **Timeline header**: Show Display Name instead of username at top of timeline page
+- [x] **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
+- [x] **Weekend notes styling**: Change background from yellow to light blue or green
 
 ### Form & Entry Display Improvements
-- [ ] **Morning Report date format**: Auto-format previous day's dinner based on day of week
+- [x] **Morning Report date format**: Auto-format previous day's dinner based on day of week
   - Example: "Mon Dinner" (on Tuesday), "Fri Dinner" (on Saturday)
-- [ ] **School Day form updates**:
-  - [ ] Display bathroom times as badges (improve spacing)
-  - [ ] Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
-  - [ ] Remove "Additional Notes/Reminders" field from form and display
-  - [ ] Remove "Other" option for Inclusion Specials and Small Group Specials
-  - [ ] Keep "Other" option for Related Services only
-- [ ] **Weekend form mood grid**: Add optional mood grid to Weekend form input
-- [ ] **Photo post mood grid**: Add optional mood grid to Photo form input
+- [x] **School Day form updates**:
+  - [x] Display bathroom times as badges (improve spacing)
+  - [x] Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
+  - [x] Remove "Additional Notes/Reminders" field from form and display
+  - [x] Remove "Other" option for Inclusion Specials and Small Group Specials
+  - [x] Keep "Other" option for Related Services only
+- [x] **Weekend form mood grid**: Add optional mood grid to Weekend form input
+- [x] **Photo post mood grid**: Add optional mood grid to Photo form input
 
 ### New Feature Additions
 - [ ] **User guide**: Create how-to guide for new users, accessible from user profile page

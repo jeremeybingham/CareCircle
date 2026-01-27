@@ -13,10 +13,10 @@
     {% if user.is_authenticated %}
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{% url 'timeline:timeline' %}" class="nav-brand">🚀 Eddie's Timeline</a>
+            <a href="{% url 'timeline:about_eddie' %}" class="nav-brand">🚀 About Eddie</a>
             <div class="nav-menu">
-                <a href="{% url 'timeline:about_eddie' %}" class="nav-link">About Eddie</a>
-                <a href="{% url 'timeline:profile' %}" class="nav-link nav-user-link">{{ user.username }}</a>
+                <a href="{% url 'timeline:timeline' %}" class="nav-link">Timeline</a>
+                <a href="{% url 'timeline:profile' %}" class="nav-link nav-user-link">{% if user.profile.display_name %}{{ user.profile.display_name }}{% else %}{{ user.username }}{% endif %}</a>
                 {% if user.is_staff %}
                 <a href="{% url 'admin:index' %}" class="nav-link">Admin</a>
                 {% endif %}

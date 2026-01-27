@@ -138,3 +138,26 @@ def mood_emoji(mood_key):
     if not mood_key:
         return ''
     return MOOD_EMOJI_MAP.get(mood_key.strip().lower(), '')
+
+
+@register.filter(name='previous_day_abbrev')
+def previous_day_abbrev(value):
+    """
+    Get the abbreviated name of the previous day.
+
+    For a morning report on Tuesday, returns "Mon" (for Monday's dinner).
+    For a morning report on Saturday, returns "Fri" (for Friday's dinner).
+
+    Usage:
+        {{ entry.timestamp|previous_day_abbrev }} Dinner
+        -> "Mon Dinner" (if entry is on Tuesday)
+    """
+    from datetime import timedelta
+    if not value:
+        return ''
+    if hasattr(value, 'date'):
+        date = value.date()
+    else:
+        date = value
+    previous_day = date - timedelta(days=1)
+    return previous_day.strftime('%a')

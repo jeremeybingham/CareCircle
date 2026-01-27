@@ -1,10 +1,11 @@
+{% load entry_display %}
 <div class="timeline-content">
     <h2 class="timeline-title">
         <span class="timeline-icon">{{ entry.form_type.icon }}</span>
         {{ entry.timestamp|date:"l" }} Morning Report
     </h2>
     <div class="data-list">
-        <p><strong>Dinner:</strong> {{ entry.data.dinner }}</p>
+        <p><strong>{{ entry.timestamp|previous_day_abbrev }} Dinner:</strong> {{ entry.data.dinner }}</p>
         <p><strong>Bedtime:</strong> {{ entry.data.bedtime }}</p>
         <p><strong>Woke Up:</strong> {{ entry.data.woke_up }}</p>
         <p><strong>Breakfast:</strong> {{ entry.data.breakfast }}</p>
