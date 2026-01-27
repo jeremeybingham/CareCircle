@@ -20,12 +20,12 @@
   - [ ] Remove "Additional Notes/Reminders" field from form and display
   - [ ] Remove "Other" option for Inclusion Specials and Small Group Specials
   - [ ] Keep "Other" option for Related Services only
-
-### New Feature Additions
-- [ ] **Clickable links in posts**: Auto-detect and convert URLs in text posts to clickable links
 - [ ] **Weekend form mood grid**: Add optional mood grid to Weekend form input
 - [ ] **Photo post mood grid**: Add optional mood grid to Photo form input
+
+### New Feature Additions
 - [ ] **User guide**: Create how-to guide for new users, accessible from user profile page
+- [ ] **Clickable links in posts**: Auto-detect and convert URLs in text posts to clickable links
 
 ---
  
