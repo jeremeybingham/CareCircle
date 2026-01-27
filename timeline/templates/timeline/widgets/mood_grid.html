@@ -1,0 +1,24 @@
+{% comment %}
+Mood Grid Widget Template
+
+Displays mood options in a touch-friendly grid layout with emojis.
+Used by MoodGridWidget for multi-select mood tracking.
+{% endcomment %}
+{% load entry_display %}
+
+<div class="mood-grid-container">
+    {% for group, options, index in widget.optgroups %}
+        {% for option in options %}
+            <label class="mood-option{% if option.attrs.checked %} selected{% endif %}" for="{{ option.attrs.id }}">
+                <input type="checkbox"
+                       name="{{ option.name }}"
+                       value="{{ option.value }}"
+                       {% if option.attrs.checked %}checked{% endif %}
+                       id="{{ option.attrs.id }}"
+                       class="mood-checkbox">
+                <span class="mood-emoji">{{ emoji_map|get_item:option.value }}</span>
+                <span class="mood-label">{{ option.label }}</span>
+            </label>
+        {% endfor %}
+    {% endfor %}
+</div>

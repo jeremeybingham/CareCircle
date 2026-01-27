@@ -1,0 +1,31 @@
+{% comment %}
+Mood Display Partial Template
+
+Displays mood data from an entry with badges and optional notes.
+Used to show mood information consistently across entry templates.
+
+Expected context:
+    - moods: comma-separated string of mood values (e.g., "happy, calm, tired")
+    - mood_notes: optional string with additional mood context
+
+Usage:
+    {% include "timeline/partials/_mood_display.html" with moods=entry.data.mood mood_notes=entry.data.mood_notes %}
+{% endcomment %}
+{% load entry_display %}
+
+{% if moods %}
+<div class="entry-section mood-section">
+    <h3>Mood</h3>
+    <div class="mood-badges">
+        {% for mood in moods|split_commas %}
+        <span class="mood-badge mood-{{ mood }}">
+            <span class="mood-badge-emoji">{{ mood|mood_emoji }}</span>
+            <span class="mood-badge-label">{{ mood|title }}</span>
+        </span>
+        {% endfor %}
+    </div>
+    {% if mood_notes %}
+    <p class="mood-notes-text">{{ mood_notes }}</p>
+    {% endif %}
+</div>
+{% endif %}

@@ -7,13 +7,25 @@ from .constants import (
     RELATED_SERVICES_CHOICES,
     SMALL_GROUP_SPECIALS_CHOICES,
 )
+from .mixins import MoodFieldMixin
 
 
-class SchoolDayForm(BaseEntryForm):
+class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
     """
     School day tracking form.
-    Tracks bathroom, meals, activities, services, and notes.
+    Tracks bathroom, meals, activities, services, mood, and notes.
     """
+
+    # Field ordering: put mood before notes sections
+    field_order = [
+        'bathroom',
+        'snacks', 'lunch_from_home', 'other_food',
+        'inclusion_specials', 'inclusion_other',
+        'small_group_specials', 'small_group_other',
+        'related_services', 'related_other',
+        'mood', 'mood_notes',
+        'notes_about_day', 'additional_notes',
+    ]
     # Bathroom
     bathroom = forms.CharField(
         required=False,

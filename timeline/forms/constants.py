@@ -67,3 +67,42 @@ RELATED_SERVICES_CHOICES = [
     ('Speech', 'Speech'),
     ('OT', 'OT'),
 ]
+
+
+# =============================================================================
+# Mood Choices (Standardized for all forms)
+# =============================================================================
+
+# Mood options with emoji for visual display
+# Format: (value, display_label)
+# The emoji is stored separately in MOOD_EMOJI_MAP for flexibility
+MOOD_CHOICES = [
+    ('happy', 'Happy'),
+    ('calm', 'Calm'),
+    ('energetic', 'Energetic'),
+    ('tired', 'Tired'),
+    ('sad', 'Sad'),
+    ('anxious', 'Anxious'),
+    ('frustrated', 'Frustrated'),
+    ('silly', 'Silly'),
+    ('upset', 'Upset/Angry'),
+    ('unwell', 'Not feeling well'),
+    ('focused', 'Focused'),
+    ('withdrawn', 'Quiet/Withdrawn'),
+]
+
+# Emoji mapping for mood display
+MOOD_EMOJI_MAP = {
+    'happy': '😊',
+    'calm': '😌',
+    'energetic': '⚡',
+    'tired': '😴',
+    'sad': '😢',
+    'anxious': '😰',
+    'frustrated': '😤',
+    'silly': '🤪',
+    'upset': '😠',
+    'unwell': '🤒',
+    'focused': '🤔',
+    'withdrawn': '😶',
+}
