@@ -3,6 +3,8 @@ from django.template.loader import render_to_string
 from django.template import TemplateDoesNotExist
 from django.utils.safestring import mark_safe
 
+from timeline.forms.constants import MOOD_EMOJI_MAP
+
 register = template.Library()
 
 
@@ -122,3 +124,17 @@ def should_show_date_divider(entries, current_index):
     previous_date = previous_entry.timestamp.date()
 
     return current_date != previous_date
+
+
+@register.filter(name='mood_emoji')
+def mood_emoji(mood_key):
+    """
+    Get the emoji for a mood key.
+
+    Usage:
+        {{ "happy"|mood_emoji }}  -> 😊
+        {{ mood|mood_emoji }}
+    """
+    if not mood_key:
+        return ''
+    return MOOD_EMOJI_MAP.get(mood_key.strip().lower(), '')

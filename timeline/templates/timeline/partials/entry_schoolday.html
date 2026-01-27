@@ -91,7 +91,10 @@
         </div>
     </div>
     {% endif %}
-    
+
+    <!-- Mood -->
+    {% include "timeline/partials/_mood_display.html" with moods=entry.data.mood mood_notes=entry.data.mood_notes %}
+
     <!-- Notes About My Day -->
     {% if entry.data.notes_about_day %}
     <div class="entry-section">

@@ -1518,3 +1518,220 @@ body {
         width: 100%;
     }
 }
+
+/* ===========================================
+   Mood Tracking Grid Styles
+   =========================================== */
+
+/* Mood Grid Input Widget (Form) */
+.mood-grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.mood-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+    min-height: 80px;
+    text-align: center;
+}
+
+.mood-option:hover {
+    border-color: #2965CA;
+    background: #f8fafc;
+}
+
+.mood-option.selected,
+.mood-option:has(.mood-checkbox:checked) {
+    background: #e8f4fd;
+    border-color: #2965CA;
+    box-shadow: 0 0 0 3px rgba(41, 101, 202, 0.15);
+}
+
+.mood-checkbox {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.mood-option .mood-emoji {
+    font-size: 28px;
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.mood-option .mood-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #444;
+    line-height: 1.2;
+}
+
+/* Mood Badge Display (Entry View) */
+.mood-section {
+    margin-bottom: 16px;
+}
+
+.mood-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.mood-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    color: #444;
+}
+
+.mood-badge-emoji {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.mood-badge-label {
+    text-transform: capitalize;
+}
+
+/* Mood badge colors - using Buzz Lightyear theme */
+.mood-badge.mood-happy {
+    background: #e8f5e9;
+    border-color: #8DAC50;
+    color: #084605;
+}
+
+.mood-badge.mood-calm {
+    background: #e3f2fd;
+    border-color: #64b5f6;
+    color: #1565c0;
+}
+
+.mood-badge.mood-energetic {
+    background: #fff8e1;
+    border-color: #FFD500;
+    color: #8a7000;
+}
+
+.mood-badge.mood-tired {
+    background: #f3e5f5;
+    border-color: #613B6F;
+    color: #613B6F;
+}
+
+.mood-badge.mood-sad {
+    background: #e3f2fd;
+    border-color: #90caf9;
+    color: #1565c0;
+}
+
+.mood-badge.mood-anxious {
+    background: #fff3e0;
+    border-color: #ffb74d;
+    color: #e65100;
+}
+
+.mood-badge.mood-frustrated {
+    background: #ffebee;
+    border-color: #DB382D;
+    color: #c62828;
+}
+
+.mood-badge.mood-silly {
+    background: #fce4ec;
+    border-color: #f48fb1;
+    color: #c2185b;
+}
+
+.mood-badge.mood-upset {
+    background: #ffebee;
+    border-color: #ef5350;
+    color: #c62828;
+}
+
+.mood-badge.mood-unwell {
+    background: #efebe9;
+    border-color: #a1887f;
+    color: #5d4037;
+}
+
+.mood-badge.mood-focused {
+    background: #e8f5e9;
+    border-color: #66bb6a;
+    color: #2e7d32;
+}
+
+.mood-badge.mood-withdrawn {
+    background: #eceff1;
+    border-color: #90a4ae;
+    color: #546e7a;
+}
+
+.mood-notes-text {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #fafafa;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #555;
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* Mobile Responsive for Mood Grid */
+@media (max-width: 600px) {
+    .mood-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .mood-option {
+        padding: 10px 6px;
+        min-height: 70px;
+    }
+
+    .mood-option .mood-emoji {
+        font-size: 24px;
+    }
+
+    .mood-option .mood-label {
+        font-size: 11px;
+    }
+
+    .mood-badges {
+        gap: 6px;
+    }
+
+    .mood-badge {
+        padding: 6px 10px;
+        font-size: 13px;
+    }
+
+    .mood-badge-emoji {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    .mood-grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
