@@ -280,6 +280,10 @@ class EddieProfileAdmin(admin.ModelAdmin):
     """Admin interface for Eddie's profile (singleton)"""
 
     fieldsets = (
+        ('Photo', {
+            'fields': ('photo', 'photo_preview'),
+            'description': 'Current photo of Eddie'
+        }),
         ('About Eddie', {
             'fields': ('bio', 'tips_and_tricks', 'favorites', 'fun_facts', 'goals'),
             'description': 'General information about Eddie for caregivers'
@@ -312,7 +316,14 @@ class EddieProfileAdmin(admin.ModelAdmin):
         }),
     )
 
-    readonly_fields = ['updated_at']
+    readonly_fields = ['updated_at', 'photo_preview']
+
+    def photo_preview(self, obj):
+        """Show photo thumbnail in admin"""
+        if obj.photo:
+            return mark_safe(f'<img src="{obj.photo.url}" style="max-width: 300px; max-height: 300px; border-radius: 8px;" />')
+        return "No photo uploaded"
+    photo_preview.short_description = 'Current Photo'
 
     def has_add_permission(self, request):
         """Only allow one instance (singleton)"""

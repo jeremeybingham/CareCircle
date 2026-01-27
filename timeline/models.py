@@ -241,6 +241,15 @@ class EddieProfile(models.Model):
     Singleton model storing Eddie's profile information for the "About Eddie" page.
     This information is shared with all caregivers to help them understand and support Eddie.
     """
+    # Profile Photo
+    photo = models.ImageField(
+        upload_to='eddie_profile/',
+        blank=True,
+        null=True,
+        validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'gif', 'webp'])],
+        help_text="Current photo of Eddie for caregivers"
+    )
+
     # Bio Section
     bio = models.TextField(
         help_text="General information about Eddie (age, family, personality)"
