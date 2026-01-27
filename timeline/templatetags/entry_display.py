@@ -1,3 +1,5 @@
+import ast
+
 from django import template
 from django.template.loader import render_to_string
 from django.template import TemplateDoesNotExist
@@ -41,8 +43,9 @@ def render_entry(context, entry):
 @register.filter(name='split_commas')
 def split_commas(value):
     """
-    Split a comma-separated string into a list.
-    
+    Split a comma-separated or space-separated string into a list.
+    Also handles Python list representations (e.g., "['Happy', 'Energetic']").
+
     Usage:
         {% for item in my_string|split_commas %}
             {{ item }}
@@ -50,7 +53,28 @@ def split_commas(value):
     """
     if not value:
         return []
-    return [item.strip() for item in str(value).split(',') if item.strip()]
+
+    # Handle actual Python lists
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+
+    value_str = str(value)
+
+    # Handle Python list string representation (e.g., "['Happy', 'Energetic']")
+    if value_str.startswith('[') and value_str.endswith(']'):
+        try:
+            parsed = ast.literal_eval(value_str)
+            if isinstance(parsed, list):
+                return [str(item).strip() for item in parsed if str(item).strip()]
+        except (ValueError, SyntaxError):
+            pass
+
+    # Split by comma first
+    if ',' in value_str:
+        return [item.strip() for item in value_str.split(',') if item.strip()]
+
+    # Split by space if no commas
+    return [item.strip() for item in value_str.split() if item.strip()]
 
 
 @register.filter(name='get_item')
