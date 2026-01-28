@@ -43,8 +43,11 @@ def render_entry(context, entry):
 @register.filter(name='split_commas')
 def split_commas(value):
     """
-    Split a comma-separated or space-separated string into a list.
+    Split a comma-separated string into a list.
     Also handles Python list representations (e.g., "['Happy', 'Energetic']").
+
+    For space-separated values, only splits if content looks like time entries
+    (contains ':'), to preserve multi-word phrases like "hello world".
 
     Usage:
         {% for item in my_string|split_commas %}
@@ -69,12 +72,17 @@ def split_commas(value):
         except (ValueError, SyntaxError):
             pass
 
-    # Split by comma first
+    # Split by comma first (primary delimiter for phrases)
     if ',' in value_str:
         return [item.strip() for item in value_str.split(',') if item.strip()]
 
-    # Split by space if no commas
-    return [item.strip() for item in value_str.split() if item.strip()]
+    # Split by space only if it looks like time entries (contains ':')
+    # This preserves multi-word phrases like "hello world" as single items
+    if ':' in value_str:
+        return [item.strip() for item in value_str.split() if item.strip()]
+
+    # No commas and not time entries - return as single item
+    return [value_str.strip()] if value_str.strip() else []
 
 
 @register.filter(name='get_item')
