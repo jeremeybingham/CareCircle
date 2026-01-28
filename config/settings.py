@@ -129,6 +129,12 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Image optimization settings
+# These control how uploaded images are processed before storage
+IMAGE_MAX_WIDTH = 1920
+IMAGE_MAX_HEIGHT = 1920
+IMAGE_JPEG_QUALITY = 85  # 1-100, 85 is a good balance of quality vs size
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
