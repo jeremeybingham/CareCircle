@@ -1,71 +1,13 @@
 # Timeline - TODO List
 
-## Quick Fixes & UI Improvements
-
-### Visual & Display Improvements
-- [x] **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
-- [x] **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
-- [x] **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
-- [x] **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
-- [x] **Timeline header**: Show Display Name instead of username at top of timeline page
-- [x] **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
-- [x] **Weekend notes styling**: Change background from yellow to light blue or green
-
-### Form & Entry Display Improvements
-- [x] **Morning Report date format**: Auto-format previous day's dinner based on day of week
-  - Example: "Mon Dinner" (on Tuesday), "Fri Dinner" (on Saturday)
-- [x] **School Day form updates**:
-  - [x] Display bathroom times as badges (improve spacing)
-  - [x] Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
-  - [x] Remove "Additional Notes/Reminders" field from form and display
-  - [x] Remove "Other" option for Inclusion Specials and Small Group Specials
-  - [x] Keep "Other" option for Related Services only
-- [x] **Weekend form mood grid**: Add optional mood grid to Weekend form input
-- [x] **Photo post mood grid**: Add optional mood grid to Photo form input
-
-### New Feature Additions
+## Planned Features and Improvements
+ 
+### New Feature Additions to expand on:
 - [ ] **User guide**: Create how-to guide for new users, accessible from user profile page
 - [ ] **Clickable links in posts**: Auto-detect and convert URLs in text posts to clickable links
 
----
- 
-## Planned Features and Improvements
- 
-### 1. Babysitter & Lunch Form (Friday Pickups)
- 
-**Goal**: Create a specialized form for babysitter pickups with optional lunch details.
- 
-**Form Fields**:
-- Pickup time
-- Pickup Location
-- Any stops / Notes? (text area)
-- Lunch or snack? Yes / No (checkbox)
-- if Lunch, None|Some|Most|All (radio buttons)
-- Lunch Notes? (text area)
-- Mood Grid
-- Dropoff time
-- Dropoff Location
-- (form will be filled out by sitter/user)
- 
-**Implementation Steps**:
-- [ ] Create `timeline/forms/friday_pickup.py` with FridayPickupForm
-- [ ] Add to form registry
-- [ ] Create display template
-- [ ] Add validation for required fields
-- [ ] Style form to stand out (Friday-specific)
-- [ ] Run `python manage.py init_forms`
-- [ ] Grant access to relevant users
- 
-**Files to Create/Modify**:
-- `timeline/forms/friday_pickup.py` - NEW
-- `timeline/forms/registry.py` - Add to FORM_REGISTRY
-- `timeline/forms/__init__.py` - Add import
-- `timeline/templates/timeline/partials/entry_friday_pickup.html` - NEW
-- `timeline/static/timeline/css/style.css` - Add styling
- 
----
- 
-### 2. Caregiver Directory (User List with Contact Info)
+
+### 1. Caregiver Directory (User List with Contact Info)
  
 **Goal**: Create a page listing all caregivers with their contact information for easy reference during handoffs or emergencies.
  
@@ -125,7 +67,7 @@
  
 ---
  
-### 3. Documents & Files Upload System
+### 2. Documents & Files Upload System
  
 **Goal**: Create a system for uploading documents/files with descriptions, viewable in timeline and on a dedicated documents page.
  
@@ -260,82 +202,7 @@ class DocumentListView(LoginRequiredMixin, ListView):
  
 ---
  
-### 4. User Post History Export
- 
-**Goal**: Allow users to download their post history in portable formats for record-keeping, IEP meetings, or personal archives.
- 
-**Use Cases**:
-- Parents preparing for IEP meetings need documentation
-- Therapists want records of session notes
-- Caregivers leaving want to hand off their contribution history
-- Creating a backup of observations and photos
- 
-**Export Formats**:
- 
-#### 4.1 Plaintext Export (Simpler, Lower Resource Usage)
-- Generate a text file with all user's posts
-- Include timestamps, form types, and all form data
-- Include URLs/links to photos (not embedded)
-- Easy to implement, minimal server resources
-- Good for quick reference and searching
- 
-#### 4.2 PDF Export with Embedded Photos (Resource Intensive)
-- Generate a formatted PDF document
-- Embed photos directly in the document
-- Professional appearance for meetings/records
-- **Server Resource Concerns**:
-  - Photo processing requires significant memory
-  - Large photo collections could timeout or crash
-  - May need pagination/chunking for large histories
-  - Consider using Celery for background processing
-  - Alternative: Generate incrementally (month-by-month exports)
- 
-**Implementation Considerations**:
-- Start with plaintext export (lower complexity)
-- Add PDF export as optional enhancement
-- Implement date range filtering to limit export size
-- Show warning for large exports
-- Consider email delivery for large PDFs (requires email setup)
- 
-**Implementation Steps**:
-- [ ] Create `ExportPostHistoryView` with format selection
-- [ ] Implement plaintext export generator
-- [ ] Add date range filter to limit export scope
-- [ ] Create download response with proper headers
-- [ ] (Optional) Implement PDF export using WeasyPrint or ReportLab
-- [ ] (Optional) Add background task processing for large exports
-- [ ] Add export button to user profile page
-- [ ] Handle empty post history gracefully
- 
-**Files to Create/Modify**:
-- `timeline/views.py` - Add export views
-- `timeline/templates/timeline/export_history.html` - NEW (format/date selection)
-- `timeline/utils/export.py` - NEW (export generation logic)
-- `timeline/urls.py` - Add export routes
-- `requirements.txt` - Add PDF library if implementing PDF export
- 
-**Plaintext Export Example**:
-```
-Timeline Post History Export
-User: Ms. Johnson (Teacher)
-Exported: January 27, 2026
-Date Range: January 1, 2026 - January 27, 2026
----
- 
-[2026-01-27 08:30 AM] School Day Entry
-- Breakfast: Most of it eaten
-- Mood: Happy, energetic
-- Activities: Circle time, art project
-- Photo: https://timeline.example.com/media/photos/2026/01/27/morning.jpg
- 
-[2026-01-26 03:15 PM] Words I'm Using
-- Words: "more please", "all done", "help"
-...
-```
- 
----
- 
-### 5. Standardized Data Fields for Reporting
+### 3. Standardized Data Fields for Reporting
  
 **Goal**: Coordinate field types and data storage across forms so that identical data (food intake, mood, activities, etc.) is captured consistently, enabling future analytics and reporting.
  
@@ -407,13 +274,13 @@ SLEEP_QUALITY_CHOICES = [
  
 ---
  
-### 6. Code Quality & Refactoring Improvements
+### 4. Code Quality & Refactoring Improvements
  
 **Goal**: Improve code maintainability, consistency, and adherence to Django best practices without changing functionality.
  
 **Note**: Some items from a January 2026 code review have already been addressed in PR #25 (permission helpers, API decorator, centralized form constants). The items below remain.
  
-#### 6.1 Replace DeleteView for Pin/Unpin Views (Medium Priority)
+#### 4.1 Replace DeleteView for Pin/Unpin Views (Medium Priority)
  
 **Issue**: `EntryPinView` and `EntryUnpinView` inherit from `DeleteView` but override `form_valid()` to update instead of delete. This is semantically confusing.
  
@@ -441,7 +308,7 @@ class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, View):
  
 ---
  
-#### 6.2 Add Type Hints (Low Priority)
+#### 4.2 Add Type Hints (Low Priority)
  
 **Issue**: The codebase doesn't use type hints, which would improve IDE support and catch errors earlier.
  
@@ -463,7 +330,7 @@ def get_form_class(form_type: str) -> type[BaseEntryForm] | None:
  
 ---
  
-#### 6.3 Create Template Inclusion Tag for Tag Sections (Low Priority)
+#### 4.3 Create Template Inclusion Tag for Tag Sections (Low Priority)
  
 **Issue**: In `entry_schoolday.html`, the same tag-list rendering pattern repeats 4 times for different sections (inclusion specials, small group specials, related services).
  
@@ -493,7 +360,7 @@ def render_tag_section(title, items, other=None):
  
 ---
  
-#### 6.4 Standardize Docstring Format (Low Priority)
+#### 4.4 Standardize Docstring Format (Low Priority)
  
 **Issue**: Docstrings use inconsistent formats - some are detailed with Args/Returns, others are single lines.
  
@@ -519,7 +386,7 @@ def get_user_profile_attr(user, attr, default=False):
  
 ---
  
-#### 6.5 Split Settings into Environment-Specific Files (Low Priority)
+#### 4.5 Split Settings into Environment-Specific Files (Low Priority)
  
 **Issue**: `config/settings.py` handles all environments with conditionals. For larger deployments, split settings are easier to manage.
  
@@ -539,7 +406,7 @@ config/
  
 ---
  
-#### 6.6 Add Custom Model Managers (Low Priority)
+#### 4.6 Add Custom Model Managers (Low Priority)
  
 **Issue**: Query patterns like `Entry.objects.all().select_related(...)` repeat in views.
  
@@ -570,7 +437,7 @@ class Entry(models.Model):
  
 ---
  
-### 7. Future: Analytics & Reporting Dashboard
+### 5. Future: Analytics & Reporting Dashboard
  
 **Goal**: Leverage standardized data (Section 5) to provide insights on patterns and trends.
  
@@ -733,3 +600,27 @@ class Entry(models.Model):
 - Data stored as comma-separated string for consistent JSON storage
 - Mobile-responsive CSS with 3-column grid (2 on small screens)
 - Color-coded mood badges in entry display (Buzz Lightyear theme)
+
+### Visual & Display Improvements
+- [x] **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
+- [x] **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
+- [x] **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
+- [x] **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
+- [x] **Timeline header**: Show Display Name instead of username at top of timeline page
+- [x] **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
+- [x] **Weekend notes styling**: Change background from yellow to light blue or green
+
+### Form & Entry Display Improvements
+- [x] **Morning Report date format**: Auto-format previous day's dinner based on day of week
+  - Example: "Mon Dinner" (on Tuesday), "Fri Dinner" (on Saturday)
+- [x] **School Day form updates**:
+  - [x] Display bathroom times as badges (improve spacing)
+  - [x] Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
+  - [x] Remove "Additional Notes/Reminders" field from form and display
+  - [x] Remove "Other" option for Inclusion Specials and Small Group Specials
+  - [x] Keep "Other" option for Related Services only
+- [x] **Weekend form mood grid**: Add optional mood grid to Weekend form input
+- [x] **Photo post mood grid**: Add optional mood grid to Photo form input
+
+### **Babysitter & Lunch Form**: Create a specialized form for babysitter pickups with optional lunch details.
+ 
