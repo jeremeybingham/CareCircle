@@ -1,10 +1,28 @@
 # Timeline - TODO List
 
+## Overall Priority Rank:
+
+
+
 ## Planned Features and Improvements
+
+### Easy Fixes
+- [ ] **Login Page Text**: "Welcome Back | Login to your timeline" change to: "Eddie's Timeline | Login to View"
+- [ ] **Mood Grid Placement**: ensure Mood Grid is at bottom of forms it's included in, and doesn't render in between fields for the forms it's included in; see "overnight.py" "pickup.py" and "schoolday.py" for examples of it pushing other form fields down.
+- [ ] **Remove Mood Grid Notes**: Not needed, remove
+- [ ] **About Eddie Visual** Add some colored background to the section headers like the "Emergency Contact" section is purple - use other Buzz Lightyear colors in CSS
+- [ ] **User Profile page Visual** Add some colored background to the section headers
+- [ ] **User Signup page** Move Last Name below first name to avoid overflow on mobile
+
  
 ### New Feature Additions to expand on:
+- [ ] **Standardized Data Fields for Food Reporting**: Coordinate field types and data storage across forms so that identical data for food is captured consistently, enabling future analytics and reporting. See FOOD.md file in root dir for examples.
 - [ ] **User guide**: Create how-to guide for new users, accessible from user profile page
 - [ ] **Clickable links in posts**: Auto-detect and convert URLs in text posts to clickable links
+- [ ] **Time Menu Ennhancements**: Make time entry menus easier
+- [ ] **Disclaimer on Signup**: Add a note and checkbox about privacy and not sharing the app or info from it with unauthorized parties.
+- [ ] **General CSS Overhaul** Once app is stable add more decorative CSS elements
+- [ ] **Questions Prompts** Add self-generated posts according to day of week (or list from School of dated questions provided) see QUESTIONS.md file in root dir
 
 
 ### 1. Caregiver Directory (User List with Contact Info)
@@ -199,79 +217,7 @@ class DocumentListView(LoginRequiredMixin, ListView):
     'description': 'Upload and share documents and files',
 },
 ```
- 
----
- 
-### 3. Standardized Data Fields for Reporting
- 
-**Goal**: Coordinate field types and data storage across forms so that identical data (food intake, mood, activities, etc.) is captured consistently, enabling future analytics and reporting.
- 
-**Why This Matters**:
-- Currently, different forms may capture similar data in different formats
-- Example: "dinner" in overnight form vs "lunch" in schoolday form use similar portion options but may have inconsistent field names or choices
-- Standardization enables: trend analysis, pattern recognition, IEP progress reports, health tracking
- 
-**Areas Needing Standardization**:
- 
-#### 5.1 Food/Meal Intake
-- **Current**: `PORTION_CHOICES` in `constants.py` (All of it, Most of it, Half, Some, None)
-- **Ensure**: All meal-related fields across all forms use identical choices
-- **Field naming**: Use consistent names like `breakfast_portion`, `lunch_portion`, `dinner_portion`, `snack_portion`
-- **Additional data**: Consider adding `meal_type` (breakfast/lunch/dinner/snack) and `meal_notes` fields
- 
-#### 5.2 Sleep
-- **Fields**: `sleep_quality`, `sleep_duration`, `wake_ups`, `bedtime`, `wake_time`
-- **Choices**: Consistent quality scale (Great, Good, Fair, Poor, Terrible)
- 
-#### 5.3 Bathroom/Toileting
-- **Fields**: `bathroom_time`, `bathroom_type`, `bathroom_success`
-- **Ensure**: Timestamp format consistency for trend analysis
- 
-#### 5.4 Activities
-- **Current**: Activity choices exist but may vary between forms
-- **Solution**: Central `ACTIVITY_CHOICES` in constants.py used everywhere
- 
-**Implementation Steps**:
-- [ ] Audit all existing forms for overlapping data fields
-- [ ] Document current field names and choice values
-- [ ] Design standardized field schema for each data category
-- [ ] Update `timeline/forms/constants.py` with all standardized choices
-- [ ] Create standardized form field mixins or base classes
-- [ ] Migrate existing forms to use standardized fields
-- [ ] Update display templates to handle standardized data
-- [ ] Consider data migration for existing entries (optional, complex)
-- [ ] Document field standards for future form development
- 
-**Files to Create/Modify**:
-- `timeline/forms/constants.py` - Expand with all standardized choices
-- `timeline/forms/mixins.py` - NEW (reusable form field groups)
-- `timeline/forms/*.py` - Update all forms to use standardized fields
-- `docs/DATA_STANDARDS.md` - NEW (document field conventions)
- 
-**Example Standardized Constants**:
-```python
-# timeline/forms/constants.py
- 
-# Food/Meal Intake
-PORTION_CHOICES = [
-    ('all', 'All of it'),
-    ('most', 'Most of it'),
-    ('half', 'About half'),
-    ('some', 'Some of it'),
-    ('none', 'None'),
-    ('na', 'N/A'),
-]
- 
-# Sleep Quality
-SLEEP_QUALITY_CHOICES = [
-    ('great', 'Great'),
-    ('good', 'Good'),
-    ('fair', 'Fair'),
-    ('poor', 'Poor'),
-    ('terrible', 'Terrible'),
-]
-```
- 
+
 ---
  
 ### 4. Code Quality & Refactoring Improvements
@@ -458,39 +404,6 @@ class Entry(models.Model):
 - PDF export for documentation
  
 **Implementation**: To be planned after data standardization is complete.
- 
----
- 
-## Implementation Priority
-
-**Immediate** (Quick wins):
-- **Quick Fixes & UI Improvements** - Address visual/display issues and small enhancements
-  - Most are simple template/CSS changes
-  - Image optimization may require more work
-  - Clickable links feature needs URL detection logic
-
-**High Priority** (Start with these):
-1. Babysitter & Lunch Form (1) - Specific recurring use case
-2. Caregiver Directory (2) - Useful for team communication
-   - *Note: "New View: list of all users with contact info" aligns with this*
- 
-**Medium Priority**:
-3. Documents & Files Upload System (3) - Useful for sharing IEP docs, forms
-4. User Post History Export (4) - Start with plaintext
-   - *Note: "Download post history to plaintext/PDF" aligns with this*
-5. Standardized Data Fields (5) - Foundation for reporting
-   - *Note: "Standardize food intake form design" aligns with this*
-6. Replace DeleteView for pin/unpin (6.1) - Semantic clarity
- 
-**Lower Priority** (More complex or optional):
-7. Template inclusion tag for tag sections (6.3)
-8. Add type hints (6.2)
-9. Standardize docstrings (6.4)
-10. Split settings files (6.5) - Only if needed
-11. Custom model managers (6.6)
- 
-**Long-term**:
-12. Analytics & Reporting Dashboard (7) - After data standardization
  
 ---
  
