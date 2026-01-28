@@ -3,6 +3,11 @@ from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator, EmailValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from PIL import Image, ImageOps
+from io import BytesIO
+from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.conf import settings
+import sys
 
 
 class UserProfile(models.Model):
@@ -234,6 +239,83 @@ class Entry(models.Model):
         if self.image:
             display_data['image_url'] = self.image.url
         return display_data
+
+    def save(self, *args, **kwargs):
+        """Override save to optimize images before storing"""
+        if self.image and self._state.adding:  # Only optimize on creation
+            self.image = self._optimize_image(self.image)
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def _optimize_image(image_field):
+        """
+        Optimize uploaded image:
+        - Convert to JPEG
+        - Resize to max dimensions (default 1920x1920)
+        - Compress to quality setting (default 85%)
+        - Handle EXIF rotation
+        - Remove EXIF data
+
+        Returns optimized image file, or original if optimization fails.
+        """
+        try:
+            img = Image.open(image_field)
+
+            # Rotate based on EXIF orientation before removing EXIF
+            try:
+                img = ImageOps.exif_transpose(img)
+            except Exception:
+                pass
+
+            # Convert to RGB (handles PNG transparency, etc.)
+            if img.mode in ('RGBA', 'LA', 'P'):
+                background = Image.new('RGB', img.size, (255, 255, 255))
+                if img.mode == 'RGBA':
+                    background.paste(img, mask=img.split()[3])
+                else:
+                    background.paste(img)
+                img = background
+            elif img.mode != 'RGB':
+                img = img.convert('RGB')
+
+            # Get settings with defaults
+            max_width = getattr(settings, 'IMAGE_MAX_WIDTH', 1920)
+            max_height = getattr(settings, 'IMAGE_MAX_HEIGHT', 1920)
+            jpeg_quality = getattr(settings, 'IMAGE_JPEG_QUALITY', 85)
+
+            # Resize if needed (maintain aspect ratio)
+            if img.width > max_width or img.height > max_height:
+                img.thumbnail((max_width, max_height), Image.Resampling.LANCZOS)
+
+            # Save optimized version
+            output = BytesIO()
+            img.save(
+                output,
+                format='JPEG',
+                quality=jpeg_quality,
+                optimize=True,
+                progressive=True  # Progressive JPEG for better web loading
+            )
+            output.seek(0)
+
+            # Generate new filename with .jpg extension
+            original_name = image_field.name
+            name_without_ext = original_name.rsplit('.', 1)[0]
+            new_filename = f"{name_without_ext}.jpg"
+
+            return InMemoryUploadedFile(
+                output,
+                'ImageField',
+                new_filename,
+                'image/jpeg',
+                sys.getsizeof(output),
+                None
+            )
+
+        except Exception as e:
+            # If optimization fails, return original
+            print(f"Image optimization failed: {e}")
+            return image_field
 
 
 class EddieProfile(models.Model):
