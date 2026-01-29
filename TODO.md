@@ -8,6 +8,7 @@
 - [ ] **Disclaimer on Signup**: Add a note and checkbox about privacy and not sharing the app or info from it with unauthorized parties.
 - [ ] **General CSS Overhaul** Once app is stable add more decorative CSS elements
 - [ ] **Questions Prompts** Add self-generated posts according to day of week (or list from School of dated questions provided) see QUESTIONS.md file in root dir
+- [ ] **Child Name as Param** Remove all instances of "Eddie" in template HTML and use a settable field/paramater in the admin / "About Eddie" form info
 
 ## Planned Features with more detail
 
