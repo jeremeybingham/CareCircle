@@ -6,30 +6,18 @@ to update options across the application.
 """
 
 # =============================================================================
-# Portion/Consumption Choices
+# Portion/Consumption Choices (Standardized)
 # =============================================================================
 
-# Full portion choices with blank option (for dropdown/select fields)
-PORTION_CHOICES_WITH_BLANK = [
-    ('', '-- Select --'),
-    ('None', 'None'),
-    ('Some', 'Some'),
-    ('Most', 'Most'),
-    ('All', 'All'),
-]
-
-# Simple portion choices without "Most" (for radio buttons)
-PORTION_CHOICES_SIMPLE = [
-    ('None', 'None'),
-    ('Some', 'Some'),
-    ('All', 'All'),
-]
-
-# Portion choices with "Not specified" blank (for optional radio buttons)
-PORTION_CHOICES_RADIO = [
+# Standardized portion choices for all meal-related fields (radio buttons).
+# Used across all forms: overnight, schoolday, pickup, etc.
+# Always paired with an optional text field for "Type of Food".
+# See FOOD.md for the standardization specification.
+PORTION_CHOICES = [
     ('', 'Not specified'),
     ('None', 'None'),
     ('Some', 'Some'),
+    ('Most', 'Most'),
     ('All', 'All'),
 ]
 

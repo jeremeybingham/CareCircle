@@ -22,15 +22,10 @@
         {% endif %}
 
         {# Lunch/Snack section #}
-        {% if entry.data.had_lunch %}
+        {% if entry.data.lunch_portion %}
         <div class="entry-section">
             <h3 class="section-header">Lunch/Snack</h3>
-            {% if entry.data.lunch_portion %}
-            <p><strong>Ate:</strong> {{ entry.data.lunch_portion }}</p>
-            {% endif %}
-            {% if entry.data.lunch_notes %}
-            <p>{{ entry.data.lunch_notes }}</p>
-            {% endif %}
+            <p><strong>Ate:</strong> {{ entry.data.lunch_portion }}{% if entry.data.lunch_food %} — {{ entry.data.lunch_food }}{% endif %}</p>
         </div>
         {% endif %}
 

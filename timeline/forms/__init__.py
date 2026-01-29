@@ -12,7 +12,7 @@ from .schoolday import SchoolDayForm
 from .weekend import WeekendForm
 from .words import WordsForm
 from .pickup import PickupForm
-from .mixins import MoodFieldMixin
+from .mixins import MealFieldMixin, MoodFieldMixin
 from .widgets import MoodGridWidget
 from .registry import (
     FORM_REGISTRY,
@@ -37,6 +37,7 @@ __all__ = [
     'PickupForm',
 
     # Mixins and Widgets
+    'MealFieldMixin',
     'MoodFieldMixin',
     'MoodGridWidget',
 

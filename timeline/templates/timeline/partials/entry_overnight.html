@@ -5,10 +5,14 @@
         {{ entry.timestamp|date:"l" }} Morning Report
     </h2>
     <div class="data-list">
-        <p><strong>{{ entry.timestamp|previous_day_abbrev }} Dinner:</strong> {{ entry.data.dinner }}</p>
+        {% if entry.data.dinner_portion %}
+        <p><strong>{{ entry.timestamp|previous_day_abbrev }} Dinner:</strong> {{ entry.data.dinner_portion }}{% if entry.data.dinner_food %} — {{ entry.data.dinner_food }}{% endif %}</p>
+        {% endif %}
         <p><strong>Bedtime:</strong> {{ entry.data.bedtime }}</p>
         <p><strong>Woke Up:</strong> {{ entry.data.woke_up }}</p>
-        <p><strong>Breakfast:</strong> {{ entry.data.breakfast }}</p>
+        {% if entry.data.breakfast_portion %}
+        <p><strong>Breakfast:</strong> {{ entry.data.breakfast_portion }}{% if entry.data.breakfast_food %} — {{ entry.data.breakfast_food }}{% endif %}</p>
+        {% endif %}
         {% if entry.data.notes %}
         <p><strong>Notes:</strong> {{ entry.data.notes }}</p>
         {% endif %}
