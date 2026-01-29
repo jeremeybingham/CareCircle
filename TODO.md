@@ -13,6 +13,7 @@
 - [ ] **About Eddie Visual** Add some colored background to the section headers like the "Emergency Contact" section is purple - use other Buzz Lightyear colors in CSS
 - [ ] **User Profile page Visual** Add some colored background to the section headers
 - [ ] **User Signup page** Move Last Name below first name to avoid overflow on mobile
+- [ ] **EST Time Zone** Set timezone in env file and use in Django (seems to be UTC right now)
 
  
 ### New Feature Additions to expand on:
