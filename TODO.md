@@ -9,6 +9,7 @@
 - [ ] **General CSS Overhaul** Once app is stable add more decorative CSS elements
 - [ ] **Questions Prompts** Add self-generated posts according to day of week (or list from School of dated questions provided) see QUESTIONS.md file in root dir
 - [ ] **Child Name as Param** Remove all instances of "Eddie" in template HTML and use a settable field/paramater in the admin / "About Eddie" form info
+- [ ] **ABA/Afterschool form** Create a new form for ABA and/or afterschool program (probably separate but similar in parts)
 
 ## Planned Features with more detail
 
