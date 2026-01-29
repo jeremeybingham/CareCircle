@@ -21,7 +21,7 @@ class SchoolDayForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
     meal_fields = ['snack', 'lunch']
     meal_labels = {'snack': 'Snacks', 'lunch': 'Lunch from Home'}
 
-    # Field ordering: put mood before notes sections
+    # Field ordering: mood at the bottom, after all other fields
     field_order = [
         'bathroom',
         'snack_portion', 'snack_food',
@@ -30,8 +30,8 @@ class SchoolDayForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
         'inclusion_specials',
         'small_group_specials',
         'related_services', 'related_other',
-        'mood', 'mood_notes',
         'notes_about_day',
+        'mood',
     ]
 
     # Bathroom

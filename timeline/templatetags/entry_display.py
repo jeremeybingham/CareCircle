@@ -3,6 +3,7 @@ import ast
 from django import template
 from django.template.loader import render_to_string
 from django.template import TemplateDoesNotExist
+from django.utils import timezone as tz
 from django.utils.safestring import mark_safe
 
 from timeline.forms.constants import MOOD_EMOJI_MAP
@@ -102,12 +103,15 @@ def get_item(dictionary, key):
 def format_date(value):
     """
     Format a date/datetime as 'Monday, January 1'.
+    Converts to local timezone before formatting.
 
     Usage:
         {{ entry.timestamp|format_date }}
     """
     if not value:
         return ''
+    if hasattr(value, 'tzinfo') and value.tzinfo is not None:
+        value = tz.localtime(value)
     return value.strftime('%A, %B %-d')
 
 
@@ -115,6 +119,7 @@ def format_date(value):
 def get_date(value):
     """
     Extract just the date from a datetime.
+    Converts to local timezone before extracting.
 
     Usage:
         {{ entry.timestamp|get_date }}
@@ -122,6 +127,8 @@ def get_date(value):
     if not value:
         return None
     if hasattr(value, 'date'):
+        if hasattr(value, 'tzinfo') and value.tzinfo is not None:
+            value = tz.localtime(value)
         return value.date()
     return value
 
@@ -152,8 +159,8 @@ def should_show_date_divider(entries, current_index):
     if previous_entry.is_pinned:
         return True
 
-    current_date = current_entry.timestamp.date()
-    previous_date = previous_entry.timestamp.date()
+    current_date = tz.localtime(current_entry.timestamp).date()
+    previous_date = tz.localtime(previous_entry.timestamp).date()
 
     return current_date != previous_date
 
@@ -176,6 +183,7 @@ def mood_emoji(mood_key):
 def previous_day_abbrev(value):
     """
     Get the abbreviated name of the previous day.
+    Converts to local timezone before extracting the date.
 
     For a morning report on Tuesday, returns "Mon" (for Monday's dinner).
     For a morning report on Saturday, returns "Fri" (for Friday's dinner).
@@ -188,6 +196,8 @@ def previous_day_abbrev(value):
     if not value:
         return ''
     if hasattr(value, 'date'):
+        if hasattr(value, 'tzinfo') and value.tzinfo is not None:
+            value = tz.localtime(value)
         date = value.date()
     else:
         date = value

@@ -1260,6 +1260,67 @@ body {
     margin: 0;
 }
 
+/* About Eddie Colored Section Headers (Buzz Lightyear Theme) */
+.bio-section .section-title {
+    background: #2965CA;
+    color: white;
+    border-bottom: none;
+}
+
+.tips-section .section-title {
+    background: #8DAC50;
+    color: white;
+    border-bottom: none;
+}
+
+.favs-section .section-title {
+    background: #FFD500;
+    color: #222;
+    border-bottom: none;
+}
+
+.funfacts-section .section-title {
+    background: #613B6F;
+    color: white;
+    border-bottom: none;
+}
+
+.goals-section .section-title {
+    background: #8DAC50;
+    color: white;
+    border-bottom: none;
+}
+
+.meals-section .section-title {
+    background: #8DAC50;
+    color: white;
+    border-bottom: none;
+}
+
+.potty-section .section-title {
+    background: #2965CA;
+    color: white;
+    border-bottom: none;
+}
+
+.safety-section .section-title {
+    background: #DB382D;
+    color: white;
+    border-bottom: none;
+}
+
+.communication-section .section-title {
+    background: #2965CA;
+    color: white;
+    border-bottom: none;
+}
+
+.physical-section .section-title {
+    background: #613B6F;
+    color: white;
+    border-bottom: none;
+}
+
 /* Contacts Section */
 .contacts-section .section-title {
     background: #613B6F;
@@ -1455,6 +1516,31 @@ body {
     margin-top: 16px;
 }
 
+/* Profile Section Colored Headers (Buzz Lightyear Theme) */
+.profile-info-section .section-title {
+    background: #2965CA;
+    color: white;
+    border-bottom: none;
+}
+
+.security-section .section-title {
+    background: #DB382D;
+    color: white;
+    border-bottom: none;
+}
+
+.formaccess-section .section-title {
+    background: #8DAC50;
+    color: white;
+    border-bottom: none;
+}
+
+.accountinfo-section .section-title {
+    background: #FFD500;
+    color: #222;
+    border-bottom: none;
+}
+
 /* Security Section */
 .security-info {
     color: #666;
@@ -1463,8 +1549,9 @@ body {
 
 /* Permissions Section */
 .permissions-section .section-title {
-    background: #f5f0f7;
-    color: #613B6F;
+    background: #613B6F;
+    color: white;
+    border-bottom: none;
 }
 
 .permissions-note {

@@ -73,16 +73,15 @@ class MoodFieldMixin:
     """
     Mixin to add standardized mood tracking fields to any form.
 
-    Provides a multi-select mood grid and optional notes field.
+    Provides a multi-select mood grid.
 
     Usage:
         class MyForm(MoodFieldMixin, BaseEntryForm):
-            # mood and mood_notes fields are automatically included
+            # mood field is automatically included
             other_field = forms.CharField()
 
-    The mixin adds these fields:
+    The mixin adds:
         - mood: MultipleChoiceField with MoodGridWidget (optional)
-        - mood_notes: CharField textarea for additional context (optional)
 
     Note: The mixin injects fields in __init__ to work around Django's
     form metaclass only collecting fields from actual Form subclasses.
@@ -98,17 +97,6 @@ class MoodFieldMixin:
             label="How was Eddie's mood?",
             widget=MoodGridWidget(),
             help_text="Select all that apply"
-        )
-
-        # Add mood_notes field
-        self.fields['mood_notes'] = forms.CharField(
-            required=False,
-            label="Mood notes (optional)",
-            widget=forms.Textarea(attrs={
-                'rows': 2,
-                'placeholder': 'Any context about mood or behavior...'
-            }),
-            help_text="Additional details about mood or behavior"
         )
 
         # Apply field ordering if specified on the class

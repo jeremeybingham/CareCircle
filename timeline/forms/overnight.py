@@ -38,13 +38,13 @@ class OvernightForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
         })
     )
 
-    # Field ordering: dinner, sleep routine, breakfast, then mood, then notes
+    # Field ordering: dinner, sleep routine, breakfast, notes, then mood at bottom
     field_order = [
         'dinner_portion', 'dinner_food',
         'bedtime', 'woke_up',
         'breakfast_portion', 'breakfast_food',
-        'mood', 'mood_notes',
         'notes',
+        'mood',
     ]
 
     def clean(self):
