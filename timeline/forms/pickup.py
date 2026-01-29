@@ -84,17 +84,16 @@ class PickupForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
         label="Dropoff Location",
     )
 
-    # Field ordering
+    # Field ordering: mood at the bottom, after all other fields
     field_order = [
         'pickup_time',
         'pickup_location',
         'stops_notes',
         'lunch_portion',
         'lunch_food',
-        'mood',
-        'mood_notes',
         'dropoff_time',
         'dropoff_location',
+        'mood',
     ]
 
     def get_json_data(self):
