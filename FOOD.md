@@ -18,15 +18,15 @@
  
 
 **Implementation Steps**:
-- [ ] Audit all existing forms for overlapping data fields
-- [ ] Document current field names and choice values
-- [ ] Design standardized field schema for each data category
-- [ ] Update `timeline/forms/constants.py` with all standardized choices
-- [ ] Create standardized form field mixins or base classes
-- [ ] Migrate existing forms to use standardized fields
-- [ ] Update display templates to handle standardized data
+- [x] Audit all existing forms for overlapping data fields
+- [x] Document current field names and choice values
+- [x] Design standardized field schema for each data category
+- [x] Update `timeline/forms/constants.py` with all standardized choices
+- [x] Create standardized form field mixins or base classes
+- [x] Migrate existing forms to use standardized fields
+- [x] Update display templates to handle standardized data
 - [ ] Consider data migration for existing entries (optional, complex)
-- [ ] Document field standards for future form development
+- [x] Document field standards for future form development
  
 **Files to Create/Modify**:
 - `timeline/forms/constants.py` - Expand with all standardized choices
@@ -50,35 +50,48 @@ PORTION_CHOICES= [
 ```
  
 ---
-Currently: 
+
+**Implementation Complete**:
+
+The three inconsistent `PORTION_CHOICES_*` constants have been replaced with a single
+standardized `PORTION_CHOICES` in `constants.py`:
 
 ```python
-# =============================================================================
-# Portion/Consumption Choices TODO: FIX this
-# =============================================================================
-
-# Full portion choices with blank option (for dropdown/select fields)
-PORTION_CHOICES_WITH_BLANK = [
-    ('', '-- Select --'),
+PORTION_CHOICES = [
+    ('', 'Not specified'),
     ('None', 'None'),
     ('Some', 'Some'),
     ('Most', 'Most'),
     ('All', 'All'),
 ]
-
-# Simple portion choices without "Most" (for radio buttons)
-PORTION_CHOICES_SIMPLE = [
-    ('None', 'None'),
-    ('Some', 'Some'),
-    ('All', 'All'),
-]
-
-# Portion choices with "Not specified" blank (for optional radio buttons)
-PORTION_CHOICES_RADIO = [
-    ('', 'Not specified'),
-    ('None', 'None'),
-    ('Some', 'Some'),
-    ('All', 'All'),
-]
 ```
+
+A `MealFieldMixin` was created in `mixins.py` that dynamically injects standardized
+meal fields into any form. Each meal gets:
+- `{meal}_portion` — RadioSelect using `PORTION_CHOICES`
+- `{meal}_food` — Optional text field for "Type of Food"
+
+**Forms updated**:
+
+| Form | `meal_fields` | Custom Labels |
+|------|---------------|---------------|
+| OvernightForm | `['dinner', 'breakfast']` | `dinner` → "Dinner Last Night" |
+| SchoolDayForm | `['snack', 'lunch']` | `snack` → "Snacks", `lunch` → "Lunch from Home" |
+| PickupForm | `['lunch']` | `lunch` → "Lunch/Snack" |
+
+**Field name mapping (old → new)**:
+- `dinner` → `dinner_portion` + `dinner_food`
+- `breakfast` → `breakfast_portion` + `breakfast_food`
+- `snacks` → `snack_portion` + `snack_food`
+- `lunch_from_home` → `lunch_portion` + `lunch_food`
+- `had_lunch` (boolean) → removed (replaced by "Not specified" option)
+- `lunch_notes` → `lunch_food` (type of food text field)
+
+**Templates updated**: `entry_overnight.html`, `entry_schoolday.html`, `entry_pickup.html`
+now reference the new `*_portion` and `*_food` field names and display food type inline
+with the portion value (e.g., "Most — pasta and chicken").
+
+**Note**: Existing entries stored with old field names will not display their food data
+in the updated templates. A data migration could be written to rename the JSON keys
+in existing entries if needed.
 

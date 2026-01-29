@@ -3,29 +3,37 @@ from django import forms
 from .base import BaseEntryForm
 from .constants import (
     INCLUSION_SPECIALS_CHOICES,
-    PORTION_CHOICES_RADIO,
     RELATED_SERVICES_CHOICES,
     SMALL_GROUP_SPECIALS_CHOICES,
 )
-from .mixins import MoodFieldMixin
+from .mixins import MealFieldMixin, MoodFieldMixin
 
 
-class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
+class SchoolDayForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
     """
     School day tracking form.
     Tracks bathroom, meals, activities, services, mood, and notes.
+
+    Meal fields (snack_portion, snack_food, lunch_portion, lunch_food)
+    are injected by MealFieldMixin using standardized PORTION_CHOICES.
     """
+
+    meal_fields = ['snack', 'lunch']
+    meal_labels = {'snack': 'Snacks', 'lunch': 'Lunch from Home'}
 
     # Field ordering: put mood before notes sections
     field_order = [
         'bathroom',
-        'snacks', 'lunch_from_home', 'other_food',
+        'snack_portion', 'snack_food',
+        'lunch_portion', 'lunch_food',
+        'other_food',
         'inclusion_specials',
         'small_group_specials',
         'related_services', 'related_other',
         'mood', 'mood_notes',
         'notes_about_day',
     ]
+
     # Bathroom
     bathroom = forms.CharField(
         required=False,
@@ -36,22 +44,8 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
         }),
         help_text="Enter times separated by commas or spaces"
     )
-    
-    # Food Log
-    snacks = forms.ChoiceField(
-        choices=PORTION_CHOICES_RADIO,
-        required=False,
-        label="Snacks",
-        widget=forms.RadioSelect()
-    )
 
-    lunch_from_home = forms.ChoiceField(
-        choices=PORTION_CHOICES_RADIO,
-        required=False,
-        label="Lunch from Home",
-        widget=forms.RadioSelect()
-    )
-    
+    # Other Food (catch-all for food not covered by snack/lunch)
     other_food = forms.CharField(
         required=False,
         label="Other Food",
@@ -60,7 +54,7 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
             'placeholder': 'Any other food consumed'
         })
     )
-    
+
     # Inclusion Specials
     inclusion_specials = forms.MultipleChoiceField(
         choices=INCLUSION_SPECIALS_CHOICES,
@@ -76,7 +70,7 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
         label="Small Group Specials",
         widget=forms.CheckboxSelectMultiple()
     )
-    
+
     # Related Services
     related_services = forms.MultipleChoiceField(
         choices=RELATED_SERVICES_CHOICES,
@@ -84,7 +78,7 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
         label="Related Services",
         widget=forms.CheckboxSelectMultiple()
     )
-    
+
     related_other = forms.CharField(
         required=False,
         label="Related Services - Other",
@@ -93,7 +87,7 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
             'placeholder': 'Other services'
         })
     )
-    
+
     # Notes
     notes_about_day = forms.CharField(
         required=False,
@@ -103,7 +97,7 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
             'placeholder': 'How was the day?'
         })
     )
-    
+
     def get_json_data(self):
         """
         Override to convert MultipleChoiceField lists to comma-separated strings
@@ -113,12 +107,12 @@ class SchoolDayForm(MoodFieldMixin, BaseEntryForm):
         for field_name, value in self.cleaned_data.items():
             if value is None or value == '':
                 continue
-            
+
             # Convert list fields to comma-separated strings
             if isinstance(value, list):
                 if value:  # Only include if not empty list
                     data[field_name] = ', '.join(value)
             else:
                 data[field_name] = value
-        
+
         return data

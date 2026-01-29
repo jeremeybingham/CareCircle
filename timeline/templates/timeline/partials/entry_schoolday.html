@@ -19,20 +19,20 @@
     {% endif %}
 
     <!-- Food Log -->
-    {% if entry.data.snacks or entry.data.lunch_from_home or entry.data.other_food %}
+    {% if entry.data.snack_portion or entry.data.lunch_portion or entry.data.other_food %}
     <div class="entry-section">
         <h3>🍎 Food Log</h3>
         <div class="data-grid">
-            {% if entry.data.snacks %}
+            {% if entry.data.snack_portion %}
             <div class="data-item">
                 <span class="data-label">Snacks</span>
-                <span class="data-value">{{ entry.data.snacks }}</span>
+                <span class="data-value">{{ entry.data.snack_portion }}{% if entry.data.snack_food %} — {{ entry.data.snack_food }}{% endif %}</span>
             </div>
             {% endif %}
-            {% if entry.data.lunch_from_home %}
+            {% if entry.data.lunch_portion %}
             <div class="data-item">
                 <span class="data-label">Lunch from Home</span>
-                <span class="data-value">{{ entry.data.lunch_from_home }}</span>
+                <span class="data-value">{{ entry.data.lunch_portion }}{% if entry.data.lunch_food %} — {{ entry.data.lunch_food }}{% endif %}</span>
             </div>
             {% endif %}
             {% if entry.data.other_food %}

@@ -1,20 +1,21 @@
 from django import forms
 
 from .base import BaseEntryForm
-from .constants import PORTION_CHOICES_WITH_BLANK, TIME_CHOICES
-from .mixins import MoodFieldMixin
+from .constants import TIME_CHOICES
+from .mixins import MealFieldMixin, MoodFieldMixin
 
 
-class OvernightForm(MoodFieldMixin, BaseEntryForm):
+class OvernightForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
     """
     Overnight routine tracking form.
     Tracks dinner, sleep, breakfast, mood, and notes.
+
+    Meal fields (dinner_portion, dinner_food, breakfast_portion, breakfast_food)
+    are injected by MealFieldMixin using standardized PORTION_CHOICES.
     """
-    dinner = forms.ChoiceField(
-        choices=PORTION_CHOICES_WITH_BLANK,
-        required=True,
-        label="Dinner Last Night",
-    )
+
+    meal_fields = ['dinner', 'breakfast']
+    meal_labels = {'dinner': 'Dinner Last Night'}
 
     bedtime = forms.ChoiceField(
         choices=TIME_CHOICES,
@@ -28,12 +29,6 @@ class OvernightForm(MoodFieldMixin, BaseEntryForm):
         label="Woke Up",
     )
 
-    breakfast = forms.ChoiceField(
-        choices=PORTION_CHOICES_WITH_BLANK,
-        required=True,
-        label="Breakfast",
-    )
-
     notes = forms.CharField(
         required=False,
         label="Notes",
@@ -43,15 +38,21 @@ class OvernightForm(MoodFieldMixin, BaseEntryForm):
         })
     )
 
-    # Field ordering: routine fields, then mood, then notes
-    field_order = ['dinner', 'bedtime', 'woke_up', 'breakfast', 'mood', 'mood_notes', 'notes']
+    # Field ordering: dinner, sleep routine, breakfast, then mood, then notes
+    field_order = [
+        'dinner_portion', 'dinner_food',
+        'bedtime', 'woke_up',
+        'breakfast_portion', 'breakfast_food',
+        'mood', 'mood_notes',
+        'notes',
+    ]
 
     def clean(self):
         """Custom validation for overnight form"""
         cleaned_data = super().clean()
 
         # Ensure at least some data is provided
-        required_fields = ['dinner', 'bedtime', 'woke_up', 'breakfast']
+        required_fields = ['dinner_portion', 'bedtime', 'woke_up', 'breakfast_portion']
         if not any(cleaned_data.get(field) for field in required_fields):
             raise forms.ValidationError("Please fill in at least one field.")
 
