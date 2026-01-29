@@ -25,8 +25,13 @@
 - [ ] **General CSS Overhaul** Once app is stable add more decorative CSS elements
 - [ ] **Questions Prompts** Add self-generated posts according to day of week (or list from School of dated questions provided) see QUESTIONS.md file in root dir
 
+---
 
-### 1. Caregiver Directory (User List with Contact Info)
+## Features with more detail
+
+---
+
+### Caregiver Directory (User List with Contact Info)
  
 **Goal**: Create a page listing all caregivers with their contact information for easy reference during handoffs or emergencies.
  
@@ -86,7 +91,7 @@
  
 ---
  
-### 2. Documents & Files Upload System
+### Documents & Files Upload System
  
 **Goal**: Create a system for uploading documents/files with descriptions, viewable in timeline and on a dedicated documents page.
  
@@ -221,13 +226,11 @@ class DocumentListView(LoginRequiredMixin, ListView):
 
 ---
  
-### 4. Code Quality & Refactoring Improvements
+## Code Quality & Refactoring Improvements
  
 **Goal**: Improve code maintainability, consistency, and adherence to Django best practices without changing functionality.
  
-**Note**: Some items from a January 2026 code review have already been addressed in PR #25 (permission helpers, API decorator, centralized form constants). The items below remain.
- 
-#### 4.1 Replace DeleteView for Pin/Unpin Views (Medium Priority)
+#### Replace DeleteView for Pin/Unpin Views (Medium Priority)
  
 **Issue**: `EntryPinView` and `EntryUnpinView` inherit from `DeleteView` but override `form_valid()` to update instead of delete. This is semantically confusing.
  
@@ -255,7 +258,7 @@ class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, View):
  
 ---
  
-#### 4.2 Add Type Hints (Low Priority)
+#### Add Type Hints (Low Priority)
  
 **Issue**: The codebase doesn't use type hints, which would improve IDE support and catch errors earlier.
  
@@ -277,7 +280,7 @@ def get_form_class(form_type: str) -> type[BaseEntryForm] | None:
  
 ---
  
-#### 4.3 Create Template Inclusion Tag for Tag Sections (Low Priority)
+#### Create Template Inclusion Tag for Tag Sections (Low Priority)
  
 **Issue**: In `entry_schoolday.html`, the same tag-list rendering pattern repeats 4 times for different sections (inclusion specials, small group specials, related services).
  
@@ -307,7 +310,7 @@ def render_tag_section(title, items, other=None):
  
 ---
  
-#### 4.4 Standardize Docstring Format (Low Priority)
+#### Standardize Docstring Format (Low Priority)
  
 **Issue**: Docstrings use inconsistent formats - some are detailed with Args/Returns, others are single lines.
  
@@ -333,7 +336,7 @@ def get_user_profile_attr(user, attr, default=False):
  
 ---
  
-#### 4.5 Split Settings into Environment-Specific Files (Low Priority)
+#### Split Settings into Environment-Specific Files (Low Priority)
  
 **Issue**: `config/settings.py` handles all environments with conditionals. For larger deployments, split settings are easier to manage.
  
@@ -353,7 +356,7 @@ config/
  
 ---
  
-#### 4.6 Add Custom Model Managers (Low Priority)
+#### Add Custom Model Managers (Low Priority)
  
 **Issue**: Query patterns like `Entry.objects.all().select_related(...)` repeat in views.
  
@@ -384,7 +387,7 @@ class Entry(models.Model):
  
 ---
  
-### 5. Future: Analytics & Reporting Dashboard
+### Future: Analytics & Reporting Dashboard
  
 **Goal**: Leverage standardized data (Section 5) to provide insights on patterns and trends.
  
@@ -516,25 +519,25 @@ class Entry(models.Model):
 - Color-coded mood badges in entry display (Buzz Lightyear theme)
 
 ### Visual & Display Improvements
-- [x] **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
-- [x] **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
-- [x] **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
-- [x] **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
-- [x] **Timeline header**: Show Display Name instead of username at top of timeline page
-- [x] **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
-- [x] **Weekend notes styling**: Change background from yellow to light blue or green
+- **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
+- **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
+- **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
+- **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
+- **Timeline header**: Show Display Name instead of username at top of timeline page
+- **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
+- **Weekend notes styling**: Change background from yellow to light blue or green
 
 ### Form & Entry Display Improvements
-- [x] **Morning Report date format**: Auto-format previous day's dinner based on day of week
+- **Morning Report date format**: Auto-format previous day's dinner based on day of week
   - Example: "Mon Dinner" (on Tuesday), "Fri Dinner" (on Saturday)
-- [x] **School Day form updates**:
-  - [x] Display bathroom times as badges (improve spacing)
-  - [x] Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
-  - [x] Remove "Additional Notes/Reminders" field from form and display
-  - [x] Remove "Other" option for Inclusion Specials and Small Group Specials
-  - [x] Keep "Other" option for Related Services only
-- [x] **Weekend form mood grid**: Add optional mood grid to Weekend form input
-- [x] **Photo post mood grid**: Add optional mood grid to Photo form input
+-  **School Day form updates**:
+  - Display bathroom times as badges (improve spacing)
+  - Add emoji icons to sections: Food Log 🍎, Specials 🏃‍♂️
+  -  Remove "Additional Notes/Reminders" field from form and display
+  - Remove "Other" option for Inclusion Specials and Small Group Specials
+  - Keep "Other" option for Related Services only
+- **Weekend form mood grid**: Add optional mood grid to Weekend form input
+- **Photo post mood grid**: Add optional mood grid to Photo form input
 
 ### **Babysitter & Lunch Form**: Create a specialized form for babysitter pickups with optional lunch details.
  
