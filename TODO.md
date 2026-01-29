@@ -1,23 +1,7 @@
 # Timeline - TODO List
 
-## Overall Priority Rank:
-
-
-
 ## Planned Features and Improvements
-
-### Easy Fixes
-- [ ] **Login Page Text**: "Welcome Back | Login to your timeline" change to: "Eddie's Timeline | Login to View"
-- [ ] **Mood Grid Placement**: ensure Mood Grid is at bottom of forms it's included in, and doesn't render in between fields for the forms it's included in; see "overnight.py" "pickup.py" and "schoolday.py" for examples of it pushing other form fields down.
-- [ ] **Remove Mood Grid Notes**: Not needed, remove
-- [ ] **About Eddie Visual** Add some colored background to the section headers like the "Emergency Contact" section is purple - use other Buzz Lightyear colors in CSS
-- [ ] **User Profile page Visual** Add some colored background to the section headers
-- [ ] **User Signup page** Move Last Name below first name to avoid overflow on mobile
-- [ ] **EST Time Zone** Post times seem to be correctly in NY time zone but the post dividers with the date IN BETWEEN the posts seem to be using UTC(?) and appear earlier than they should by 6-7 hours
-
  
-### New Feature Additions to expand on:
-- [ ] **Standardized Data Fields for Food Reporting**: Coordinate field types and data storage across forms so that identical data for food is captured consistently, enabling future analytics and reporting. See FOOD.md file in root dir for examples.
 - [ ] **User guide**: Create how-to guide for new users, accessible from user profile page
 - [ ] **Clickable links in posts**: Auto-detect and convert URLs in text posts to clickable links
 - [ ] **Time Menu Ennhancements**: Make time entry menus easier
@@ -27,7 +11,7 @@
 
 ---
 
-## Features with more detail
+## Planned Features with more detail
 
 ---
 
@@ -541,3 +525,12 @@ class Entry(models.Model):
 
 ### **Babysitter & Lunch Form**: Create a specialized form for babysitter pickups with optional lunch details.
  
+### Easy Fixes
+- **Login Page Text**: "Welcome Back | Login to your timeline" change to: "Eddie's Timeline | Login to View"
+- **Mood Grid Placement**: ensure Mood Grid is at bottom of forms it's included in, and doesn't render in between fields for the forms it's included in; see "overnight.py" "pickup.py" and "schoolday.py" for examples of it pushing other form fields down.
+- **Remove Mood Grid Notes**: Not needed, remove
+- **About Eddie Visual** Add some colored background to the section headers like the "Emergency Contact" section is purple - use other Buzz Lightyear colors in CSS
+- **User Profile page Visual** Add some colored background to the section headers
+- **User Signup page** Move Last Name below first name to avoid overflow on mobile
+- **EST Time Zone** Post times seem to be correctly in NY time zone but the post dividers with the date IN BETWEEN the posts seem to be using UTC(?) and appear earlier than they should by 6-7 hours
+- **Standardized Data Fields for Food Reporting**: Coordinate field types and data storage across forms so that identical data for food is captured consistently, enabling future analytics and reporting. See FOOD.md file in root dir for examples.
