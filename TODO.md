@@ -9,11 +9,7 @@
 - [ ] **General CSS Overhaul** Once app is stable add more decorative CSS elements
 - [ ] **Questions Prompts** Add self-generated posts according to day of week (or list from School of dated questions provided) see QUESTIONS.md file in root dir
 
----
-
 ## Planned Features with more detail
-
----
 
 ### Caregiver Directory (User List with Contact Info)
  
