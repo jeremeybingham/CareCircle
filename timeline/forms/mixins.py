@@ -28,7 +28,6 @@ class MealFieldMixin:
         - {meal}_portion: ChoiceField with RadioSelect (PORTION_CHOICES)
         - {meal}_food: CharField for type of food (optional)
 
-    See FOOD.md for the standardization specification.
     """
 
     meal_fields = []
@@ -58,10 +57,10 @@ class MealFieldMixin:
 
             self.fields[f'{meal}_food'] = forms.CharField(
                 required=False,
-                label=f"{label} - Type of Food",
+                label=f"{label} - Notes",
                 max_length=200,
                 widget=forms.TextInput(attrs={
-                    'placeholder': 'What did he eat?'
+                    'placeholder': 'Any notes?'
                 }),
             )
 
