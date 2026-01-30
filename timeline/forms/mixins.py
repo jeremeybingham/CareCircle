@@ -5,6 +5,7 @@ Contains reusable field groups that can be added to any form.
 """
 
 from django import forms
+from django.utils.safestring import mark_safe
 
 from .constants import MOOD_CHOICES, PORTION_CHOICES
 from .widgets import MoodGridWidget
@@ -94,9 +95,11 @@ class MoodFieldMixin:
         self.fields['mood'] = forms.MultipleChoiceField(
             choices=MOOD_CHOICES,
             required=False,
-            label="How was Eddie's mood?",
+            label=mark_safe(
+                'How was Eddie\'s mood?'
+                ' <span class="mood-hint">Select all that apply</span>'
+            ),
             widget=MoodGridWidget(),
-            help_text="Select all that apply"
         )
 
         # Apply field ordering if specified on the class

@@ -1274,13 +1274,13 @@ body {
 }
 
 .favs-section .section-title {
-    background: #FFD500;
-    color: #222;
+    background: #613B6F;
+    color: white;
     border-bottom: none;
 }
 
 .funfacts-section .section-title {
-    background: #613B6F;
+    background: #2965CA;
     color: white;
     border-bottom: none;
 }
@@ -1292,7 +1292,7 @@ body {
 }
 
 .meals-section .section-title {
-    background: #8DAC50;
+    background: #613B6F;
     color: white;
     border-bottom: none;
 }
@@ -1304,26 +1304,26 @@ body {
 }
 
 .safety-section .section-title {
-    background: #DB382D;
+    background: #8DAC50;
     color: white;
     border-bottom: none;
 }
 
 .communication-section .section-title {
-    background: #2965CA;
+    background: #613B6F;
     color: white;
     border-bottom: none;
 }
 
 .physical-section .section-title {
-    background: #613B6F;
+    background: #2965CA;
     color: white;
     border-bottom: none;
 }
 
 /* Contacts Section */
 .contacts-section .section-title {
-    background: #613B6F;
+    background: #DB382D;
     color: white;
     border-bottom: none;
 }
@@ -1536,8 +1536,8 @@ body {
 }
 
 .accountinfo-section .section-title {
-    background: #FFD500;
-    color: #222;
+    background: #613B6F;
+    color: white;
     border-bottom: none;
 }
 
@@ -1711,6 +1711,13 @@ body {
 /* ===========================================
    Mood Tracking Grid Styles
    =========================================== */
+
+/* Mood hint inline with label */
+.mood-hint {
+    font-size: 13px;
+    font-weight: 400;
+    color: #666;
+}
 
 /* Mood Grid Input Widget (Form) */
 .mood-grid-container {

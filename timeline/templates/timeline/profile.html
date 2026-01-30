@@ -44,19 +44,6 @@
         </div>
     </div>
 
-    <!-- Account Security Section -->
-    <div class="profile-section security-section">
-        <h2 class="section-title">
-            <span class="section-icon">Account Security</span>
-        </h2>
-        <div class="section-content">
-            <p class="security-info">Keep your account secure by using a strong password.</p>
-            <div class="profile-actions">
-                <a href="{% url 'timeline:password_change' %}" class="btn btn-secondary">Change Password</a>
-            </div>
-        </div>
-    </div>
-
     <!-- Permissions Section (Read-only) -->
     <div class="profile-section permissions-section">
         <h2 class="section-title">
@@ -119,6 +106,19 @@
                 {% if user.is_staff %}
                 <p><strong>Role:</strong> Administrator</p>
                 {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Account Security Section -->
+    <div class="profile-section security-section">
+        <h2 class="section-title">
+            <span class="section-icon">Account Security</span>
+        </h2>
+        <div class="section-content">
+            <p class="security-info">Keep your account secure by using a strong password.</p>
+            <div class="profile-actions">
+                <a href="{% url 'timeline:password_change' %}" class="btn btn-secondary">Change Password</a>
             </div>
         </div>
     </div>
