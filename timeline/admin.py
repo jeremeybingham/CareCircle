@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import FormType, UserFormAccess, Entry, UserProfile, EddieProfile
+from .models import FormType, UserFormAccess, Entry, UserProfile, EddieProfile, WebhookToken
 
 
 # Customize User Admin to show form access and profile
@@ -345,6 +345,33 @@ class EddieProfileAdmin(admin.ModelAdmin):
             from django.shortcuts import redirect
             return redirect(f'admin:timeline_eddieprofile_change', obj.pk)
         return super().changelist_view(request, extra_context)
+
+
+@admin.register(WebhookToken)
+class WebhookTokenAdmin(admin.ModelAdmin):
+    list_display = ['name', 'token_preview', 'is_active', 'created_at', 'last_used_at']
+    list_filter = ['is_active', 'created_at']
+    search_fields = ['name']
+    readonly_fields = ['token', 'created_at', 'last_used_at']
+
+    fieldsets = (
+        ('Token Information', {
+            'fields': ('name', 'token', 'is_active'),
+        }),
+        ('Usage', {
+            'fields': ('created_at', 'last_used_at'),
+            'classes': ('collapse',),
+        }),
+    )
+
+    def token_preview(self, obj):
+        """Show first 8 chars of token for identification"""
+        return f"{obj.token[:8]}..."
+    token_preview.short_description = 'Token'
+
+    def has_change_permission(self, request, obj=None):
+        """Allow changing name and is_active but token is always readonly"""
+        return True
 
 
 # Customize admin site header

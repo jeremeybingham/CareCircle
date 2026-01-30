@@ -30,4 +30,9 @@ urlpatterns = [
     # API endpoints
     path('api/entries/', views.api_entries, name='api_entries'),
     path('api/forms/', views.api_forms, name='api_forms'),
+
+    # Webhook endpoints (token-authenticated, no login required)
+    path('webhooks/<str:token>/not_named_place/', views.webhook_not_named_place, name='webhook_not_named_place'),
+    path('webhooks/<str:token>/arrived_at/<str:location>/', views.webhook_arrived_at, name='webhook_arrived_at'),
+    path('webhooks/<str:token>/left_at/<str:location>/<str:time>/', views.webhook_left_at, name='webhook_left_at'),
 ]

@@ -1,3 +1,6 @@
+import secrets
+import sys
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import FileExtensionValidator, EmailValidator
@@ -7,7 +10,6 @@ from PIL import Image, ImageOps
 from io import BytesIO
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.conf import settings
-import sys
 
 
 class UserProfile(models.Model):
@@ -524,3 +526,37 @@ class EddieProfile(models.Model):
             }
         )
         return obj
+
+
+class WebhookToken(models.Model):
+    """
+    Authentication token for webhook endpoints.
+    Include the token in the webhook URL to authenticate requests.
+    """
+    name = models.CharField(
+        max_length=100,
+        help_text="Descriptive name for this token (e.g., 'Life360 Integration')"
+    )
+    token = models.CharField(
+        max_length=64,
+        unique=True,
+        default=secrets.token_urlsafe,
+        help_text="Secret token included in webhook URLs"
+    )
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Disable to revoke access without deleting"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_used_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Last time this token was used"
+    )
+
+    class Meta:
+        verbose_name = "Webhook Token"
+        verbose_name_plural = "Webhook Tokens"
+
+    def __str__(self):
+        return f"{self.name} ({'active' if self.is_active else 'inactive'})"
