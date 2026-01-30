@@ -13,7 +13,7 @@ from django.views.generic import ListView, CreateView, FormView, DeleteView, Det
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 
-from .models import FormType, Entry, UserFormAccess, EddieProfile
+from .models import FormType, Entry, UserFormAccess, EddieProfile, WebhookToken
 from .forms import get_form_class, is_valid_form_type
 from .forms.user import CustomUserCreationForm, UserProfileEditForm, StyledPasswordChangeForm
 
@@ -491,5 +491,116 @@ def api_forms(request):
             'icon': form.icon,
             'description': form.description,
         })
-    
+
     return JsonResponse(data, safe=False)
+
+
+# =============================================================================
+# Webhook Views
+# =============================================================================
+
+
+def _validate_webhook_token(token_str):
+    """
+    Validate a webhook token and update last_used_at.
+    Returns the WebhookToken if valid, None otherwise.
+    """
+    try:
+        token = WebhookToken.objects.get(token=token_str, is_active=True)
+    except WebhookToken.DoesNotExist:
+        return None
+    token.last_used_at = timezone.now()
+    token.save(update_fields=['last_used_at'])
+    return token
+
+
+def _get_webhook_dependencies():
+    """
+    Get the System user and Location form type needed for webhook entries.
+    Returns (system_user, location_form_type) or raises Http404.
+    """
+    from django.contrib.auth.models import User
+    try:
+        system_user = User.objects.get(username='system')
+    except User.DoesNotExist:
+        raise Http404("System user not configured")
+    try:
+        location_form_type = FormType.objects.get(type='location')
+    except FormType.DoesNotExist:
+        raise Http404("Location form type not configured")
+    return system_user, location_form_type
+
+
+def _create_location_entry(system_user, form_type, event_type, location, time_str):
+    """
+    Create a location timeline entry.
+    """
+    if event_type == 'not_named_place':
+        message = f"Eddie arrived at an Unnamed Place at {time_str}."
+    elif event_type == 'arrived_at':
+        message = f"Eddie arrived at {location} at {time_str}."
+    elif event_type == 'left_at':
+        message = f"Eddie left {location} at {time_str}."
+    else:
+        message = f"Eddie was at {location} at {time_str}."
+
+    entry = Entry.objects.create(
+        user=system_user,
+        form_type=form_type,
+        data={
+            'event_type': event_type,
+            'location': location,
+            'time': time_str,
+            'message': message,
+        },
+    )
+    return entry
+
+
+@require_http_methods(["GET"])
+def webhook_not_named_place(request, token):
+    """
+    Webhook: Eddie arrived at an unnamed place.
+    URL: /webhooks/<token>/not_named_place/
+    """
+    if not _validate_webhook_token(token):
+        return JsonResponse({'error': 'Invalid or inactive token'}, status=403)
+
+    system_user, form_type = _get_webhook_dependencies()
+    now = timezone.localtime(timezone.now())
+    time_str = now.strftime("%-I:%M %p")
+
+    entry = _create_location_entry(system_user, form_type, 'not_named_place', 'Unnamed Place', time_str)
+    return JsonResponse({'status': 'ok', 'entry_id': entry.id, 'message': entry.data['message']})
+
+
+@require_http_methods(["GET"])
+def webhook_arrived_at(request, token, location):
+    """
+    Webhook: Eddie arrived at a named location.
+    URL: /webhooks/<token>/arrived_at/<location>/
+    """
+    if not _validate_webhook_token(token):
+        return JsonResponse({'error': 'Invalid or inactive token'}, status=403)
+
+    system_user, form_type = _get_webhook_dependencies()
+    now = timezone.localtime(timezone.now())
+    time_str = now.strftime("%-I:%M %p")
+
+    entry = _create_location_entry(system_user, form_type, 'arrived_at', location, time_str)
+    return JsonResponse({'status': 'ok', 'entry_id': entry.id, 'message': entry.data['message']})
+
+
+@require_http_methods(["GET"])
+def webhook_left_at(request, token, location, time):
+    """
+    Webhook: Eddie left a location at a specified time.
+    URL: /webhooks/<token>/left_at/<location>/<time>/
+    """
+    if not _validate_webhook_token(token):
+        return JsonResponse({'error': 'Invalid or inactive token'}, status=403)
+
+    system_user, form_type = _get_webhook_dependencies()
+
+    entry = _create_location_entry(system_user, form_type, 'left_at', location, time)
+    return JsonResponse({'status': 'ok', 'entry_id': entry.id, 'message': entry.data['message']})
