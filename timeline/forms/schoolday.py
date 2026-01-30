@@ -51,7 +51,7 @@ class SchoolDayForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
         label="Other Food",
         max_length=200,
         widget=forms.TextInput(attrs={
-            'placeholder': 'Any other food consumed'
+            'placeholder': 'Any other food?'
         })
     )
 
