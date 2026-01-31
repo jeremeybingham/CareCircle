@@ -301,14 +301,13 @@ class EntryDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         raise PermissionDenied("You don't have permission to delete this entry.")
 
 
-class EntryUnpinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class EntryUnpinView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     """
-    Unpin an entry. Only users with can_pin_posts permission can unpin.
-    Uses DeleteView as base but overrides delete to just update is_pinned.
+    Unpin an entry. Shows confirmation on GET, unpins on POST.
+    Only users with can_pin_posts permission can unpin.
     """
     model = Entry
     template_name = 'timeline/entry_confirm_unpin.html'
-    success_url = reverse_lazy('timeline:timeline')
 
     def test_func(self):
         """Check if user has permission to unpin posts"""
@@ -318,23 +317,22 @@ class EntryUnpinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """Return 403 if user doesn't have permission"""
         raise PermissionDenied("You don't have permission to unpin posts.")
 
-    def form_valid(self, form):
-        """Unpin the entry instead of deleting it"""
-        self.object = self.get_object()
-        self.object.is_pinned = False
-        self.object.save()
-        return redirect(self.get_success_url())
+    def post(self, request, *args, **kwargs):
+        """Unpin the entry"""
+        entry = self.get_object()
+        entry.is_pinned = False
+        entry.save()
+        return redirect('timeline:timeline')
 
 
-class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     """
-    Pin an existing entry. Users can pin their own posts if they have can_pin_posts,
+    Pin an existing entry. Shows confirmation on GET, pins on POST.
+    Users can pin their own posts if they have can_pin_posts,
     or pin any post if they have can_pin_any_post.
-    Uses DeleteView as base but overrides delete to just update is_pinned.
     """
     model = Entry
     template_name = 'timeline/entry_confirm_pin.html'
-    success_url = reverse_lazy('timeline:timeline')
 
     def test_func(self):
         """Check if user has permission to pin this entry"""
@@ -352,12 +350,12 @@ class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         """Return 403 if user doesn't have permission"""
         raise PermissionDenied("You don't have permission to pin this post.")
 
-    def form_valid(self, form):
-        """Pin the entry instead of deleting it"""
-        self.object = self.get_object()
-        self.object.is_pinned = True
-        self.object.save()
-        return redirect(self.get_success_url())
+    def post(self, request, *args, **kwargs):
+        """Pin the entry"""
+        entry = self.get_object()
+        entry.is_pinned = True
+        entry.save()
+        return redirect('timeline:timeline')
 
 
 # =============================================================================

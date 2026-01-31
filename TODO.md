@@ -212,32 +212,12 @@ class DocumentListView(LoginRequiredMixin, ListView):
  
 **Goal**: Improve code maintainability, consistency, and adherence to Django best practices without changing functionality.
  
-#### Replace DeleteView for Pin/Unpin Views (Medium Priority)
- 
-**Issue**: `EntryPinView` and `EntryUnpinView` inherit from `DeleteView` but override `form_valid()` to update instead of delete. This is semantically confusing.
- 
-**Recommendation**: Use `UpdateView` or a generic `View` with `post()` method instead.
- 
-**Files to Modify**:
-- `timeline/views.py` - Refactor EntryPinView and EntryUnpinView
- 
-**Example**:
-```python
-from django.views.generic import View
- 
-class EntryPinView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """Pin an entry to the top of the timeline."""
- 
-    def post(self, request, pk):
-        entry = get_object_or_404(Entry, pk=pk)
-        entry.is_pinned = True
-        entry.save()
-        return redirect('timeline:timeline')
- 
-    def test_func(self):
-        # ... permission check
-```
- 
+#### ~~Replace DeleteView for Pin/Unpin Views (Medium Priority)~~ DONE
+
+Refactored `EntryPinView` and `EntryUnpinView` to use `DetailView` instead of `DeleteView`.
+`DetailView` provides `get_object()` and template context (`object`) for the GET confirmation page,
+while an explicit `post()` method handles the pin/unpin action. No template changes were needed.
+
 ---
  
 #### Add Type Hints (Low Priority)
