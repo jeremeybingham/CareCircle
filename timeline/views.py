@@ -13,7 +13,7 @@ from django.views.generic import ListView, CreateView, FormView, DeleteView, Det
 from django.contrib import messages
 from django.contrib.auth.views import PasswordChangeView
 
-from .models import FormType, Entry, UserFormAccess, EddieProfile, WebhookToken
+from .models import FormType, Entry, UserFormAccess, ChildProfile, WebhookToken
 from .forms import get_form_class, is_valid_form_type
 from .forms.user import CustomUserCreationForm, UserProfileEditForm, StyledPasswordChangeForm
 
@@ -102,18 +102,18 @@ class SignupView(CreateView):
         return response
 
 
-class AboutEddieView(LoginRequiredMixin, DetailView):
+class AboutChildView(LoginRequiredMixin, DetailView):
     """
-    Displays Eddie's profile information for caregivers.
+    Displays the child's profile information for caregivers.
     Uses singleton pattern - always shows the same profile.
     """
-    model = EddieProfile
-    template_name = 'timeline/about_eddie.html'
+    model = ChildProfile
+    template_name = 'timeline/about.html'
     context_object_name = 'profile'
 
     def get_object(self, queryset=None):
         """Always return the singleton instance"""
-        return EddieProfile.get_instance()
+        return ChildProfile.get_instance()
 
     def get_context_data(self, **kwargs):
         """Add contacts list to context for easier template iteration"""
@@ -533,14 +533,17 @@ def _create_location_entry(system_user, form_type, event_type, location, time_st
     """
     Create a location timeline entry.
     """
+    # Get child name from profile, or use generic fallback
+    child_name = ChildProfile.get_instance().child_name or "Child"
+
     if event_type == 'not_named_place':
-        message = f"Eddie arrived at an Unnamed Place at {time_str}."
+        message = f"{child_name} arrived at an Unnamed Place at {time_str}."
     elif event_type == 'arrived_at':
-        message = f"Eddie arrived at {location} at {time_str}."
+        message = f"{child_name} arrived at {location} at {time_str}."
     elif event_type == 'left_at':
-        message = f"Eddie left {location} at {time_str}."
+        message = f"{child_name} left {location} at {time_str}."
     else:
-        message = f"Eddie was at {location} at {time_str}."
+        message = f"{child_name} was at {location} at {time_str}."
 
     entry = Entry.objects.create(
         user=system_user,
@@ -558,7 +561,7 @@ def _create_location_entry(system_user, form_type, event_type, location, time_st
 @require_http_methods(["GET"])
 def webhook_not_named_place(request, token):
     """
-    Webhook: Eddie arrived at an unnamed place.
+    Webhook: Child arrived at an unnamed place.
     URL: /webhooks/<token>/not_named_place/
     """
     if not _validate_webhook_token(token):
@@ -575,7 +578,7 @@ def webhook_not_named_place(request, token):
 @require_http_methods(["GET"])
 def webhook_arrived_at(request, token, location):
     """
-    Webhook: Eddie arrived at a named location.
+    Webhook: Child arrived at a named location.
     URL: /webhooks/<token>/arrived_at/<location>/
     """
     if not _validate_webhook_token(token):
@@ -592,7 +595,7 @@ def webhook_arrived_at(request, token, location):
 @require_http_methods(["GET"])
 def webhook_left_at(request, token, location, time):
     """
-    Webhook: Eddie left a location at a specified time.
+    Webhook: Child left a location at a specified time.
     URL: /webhooks/<token>/left_at/<location>/<time>/
     """
     if not _validate_webhook_token(token):

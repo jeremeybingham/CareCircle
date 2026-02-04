@@ -4,7 +4,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.html import format_html
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .models import FormType, UserFormAccess, Entry, UserProfile, EddieProfile, WebhookToken
+from .models import FormType, UserFormAccess, Entry, UserProfile, ChildProfile, WebhookToken
 
 
 # Customize User Admin to show form access and profile
@@ -275,18 +275,22 @@ class UserProfileAdmin(admin.ModelAdmin):
     revoke_delete_any_permission.short_description = "Revoke delete any post permission"
 
 
-@admin.register(EddieProfile)
-class EddieProfileAdmin(admin.ModelAdmin):
-    """Admin interface for Eddie's profile (singleton)"""
+@admin.register(ChildProfile)
+class ChildProfileAdmin(admin.ModelAdmin):
+    """Admin interface for the child's profile (singleton)"""
 
     fieldsets = (
+        ('Child Name', {
+            'fields': ('child_name',),
+            'description': 'Name displayed throughout the app (e.g., in page titles, navigation)'
+        }),
         ('Photo', {
             'fields': ('photo', 'photo_preview'),
-            'description': 'Current photo of Eddie'
+            'description': 'Current photo for caregivers'
         }),
-        ('About Eddie', {
+        ('About', {
             'fields': ('bio', 'tips_and_tricks', 'favorites', 'fun_facts', 'goals'),
-            'description': 'General information about Eddie for caregivers'
+            'description': 'General information for caregivers'
         }),
         ('Daily Care', {
             'fields': ('meals_info', 'potty_info', 'safety_info', 'communication_info'),
@@ -298,9 +302,11 @@ class EddieProfileAdmin(admin.ModelAdmin):
         }),
         ('Emergency Contact 1', {
             'fields': ('contact_1_name', 'contact_1_relationship', 'contact_1_phone', 'contact_1_email'),
+            'description': 'Primary contact - customize name and relationship labels as needed'
         }),
         ('Emergency Contact 2', {
             'fields': ('contact_2_name', 'contact_2_relationship', 'contact_2_phone', 'contact_2_email'),
+            'description': 'Secondary contact - customize name and relationship labels as needed'
         }),
         ('Emergency Contact 3 (Optional)', {
             'fields': ('contact_3_name', 'contact_3_relationship', 'contact_3_phone', 'contact_3_email'),
@@ -327,7 +333,7 @@ class EddieProfileAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         """Only allow one instance (singleton)"""
-        return not EddieProfile.objects.exists()
+        return not ChildProfile.objects.exists()
 
     def has_delete_permission(self, request, obj=None):
         """Prevent deletion of the singleton"""
@@ -340,10 +346,10 @@ class EddieProfileAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         """Redirect to the edit page if instance exists, otherwise to add page"""
-        if EddieProfile.objects.exists():
-            obj = EddieProfile.objects.first()
+        if ChildProfile.objects.exists():
+            obj = ChildProfile.objects.first()
             from django.shortcuts import redirect
-            return redirect(f'admin:timeline_eddieprofile_change', obj.pk)
+            return redirect('admin:timeline_childprofile_change', obj.pk)
         return super().changelist_view(request, extra_context)
 
 

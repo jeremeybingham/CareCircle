@@ -7,8 +7,8 @@ urlpatterns = [
     # Main timeline view
     path('', views.TimelineListView.as_view(), name='timeline'),
 
-    # About Eddie page
-    path('about/', views.AboutEddieView.as_view(), name='about_eddie'),
+    # About page (child profile)
+    path('about/', views.AboutChildView.as_view(), name='about'),
 
     # User Profile pages
     path('profile/', views.UserProfileView.as_view(), name='profile'),

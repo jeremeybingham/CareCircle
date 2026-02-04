@@ -58,7 +58,7 @@ FORM_REGISTRY = {
         'form_class': WordsForm,
         'name': "Words I'm Using",
         'icon': '💬',
-        'description': "Track new words and phrases Eddie is using",
+        'description': "Track new words and phrases being used",
     },
     'pickup': {
         'form_class': PickupForm,
