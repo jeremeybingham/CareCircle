@@ -1,31 +1,31 @@
-# Timeline - Eddie's Daily Life Tracker
+# Timeline - Caregiver Communication Hub
 
-A Django application for maintaining a continuous record of daily information about Eddie, a mostly non-verbal autistic child, shared among all his caregivers.
+A Django application originally designed for maintaining a continuous record of daily information about a mostly non-verbal autistic child, shared among all caregivers.
 
 ## Project Purpose
 
-Timeline serves as a central communication hub for Eddie's parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The application addresses Eddie's limited verbal communication by providing a shared, chronological record of:
+Timeline serves as a central communication hub for parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The application addresses limited verbal communication by providing a shared, chronological record of:
 
 - **Essential daily functions**: Toileting, meals, sleep patterns
 - **Transition information**: Status updates between home, school, and after-school programs
 - **Engagement resources**: Photos and vocabulary for memory reinforcement and conversation
-- **Activity tracking**: What Eddie is doing throughout his day across different settings
-- **Mood and behavior**: How he's feeling and responding in different situations
+- **Activity tracking**: What the child is doing throughout the day across different settings
+- **Mood and behavior**: How they're feeling and responding in different situations
 
 ### Primary Use Cases
 
-**For Caregivers Receiving Eddie:**
-- Quickly check when he last ate and used the bathroom
-- See his mood and energy level from earlier in the day
-- View recent photos to engage him in conversation
-- Know what activities he's been doing
-- Access vocabulary words he's currently working on
+**For Caregivers Receiving the Child:**
+- Quickly check when they last ate and used the bathroom
+- See their mood and energy level from earlier in the day
+- View recent photos to engage them in conversation
+- Know what activities they've been doing
+- Access vocabulary words they're currently working on
 
-**For Caregivers Sending Eddie:**
+**For Caregivers Sending the Child:**
 - Share overnight information (dinner, sleep, breakfast) before school
 - Log school activities for after-school program staff
 - Upload weekend photos for Monday discussions at school
-- Document new words and phrases Eddie is using
+- Document new words and phrases the child is using
 
 ## Features
 
@@ -39,7 +39,7 @@ Timeline serves as a central communication hub for Eddie's parents, teachers, pa
 - 🎨 **Clean Interface**: Simple, focused design for fast information access
 - 📌 **Post Pinning**: Pin important entries to the top of the timeline
 - 🗑️ **Post Deletion**: Remove entries with permission-based controls
-- 💬 **Vocabulary Tracking**: Track words and phrases Eddie is using
+- 💬 **Vocabulary Tracking**: Track words and phrases the child is using
 
 ## Current Form Types
 
@@ -48,7 +48,7 @@ Timeline serves as a central communication hub for Eddie's parents, teachers, pa
 3. **Overnight** (🌙) - Dinner, sleep, and breakfast tracking (for parents)
 4. **School Day** (🎒) - Comprehensive school activity log (for teachers)
 5. **My Weekend** (🎉) - Weekend photos and descriptions (for Monday discussions)
-6. **Words I'm Using** (💬) - Track new words and phrases Eddie is using
+6. **Words I'm Using** (💬) - Track new words and phrases the child is using
 
 ## Project Status
 
@@ -123,7 +123,7 @@ In the admin:
 
 ### 5. Start Using
 
-Navigate to `http://localhost:8000/` and begin documenting Eddie's day!
+Navigate to `http://localhost:8000/` and begin documenting the child's day!
 
 ## User Roles
 
@@ -139,7 +139,7 @@ The application is designed for different caregiver roles, each with access to r
 ## Core Design Principles
 
 ### 1. Mobile-First
-Most users access via mobile browsers during Eddie's care, so the interface prioritizes:
+Most users access via mobile browsers during caregiving, so the interface prioritizes:
 - Large touch targets
 - Minimal scrolling
 - Fast loading
@@ -162,7 +162,7 @@ Forms are designed for rapid data entry:
 ### 4. Engagement Resources
 Photos and vocabulary entries serve dual purposes:
 - Information sharing between caregivers
-- Tools for engaging Eddie in conversation and memory activities
+- Tools for engaging the child in conversation and memory activities
 
 ## Project Structure
 
@@ -238,7 +238,7 @@ timeline/
 5. Fill in profile information:
    - **Display Name**: How they'll appear on posts (e.g., "Ms. Johnson", "Dad", "Speech Therapist Sarah")
    - **Email Address**: For contact and notifications
-   - **Position/Role**: Their role in Eddie's care
+   - **Position/Role**: Their role in the child's care
    - **First/Last Name**: Legal name
 6. Save
 
@@ -370,7 +370,7 @@ python manage.py test timeline
 - **App**: Heroku, Railway, or PythonAnywhere
 - **Database**: Heroku Postgres or AWS RDS
 - **Media Storage**: AWS S3 or Cloudinary
-- **Domain**: Custom domain for easy access (e.g., eddies-timeline.com)
+- **Domain**: Custom domain for easy access
 
 ## Privacy and Security
 
@@ -407,7 +407,7 @@ python manage.py test timeline
 
 ## Support and Contribution
 
-This is a personal project for Eddie's care team. If you're part of Eddie's care team and have questions or suggestions, contact Dad directly.
+This is a personal project for the care team. If you're part of the care team and have questions or suggestions, contact the administrator directly.
 
 For technical issues or ideas:
 - Create an issue in the repository
@@ -417,10 +417,6 @@ For technical issues or ideas:
 ## License
 
 Private use only. Not for public distribution.
-
----
-
-**For Eddie**: This app exists to help everyone who cares for you communicate better, so we can all work together to support you, understand you, and help you thrive. Every entry here represents someone who loves you and wants the best for you.
 
 ---
 
