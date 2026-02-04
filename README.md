@@ -1,10 +1,10 @@
-# Timeline - Caregiver Communication Hub
+# CareCircle - Caregiver Communication Hub
 
 A Django application originally designed for maintaining a continuous record of daily information about a mostly non-verbal autistic child, shared among all caregivers.
 
 ## Project Purpose
 
-Timeline serves as a central communication hub for parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The application addresses limited verbal communication by providing a shared, chronological record of:
+CareCircle serves as a central communication hub for parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The application addresses limited verbal communication by providing a shared, chronological record of:
 
 - **Essential daily functions**: Toileting, meals, sleep patterns
 - **Transition information**: Status updates between home, school, and after-school programs
