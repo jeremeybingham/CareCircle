@@ -320,23 +320,31 @@ class Entry(models.Model):
             return image_field
 
 
-class EddieProfile(models.Model):
+class ChildProfile(models.Model):
     """
-    Singleton model storing Eddie's profile information for the "About Eddie" page.
-    This information is shared with all caregivers to help them understand and support Eddie.
+    Singleton model storing the child's profile information for the "About" page.
+    This information is shared with all caregivers to help them understand and support the child.
     """
+    # Child's name (used throughout the app)
+    child_name = models.CharField(
+        max_length=100,
+        default='',
+        blank=True,
+        help_text="Child's name (displayed throughout the app)"
+    )
+
     # Profile Photo
     photo = models.ImageField(
-        upload_to='eddie_profile/',
+        upload_to='child_profile/',
         blank=True,
         null=True,
         validators=[FileExtensionValidator(['jpg', 'jpeg', 'png', 'gif', 'webp'])],
-        help_text="Current photo of Eddie for caregivers"
+        help_text="Current photo for caregivers"
     )
 
     # Bio Section
     bio = models.TextField(
-        help_text="General information about Eddie (age, family, personality)"
+        help_text="General information (age, family, personality)"
     )
 
     # Tips and Tricks
@@ -346,12 +354,12 @@ class EddieProfile(models.Model):
 
     # Favorites
     favorites = models.TextField(
-        help_text="Eddie's favorite activities, foods, games, etc."
+        help_text="Favorite activities, foods, games, etc."
     )
 
     # Fun Facts
     fun_facts = models.TextField(
-        help_text="Fun and interesting things about Eddie"
+        help_text="Fun and interesting things to know"
     )
 
     # Goals for This Year
@@ -376,7 +384,7 @@ class EddieProfile(models.Model):
 
     # Communication
     communication_info = models.TextField(
-        help_text="How Eddie communicates, AAC usage, verbal abilities"
+        help_text="How they communicate, AAC usage, verbal abilities"
     )
 
     # Physical Description
@@ -412,7 +420,7 @@ class EddieProfile(models.Model):
     )
     contact_1_relationship = models.CharField(
         max_length=50,
-        help_text="Relationship to Eddie"
+        help_text="Relationship"
     )
     contact_1_phone = models.CharField(
         max_length=20,
@@ -429,7 +437,7 @@ class EddieProfile(models.Model):
     )
     contact_2_relationship = models.CharField(
         max_length=50,
-        help_text="Relationship to Eddie"
+        help_text="Relationship"
     )
     contact_2_phone = models.CharField(
         max_length=20,
@@ -448,7 +456,7 @@ class EddieProfile(models.Model):
     contact_3_relationship = models.CharField(
         max_length=50,
         blank=True,
-        help_text="Relationship to Eddie"
+        help_text="Relationship"
     )
     contact_3_phone = models.CharField(
         max_length=20,
@@ -468,7 +476,7 @@ class EddieProfile(models.Model):
     contact_4_relationship = models.CharField(
         max_length=50,
         blank=True,
-        help_text="Relationship to Eddie"
+        help_text="Relationship"
     )
     contact_4_phone = models.CharField(
         max_length=20,
@@ -491,11 +499,13 @@ class EddieProfile(models.Model):
     )
 
     class Meta:
-        verbose_name = "Eddie's Profile"
-        verbose_name_plural = "Eddie's Profile"
+        verbose_name = "Child Profile"
+        verbose_name_plural = "Child Profile"
 
     def __str__(self):
-        return "Eddie's Profile"
+        if self.child_name:
+            return f"{self.child_name}'s Profile"
+        return "Child Profile"
 
     def save(self, *args, **kwargs):
         """Ensure only one instance exists (singleton pattern)"""
@@ -508,6 +518,7 @@ class EddieProfile(models.Model):
         obj, created = cls.objects.get_or_create(
             pk=1,
             defaults={
+                'child_name': '',
                 'bio': '',
                 'tips_and_tricks': '',
                 'favorites': '',
@@ -526,6 +537,10 @@ class EddieProfile(models.Model):
             }
         )
         return obj
+
+    def get_child_name_or_default(self):
+        """Return child_name if set, otherwise a generic default."""
+        return self.child_name if self.child_name else "Timeline"
 
 
 class WebhookToken(models.Model):

@@ -95,7 +95,7 @@ class MoodFieldMixin:
             choices=MOOD_CHOICES,
             required=False,
             label=mark_safe(
-                'How was Eddie\'s mood?'
+                'How was their mood?'
                 ' <span class="mood-hint">Select all that apply</span>'
             ),
             widget=MoodGridWidget(),

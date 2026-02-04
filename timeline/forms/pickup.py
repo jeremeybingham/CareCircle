@@ -38,7 +38,7 @@ class PickupForm(MealFieldMixin, MoodFieldMixin, BaseEntryForm):
     """
     Form for tracking pickup and dropoff information.
     Useful for babysitters, family members, or other caregivers
-    who pick up and drop off Eddie.
+    who handle pickup and dropoff.
 
     Meal fields (lunch_portion, lunch_food) are injected by MealFieldMixin
     using standardized PORTION_CHOICES. The "Not specified" option replaces

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Eddie's Timeline{% endblock %}</title>
+    <title>{% block title %}{{ child_name_possessive }} Timeline{% endblock %}</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
     {% load static %}
     <link rel="stylesheet" href="{% static 'timeline/css/style.css' %}">
@@ -13,7 +13,7 @@
     {% if user.is_authenticated %}
     <nav class="navbar">
         <div class="nav-container">
-            <a href="{% url 'timeline:about_eddie' %}" class="nav-brand">🚀 About Eddie</a>
+            <a href="{% url 'timeline:about' %}" class="nav-brand">🚀 About {{ child_name }}</a>
             <div class="nav-menu">
                 {% if request.resolver_match.url_name != 'timeline' %}
                 <a href="{% url 'timeline:timeline' %}" class="nav-link">Timeline</a>
