@@ -8,7 +8,7 @@
 - [ ] **Disclaimer on Signup**: Add a note and checkbox about privacy and not sharing the app or info from it with unauthorized parties.
 - [ ] **General CSS Overhaul** Once app is stable add more decorative CSS elements
 - [ ] **Questions Prompts** Add self-generated posts according to day of week (or list from School of dated questions provided) see QUESTIONS.md file in root dir
-- [ ] **Child Name as Param** Remove all instances of "Eddie" in template HTML and use a settable field/paramater in the admin / "About Eddie" form info
+- [ ] **Child Name as Param** Remove all hardcoded child name references in template HTML and use a settable field/parameter in the admin / "About Child" form info
 - [ ] **ABA/Afterschool form** Create a new form for ABA and/or afterschool program (probably separate but similar in parts)
 
 ## Planned Features with more detail
@@ -386,9 +386,9 @@ class Entry(models.Model):
  
 ## Completed Features
  
-### About Eddie Page
-- Created dedicated page with information about Eddie and emergency contacts
-- Added `AboutEddieView` at `/about/` route
+### About Child Page
+- Created dedicated page with information about the child and emergency contacts
+- Added `AboutChildView` at `/about/` route
 - Page includes: basic information, emergency contacts, daily routine, preferences
 - Navigation link added to main navbar
 - Accessible only to authenticated users
@@ -414,7 +414,7 @@ class Entry(models.Model):
 - Styled pinned posts with amber border and gradient background
  
 ### "Words I'm Using" Form
-- Added simple form to track new words/phrases Eddie is using
+- Added simple form to track new words/phrases the child is using
 - Single text input field for comma-separated phrases
 - Words display as large, colorful badges with Buzz Lightyear color theme
 - Created `timeline/forms/words.py`, display template, and CSS styling
@@ -483,10 +483,10 @@ class Entry(models.Model):
 ### Visual & Display Improvements
 - **Morning Report icon**: Change icon from moon 🌙 to sunrise 🌅
 - **Mood display spacing**: Remove "MOOD" text above mood display section (redundant, improves spacing)
-- **Navigation branding**: Replace "Eddie's Timeline" text with "About Eddie" link (keep rocket emoji)
+- **Navigation branding**: Replace hardcoded child name text with "About Child" link (keep rocket emoji)
 - **Page title fix**: Change main tab/page title from "My Timeline" to correct title (check base.html)
 - **Timeline header**: Show Display Name instead of username at top of timeline page
-- **About Eddie photo**: Make profile picture 60% width of container and crop to square (currently too small)
+- **About Child photo**: Make profile picture 60% width of container and crop to square (currently too small)
 - **Weekend notes styling**: Change background from yellow to light blue or green
 
 ### Form & Entry Display Improvements
@@ -504,7 +504,7 @@ class Entry(models.Model):
 ### **Babysitter & Lunch Form**: Create a specialized form for babysitter pickups with optional lunch details.
  
 ### Easy Fixes
-- **Login Page Text**: "Welcome Back | Login to your timeline" change to: "Eddie's Timeline | Login to View"
+- **Login Page Text**: "Welcome Back | Login to your timeline" - update to use configurable child name or generic text
 - **Mood Grid Placement**: ensure Mood Grid is at bottom of forms it's included in, and doesn't render in between fields for the forms it's included in; see "overnight.py" "pickup.py" and "schoolday.py" for examples of it pushing other form fields down.
 - **Remove Mood Grid Notes**: Not needed, remove
 - **About Eddie Visual** Add some colored background to the section headers like the "Emergency Contact" section is purple - use other Buzz Lightyear colors in CSS

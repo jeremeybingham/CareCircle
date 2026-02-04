@@ -4,9 +4,9 @@ This file provides context for AI assistants working on the Timeline project.
 
 ## Project Overview
 
-**Timeline** is a Django 5.0+ web application designed to maintain a continuous record of daily information about Eddie, a mostly non-verbal autistic child. The application serves as a central communication hub for all of Eddie's caregivers.
+**Timeline** is a Django 5.0+ web application originally designed to maintain a continuous record of daily information about a mostly non-verbal autistic child. The application serves as a central communication hub for all of the child's caregivers.
 
-**Purpose**: Enable seamless information sharing between Eddie's parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The app addresses Eddie's limited verbal communication by providing a shared chronological record of essential daily functions, activities, mood, photos, and vocabulary.
+**Purpose**: Enable seamless information sharing between parents, teachers, paraprofessionals, therapists, babysitters, and other caregivers. The app addresses limited verbal communication by providing a shared chronological record of essential daily functions, activities, mood, photos, and vocabulary.
 
 **Developer**: Solo developer (Dad/Parent)
 
@@ -20,8 +20,8 @@ This file provides context for AI assistants working on the Timeline project.
 1. **Quick status check**: Last meal/bathroom time, current mood
 2. **Recent photos**: For engagement and memory reinforcement  
 3. **Transition information**: Smooth handoffs between caregivers (home→school→after-school)
-4. **Vocabulary tracking**: Words and phrases Eddie is working on
-5. **Activity awareness**: What Eddie has been doing throughout the day
+4. **Vocabulary tracking**: Words and phrases the child is working on
+5. **Activity awareness**: What the child has been doing throughout the day
 
 ### User Roles
 - **Parents**: Overnight logs, weekend activities, photos, general notes
@@ -33,18 +33,18 @@ This file provides context for AI assistants working on the Timeline project.
 
 ### Key Use Cases
 
-**Receiving Eddie (e.g., teacher at morning drop-off):**
-- Check overnight form: Did he eat dinner? How did he sleep? Did he eat breakfast?
+**Receiving the child (e.g., teacher at morning drop-off):**
+- Check overnight form: Did they eat dinner? How did they sleep? Did they eat breakfast?
 - See if parents noted anything unusual (mood, behavior, health)
-- View recent photos to engage him in conversation
+- View recent photos to engage them in conversation
 
-**Sending Eddie (e.g., teacher at end of school day):**
+**Sending the child (e.g., teacher at end of school day):**
 - Log school day activities, bathroom times, lunch consumption
 - Upload photos of activities for after-school staff and parents
 - Note new words/phrases used or any incidents
 
-**Engaging Eddie:**
-- Show him weekend photos and read descriptions to reinforce memory
+**Engaging the child:**
+- Show them weekend photos and read descriptions to reinforce memory
 - Use vocabulary entries from other caregivers for consistency
 - Ask questions about activities shown in recent photos
 
@@ -169,7 +169,7 @@ Located in `timeline/templatetags/entry_display.py`:
 | `overnight` | Overnight | 🌙 | Parents | Dinner, sleep, breakfast (morning handoff info) |
 | `schoolday` | School Day | 🎒 | Teachers | Comprehensive school activity log |
 | `weekend` | My Weekend | 🎉 | Parents | Weekend photos + descriptions (Monday discussions) |
-| `words` | Words I'm Using | 💬 | All | Track new words and phrases Eddie is using |
+| `words` | Words I'm Using | 💬 | All | Track new words and phrases the child is using |
 
 ## Adding Features
 
@@ -243,7 +243,7 @@ Timeline displays prioritize:
 ### Engagement Resources
 Photos serve dual purposes:
 - Inform other caregivers of activities
-- Provide conversation prompts with Eddie
+- Provide conversation prompts with the child
 - Reinforce memory of events
 - Build consistent vocabulary across caregivers
 
@@ -411,10 +411,10 @@ __all__ = [
 ## Key Context for AI Assistants
 
 ### When suggesting changes, consider:
-1. **Eddie's needs**: Will this help caregivers better understand and support Eddie?
+1. **The child's needs**: Will this help caregivers better understand and support the child?
 2. **Mobile usability**: Is it easy to use on a phone during caregiving?
 3. **Quick access**: Can caregivers find essential info (bathroom, food, mood) in <10 seconds?
-4. **Engagement value**: Does it provide resources to interact with Eddie?
+4. **Engagement value**: Does it provide resources to interact with the child?
 5. **Caregiver burden**: Is data entry quick and simple?
 6. **Flexibility**: Can it adapt to new situations/users easily?
 
@@ -432,7 +432,7 @@ __all__ = [
 3. Excessive typing requirements
 4. Non-essential fields in forms
 5. Anything that slows down data entry
-6. Features that don't serve Eddie's needs
+6. Features that don't serve the child's needs
 
 ## Production Deployment Considerations
 
@@ -493,14 +493,14 @@ The target deployment environment is **AWS Lightsail Ubuntu** with the following
 
 ## Notes for AI Assistants
 
-This is a **personal project** for a family supporting their autistic son. The developer is Eddie's dad, working solo to build tools that help Eddie's care team communicate effectively.
+This is a **personal project** originally built by a parent for their autistic child's care team. The developer works solo to build tools that help the care team communicate effectively.
 
-**Tone**: Professional but compassionate. This isn't just a coding exercise—it's about helping a child and supporting the people who care for him.
+**Tone**: Professional but compassionate. This isn't just a coding exercise—it's about helping a child and supporting the people who care for them.
 
-**Success Metrics**: 
+**Success Metrics**:
 - Do caregivers use it regularly?
 - Does it improve communication between home and school?
-- Does it help Eddie's consistency and progress?
+- Does it help the child's consistency and progress?
 - Is it easy enough for all caregivers to use?
 
-**Remember**: Every feature should serve the goal of helping caregivers better understand, support, and engage with Eddie.
+**Remember**: Every feature should serve the goal of helping caregivers better understand, support, and engage with the child.
